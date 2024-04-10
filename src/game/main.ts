@@ -5,6 +5,7 @@ import { MainMenu } from "./scenes/MainMenu";
 import { AUTO, Game } from "phaser";
 import { Preloader } from "./scenes/Preloader";
 import { GAME_HEIGHT, GAME_WIDTH } from "@/constants/game";
+import WebFontLoader from "webfontloader";
 
 //TODO: Add all the scenes here
 export const GAME_SCENES = [Boot, Preloader, MainMenu, MainGame, GameOver];
@@ -30,7 +31,19 @@ const StartGame = (parent: string) => {
         // (window as any).Telegram.WebApp.expand();
         //@TODO: load config from server here
         //const config = await fetchConfig();
-        
+
+        //@TODO: load plugins
+
+        //@TODO: load webfont
+        WebFontLoader.load({
+            google: {
+                families: ["Pixelify Sans"],
+            },
+            active: () => {
+                console.log("Fonts loaded");
+            }
+        });
+
         return new Game({ ...config, parent });
     } catch (error) {
         console.error("Failed to launch the game.", error);
