@@ -4,7 +4,7 @@ import { MenuButton } from "./MenuButton";
 
 type Props = {};
 
-export const GameUI = (props: Props) => {
+export const InGameUI = (props: Props) => {
     return (
         <div className="absolute game-ui top-0">
             <div className="absolute flex w-full justify-between px-2 py-4">

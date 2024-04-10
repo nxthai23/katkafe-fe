@@ -8,7 +8,7 @@ import {
 } from "react";
 import StartGame from "./main";
 import { EventBus } from "./EventBus";
-import { GameUI } from "@/components/ui/GameUI";
+import { InGameUI } from "@/components/ui/InGameUI";
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -70,7 +70,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     return (
         <div className="mx-auto">
             <div id="game-container" className="relative">
-                {isGameScene && <GameUI />}
+                {isGameScene && <InGameUI />}
             </div>
         </div>
     );

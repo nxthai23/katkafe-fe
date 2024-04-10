@@ -1,6 +1,13 @@
-import { LOCATIONS_COUNT, LOCATION_ASSETS } from "@/constants/game";
+import {
+    CATS_COUNT,
+    CATS_FRAME_RATE,
+    LOCATIONS_COUNT,
+    LOCATION_ASSETS,
+} from "@/constants/game";
 import { waitForSeconds } from "@/utils/helpers";
 import { GameObjects, Scene } from "phaser";
+import { drawBackground } from "../utils/ui/sprite";
+import { CAT_ANIMATIONS } from "@/constants/anims";
 
 export class Preloader extends Scene {
     background: GameObjects.Image;
@@ -13,15 +20,8 @@ export class Preloader extends Scene {
 
     init() {
         //  We loaded this image in our Boot Scene, so we can display it here
-        this.background = this.add.image(
-            this.cameras.main.width / 2,
-            this.cameras.main.height / 2,
-            "background"
-        );
-        let scaleX = this.cameras.main.width / this.background.width;
-        let scaleY = this.cameras.main.height / this.background.height;
-        let scale = Math.max(scaleX, scaleY);
-        this.background.setScale(scale).setScrollFactor(0);
+
+        this.background = drawBackground(this, "background");
 
         // //  A simple progress bar. This is the outline of the bar.
         // this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
@@ -73,7 +73,9 @@ export class Preloader extends Scene {
 
     preload() {
         //  Load the assets for the game - Replace with your own assets
+        this.load.setPath("assets");
         this.loadLocationAssets();
+        this.loadCatSpriteSheets();
     }
 
     create() {
@@ -84,8 +86,6 @@ export class Preloader extends Scene {
     }
 
     loadLocationAssets() {
-        this.load.setPath("assets");
-
         //@TODO: Load location based on data from server
         for (let i = 1; i < LOCATIONS_COUNT + 1; i++) {
             this.load.image(
@@ -119,8 +119,72 @@ export class Preloader extends Scene {
         }
     }
 
+    loadCatSpriteSheets() {
+        for (let i = 1; i < CATS_COUNT + 1; i++) {
+            this.load.spritesheet(
+                `Cat-${i}`,
+                `/spritesheets/cats/Cat-${i}.png`,
+                {
+                    frameWidth: 128,
+                    frameHeight: 128,
+                }
+            );
+        }
+    }
+
+    createCatAnimations() {
+        for (let i = 1; i < CATS_COUNT + 1; i++) {
+            this.anims.create({
+                key: `Cat-${i}-${CAT_ANIMATIONS.IDLE}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
+                    start: 0,
+                    end: 3,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_DOWN}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
+                    start: 4,
+                    end: 7,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_UP}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
+                    start: 8,
+                    end: 11,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
+                    start: 12,
+                    end: 15,
+                }),
+                frameRate: CATS_FRAME_RATE - 4,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_LEFT}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
+                    start: 16,
+                    end: 19,
+                }),
+                frameRate: CATS_FRAME_RATE - 4,
+                repeat: -1,
+            });
+        }
+    }
+
     async waitBeforeGoToGame() {
         //@TODO: Remove this
+        this.createCatAnimations();
         await waitForSeconds(1);
         this.scene.start("Game");
     }

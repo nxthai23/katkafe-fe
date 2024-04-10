@@ -24,6 +24,13 @@ const config: Phaser.Types.Core.GameConfig = {
         width: GAME_WIDTH,
         height: GAME_HEIGHT,
     },
+    physics: {
+        default: "arcade",
+        arcade: {
+            gravity: { y: 0, x: 0 },
+            debug: false,
+        },
+    },
 };
 
 const StartGame = (parent: string) => {
@@ -41,7 +48,7 @@ const StartGame = (parent: string) => {
             },
             active: () => {
                 console.log("Fonts loaded");
-            }
+            },
         });
 
         return new Game({ ...config, parent });
