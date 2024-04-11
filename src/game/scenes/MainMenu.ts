@@ -1,7 +1,7 @@
 import { GameObjects, Scene } from "phaser";
 
 import { EventBus } from "../EventBus";
-import { GAME_HEIGHT, GAME_WIDTH } from "@/constants/game";
+import { GAME_HEIGHT, GAME_WIDTH } from "@/constants/config";
 
 export class MainMenu extends Scene {
     logo: GameObjects.Image;

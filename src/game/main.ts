@@ -4,7 +4,7 @@ import { Game as MainGame } from "./scenes/Game";
 import { MainMenu } from "./scenes/MainMenu";
 import { AUTO, Game } from "phaser";
 import { Preloader } from "./scenes/Preloader";
-import { GAME_HEIGHT, GAME_WIDTH } from "@/constants/game";
+import { GAME_HEIGHT, GAME_WIDTH } from "@/constants/config";
 import WebFontLoader from "webfontloader";
 
 //TODO: Add all the scenes here
@@ -28,7 +28,9 @@ const config: Phaser.Types.Core.GameConfig = {
         default: "arcade",
         arcade: {
             gravity: { y: 0, x: 0 },
-            debug: false,
+            debug: true,
+            debugShowBody: true,
+            debugShowStaticBody: true,
         },
     },
 };

@@ -10,7 +10,8 @@ import {
     CAT_MAX_SPEED,
     CAT_MIN_ANIM_DURATION,
     CAT_MIN_SPEED,
-} from "@/constants/game";
+    COLLISION_CATEGORIES,
+} from "@/constants/config";
 import { LAYERS } from "@/constants/layers";
 import { Cat } from "@/types/cat";
 
@@ -31,12 +32,16 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         this.setDepth(LAYERS.STAFF);
-        this.setScale(1 / 2);
+        this.setScale(1 / 2 * 1.2);
         this.setVelocity(0);
         this.setOrigin(0, 0);
 
         this.setBounce(0, 0);
         this.setCollideWorldBounds(true);
+        this.setCollisionCategory(COLLISION_CATEGORIES.CAT);
+        this.setCollidesWith([COLLISION_CATEGORIES.WALL, COLLISION_CATEGORIES.CAT]);
+
+        this.body?.setSize(64, 80);
 
         this.id = data.id;
         this.assetId = data.assetId;

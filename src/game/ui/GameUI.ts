@@ -1,4 +1,4 @@
-import { ACTIVE_AREA, LOCATION_ASSETS } from "@/constants/game";
+import { ACTIVE_AREA, LOCATION_ASSETS } from "@/constants/config";
 import { userStore } from "../store/user";
 import {
     drawBackground,

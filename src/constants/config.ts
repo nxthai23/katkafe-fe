@@ -16,7 +16,7 @@ export const LOCATION_ASSETS = {
 
 //@TODO: Load from server/config
 export const CATS_COUNT = 1;
-export const CATS_FRAME_RATE = 12;
+export const CATS_FRAME_RATE = 8;
 
 //@TODO: Load from server/config
 export const ACTIVE_AREA = {
@@ -31,4 +31,11 @@ export const CAT_MIN_SPEED = 10;
 
 export const CAT_MAX_ANIM_DURATION = 4000;
 export const CAT_MIN_ANIM_DURATION = 1000;
+
+export enum COLLISION_CATEGORIES {
+    CAT = 1,
+    GUEST = 2,
+    OBJECTS = 3,
+    WALL = 4,
+}
 

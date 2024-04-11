@@ -3,7 +3,7 @@ import {
     CATS_FRAME_RATE,
     LOCATIONS_COUNT,
     LOCATION_ASSETS,
-} from "@/constants/game";
+} from "@/constants/config";
 import { waitForSeconds } from "@/utils/helpers";
 import { GameObjects, Scene } from "phaser";
 import { drawBackground } from "../utils/ui/sprite";
@@ -167,7 +167,7 @@ export class Preloader extends Scene {
                     start: 12,
                     end: 15,
                 }),
-                frameRate: CATS_FRAME_RATE - 4,
+                frameRate: CATS_FRAME_RATE,
                 repeat: -1,
             });
             this.anims.create({
@@ -176,7 +176,7 @@ export class Preloader extends Scene {
                     start: 16,
                     end: 19,
                 }),
-                frameRate: CATS_FRAME_RATE - 4,
+                frameRate: CATS_FRAME_RATE,
                 repeat: -1,
             });
         }
