@@ -26,11 +26,14 @@
         "build": "next build"
     },
     "dependencies": {
+        "@designbycode/tailwindcss-text-stroke": "^1.2.1",
+        "axios": "^1.6.8",
         "next": "14.1.4",
         "phaser": "^3.80.1",
         "react": "^18",
         "react-dom": "^18",
-        "webfontloader": "^1.6.28"
+        "webfontloader": "^1.6.28",
+        "zustand": "^4.5.2"
     },
     "devDependencies": {
         "@types/node": "^20",
