@@ -4,15 +4,31 @@ import { CatObject } from "./models/Cat";
 import { Cat } from "@/types/cat";
 import { WallObject } from "./models/Wall";
 
+import Locations from "@/game/config/locations.json";
+import { LocationsData, PathData } from "@/types/location";
+import { userStore } from "./store/user";
+import { LAYERS } from "@/constants/layers";
+import { GuestGenerator } from "./components/GuestGenerator";
+
 export class GameManager {
     scene: Phaser.Scene;
-    cats: Phaser.Physics.Arcade.Sprite[];
-    walls: Phaser.Physics.Arcade.Sprite[];
+    locationsData: LocationsData;
+    paths: PathData[] = [];
+
+    currentLocation: number = 1;
+    guestGenerator: GuestGenerator;
+
+    //Objects
+    cats: Phaser.Physics.Arcade.Sprite[] = [];
+    walls: Phaser.Physics.Arcade.Sprite[] = [];
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
-        this.cats = [];
-        this.walls = [];
+        this.locationsData = Locations as LocationsData;
+        this.currentLocation = userStore.currentLocation;
+        this.paths =
+            this.locationsData[`location-${this.currentLocation}`].paths;
+        this.guestGenerator = new GuestGenerator(this.scene, this.paths);
     }
 
     createTempCats() {
@@ -34,8 +50,31 @@ export class GameManager {
         }
     }
 
-    createEmptyPointsForPaths() {
+    //@TODO: Update to match more complex paths
+    createEmptyPoints() {
+        for (let i = 0; i < this.paths.length; i++) {
+            const path = this.paths[i];
+            this.createEmptyPointsForPath(path);
+        }
+    }
 
+    private createEmptyPointsForPath(points: PathData) {
+        const renderedPoints = [];
+        for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+            const renderedPoint = new Phaser.GameObjects.Rectangle(
+                this.scene,
+                point.position.x,
+                point.position.y,
+                8,
+                8,
+                0x00ff00
+            );
+            renderedPoint.setDepth(LAYERS.DEBUG);
+            renderedPoints.push(renderedPoint);
+            this.scene.add.existing(renderedPoint);
+        }
+        return renderedPoints;
     }
 
     createWalls() {

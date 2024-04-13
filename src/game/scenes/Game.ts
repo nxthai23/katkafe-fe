@@ -2,7 +2,7 @@ import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 import { GameManager } from "../GameManager";
 import { GameUI } from "../ui/GameUI";
-import Locations from "@/game/config/locations/locations.json";
+import { GuestObject } from "../models/Guest";
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
@@ -18,8 +18,6 @@ export class Game extends Scene {
 
     init() {
         this.gameUI.loadLocation();
-        // this.gameUI.drawCatActiveArea();
-        
     }
 
     create() {
@@ -28,8 +26,27 @@ export class Game extends Scene {
 
         this.gameManager.createTempCats();
         this.gameManager.createWalls();
+        // this.gameManager.createEmptyPoints();
 
-        this.physics.world.addCollider(this.gameManager.cats, this.gameManager.walls)
+        this.gameManager.guestGenerator.play();
+
+        this.physics.world.addCollider(
+            this.gameManager.cats,
+            this.gameManager.walls
+        );
+        this.physics.world.addCollider(
+            this.gameManager.cats,
+            this.gameManager.cats
+        );
+        this.physics.world.addCollider(
+            this.gameManager.guestGenerator.guests,
+            this.gameManager.walls
+        );
+
+        this.physics.world.addCollider(
+            this.gameManager.guestGenerator.guests,
+            this.gameManager.guestGenerator.guests,
+        );
 
         EventBus.emit("current-scene-ready", this);
     }

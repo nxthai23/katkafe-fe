@@ -15,10 +15,6 @@ export const LOCATION_ASSETS = {
 };
 
 //@TODO: Load from server/config
-export const CATS_COUNT = 1;
-export const CATS_FRAME_RATE = 8;
-
-//@TODO: Load from server/config
 export const ACTIVE_AREA = {
     START_X: 32,
     END_X: 384 - 32,
@@ -26,16 +22,32 @@ export const ACTIVE_AREA = {
     END_Y: 608 - 80,
 };
 
-export const CAT_MAX_SPEED = 50;
-export const CAT_MIN_SPEED = 10;
-
-export const CAT_MAX_ANIM_DURATION = 4000;
-export const CAT_MIN_ANIM_DURATION = 1000;
-
 export enum COLLISION_CATEGORIES {
     CAT = 1,
     GUEST = 2,
     OBJECTS = 3,
     WALL = 4,
 }
+
+//@TODO: Load from server/config
+export const CATS_COUNT = 1;
+export const CATS_FRAME_RATE = 8;
+
+export const CAT_MAX_SPEED = 50;
+export const CAT_MIN_SPEED = 10;
+
+export const CAT_MAX_ANIM_DURATION = 4000;
+export const CAT_MIN_ANIM_DURATION = 1000;
+
+export const GUEST_SPEED = 50;
+export const MAX_GUESTS = 6;
+export const GUEST_MAX_GEN_DELAY = 10000;
+export const GUEST_MIN_GEN_DELAY = 3000;
+export const GUEST_MAX_ORDER_DELAY = 8000;
+export const GUEST_MIN_ORDER_DELAY = 3000;
+
+export const DIALOG_MAX_GEN_DELAY = 60000;
+export const DIALOG_MIN_GEN_DELAY = 10000;
+export const DIALOG_MIN_DURATION = 3000;
+export const DIALOG_MAX_DURATION = 8000;
 

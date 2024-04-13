@@ -8,6 +8,7 @@ import { waitForSeconds } from "@/utils/helpers";
 import { GameObjects, Scene } from "phaser";
 import { drawBackground } from "../utils/ui/sprite";
 import { CAT_ANIMATIONS } from "@/constants/anims";
+import { DIALOG_TYPES } from "@/constants/dialog";
 
 export class Preloader extends Scene {
     background: GameObjects.Image;
@@ -76,6 +77,7 @@ export class Preloader extends Scene {
         this.load.setPath("assets");
         this.loadLocationAssets();
         this.loadCatSpriteSheets();
+        this.loadDialogs();
     }
 
     create() {
@@ -128,6 +130,17 @@ export class Preloader extends Scene {
                     frameWidth: 128,
                     frameHeight: 128,
                 }
+            );
+        }
+    }
+
+    loadDialogs() {
+        const dialogTypes = Object.values(DIALOG_TYPES);
+        for (let i = 0; i < dialogTypes.length; i++) {
+            const dialogType = dialogTypes[i];
+            this.load.image(
+                `Dialog-${dialogType}`,
+                `/dialogs/${dialogType}.png`
             );
         }
     }

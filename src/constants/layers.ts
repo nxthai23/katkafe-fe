@@ -3,5 +3,8 @@ export const LAYERS = {
     GUEST: 1,
     OBJECT: 2,
     STAFF: 3,
+    DIALOG: 98,
+    DEBUG: 99,
     UI: 100,
 };
+

@@ -20,7 +20,7 @@ export class WallObject extends Phaser.Physics.Arcade.Sprite {
         this.setOrigin(0, 0);
 
         this.setCollisionCategory(COLLISION_CATEGORIES.WALL);
-        this.setCollidesWith([COLLISION_CATEGORIES.CAT]);
+        this.setCollidesWith([COLLISION_CATEGORIES.CAT, COLLISION_CATEGORIES.GUEST]);
 
         this.body?.setSize(width, height);
         this.setImmovable(true);

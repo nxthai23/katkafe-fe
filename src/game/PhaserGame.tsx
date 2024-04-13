@@ -55,7 +55,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
                 };
             }
 
-            console.log("scene_instance.scene.key", scene_instance.scene.key);
             if (scene_instance.scene.key === "Game") {
                 setIsGameScene(true);
             } else {

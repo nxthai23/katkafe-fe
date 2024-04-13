@@ -9,9 +9,6 @@ export const CAT_ANIMATIONS = {
 export const CAT_STATES = {
     IDLE: "idle",
     WALKING: "walking",
-    ORDERING: "ordering",
-    LEAVING: "leaving",
-    SERVING: "serving",
 };
 
 export const RANDOM_CAT_STATES = [CAT_STATES.IDLE, CAT_STATES.WALKING];
@@ -23,3 +20,9 @@ export enum CAT_DIRECTIONS {
     RIGHT,
 }
 
+export const GUEST_STATES = {
+    IDLE: "idle",
+    ARRIVING: "arrive",
+    ORDERING: "ordering",
+    LEAVING: "leaving",
+};
