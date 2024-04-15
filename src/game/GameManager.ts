@@ -1,5 +1,4 @@
-import { ACTIVE_AREA } from "@/constants/config";
-import tempData from "../mock/cat.json";
+import { ACTIVE_AREA, CATS_COUNT, CAT_MAX_LEVEL } from "@/constants/config";
 import { CatObject } from "./models/Cat";
 import { Cat } from "@/types/cat";
 import { WallObject } from "./models/Wall";
@@ -32,29 +31,42 @@ export class GameManager {
     }
 
     createTempCats() {
-        const catData = tempData as Cat;
-        for (let i = 0; i < 10; i++) {
+        const spawnPoints = this.locationsData[`location-${this.currentLocation}`].spawnPoints;
+        for (let i = 0; i < spawnPoints.length; i++) {
             const cat = new CatObject(
                 this.scene,
-                Phaser.Math.Between(
-                    ACTIVE_AREA.START_X,
-                    ACTIVE_AREA.END_X - 64
-                ),
-                Phaser.Math.Between(
-                    ACTIVE_AREA.START_Y,
-                    ACTIVE_AREA.END_Y - 64
-                ),
-                catData
+                spawnPoints[i].x,
+                spawnPoints[i].y,
+                {
+                    id: `Cat-${i}`,
+                    assetId: Phaser.Math.Between(1, CATS_COUNT),
+                    level: Phaser.Math.Between(1, CAT_MAX_LEVEL)
+                }
             );
             this.cats.push(cat);
         }
     }
 
-    //@TODO: Update to match more complex paths
-    createEmptyPoints() {
+    createEmptyPointsForPaths() {
         for (let i = 0; i < this.paths.length; i++) {
             const path = this.paths[i];
             this.createEmptyPointsForPath(path);
+        }
+    }
+
+    createEmptyPointsForSpawn () {
+        const spawnPoints = this.locationsData[`location-${this.currentLocation}`].spawnPoints;
+        for (let i = 0; i < spawnPoints.length; i++) {
+            const point = spawnPoints[i];
+            const renderedPoint = new Phaser.GameObjects.Rectangle(
+                this.scene,
+                point.x,
+                point.y,
+                8,
+                8,
+                0x00ff00
+            ).setDepth(LAYERS.DEBUG)
+            this.scene.add.existing(renderedPoint);
         }
     }
 

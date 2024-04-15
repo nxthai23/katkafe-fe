@@ -9,6 +9,7 @@ import { GameObjects, Scene } from "phaser";
 import { drawBackground } from "../utils/ui/sprite";
 import { CAT_ANIMATIONS } from "@/constants/anims";
 import { DIALOG_TYPES } from "@/constants/dialog";
+import { CAT_AUDIO_COUNT, GUEST_AUDIO_COUNT } from "@/constants/audio";
 
 export class Preloader extends Scene {
     background: GameObjects.Image;
@@ -78,6 +79,7 @@ export class Preloader extends Scene {
         this.loadLocationAssets();
         this.loadCatSpriteSheets();
         this.loadDialogs();
+        this.loadAudios();
     }
 
     create() {
@@ -132,6 +134,16 @@ export class Preloader extends Scene {
                 }
             );
         }
+        for (let i = 1; i < CATS_COUNT + 1; i++) {
+            this.load.spritesheet(
+                `Cat-${i}-Apron`,
+                `/spritesheets/apron-cats/Cat-${i}-Apron.png`,
+                {
+                    frameWidth: 128,
+                    frameHeight: 128,
+                }
+            );
+        }
     }
 
     loadDialogs() {
@@ -142,6 +154,17 @@ export class Preloader extends Scene {
                 `Dialog-${dialogType}`,
                 `/dialogs/${dialogType}.png`
             );
+        }
+    }
+
+    loadAudios() {
+        this.load.audio("bgm", "/audios/sound-background.wav");
+        this.load.audio("ambience", "/audios/sound-ambience.wav");
+        for (let i = 1; i < CAT_AUDIO_COUNT + 1; i++) {
+            this.load.audio(`cat-${i}`, `/audios/sound-cat-${i}.wav`);
+        }
+        for (let i = 1; i < GUEST_AUDIO_COUNT + 1; i++) {
+            this.load.audio(`guest-${i}`, `/audios/sound-guest-${i}.wav`);
         }
     }
 
@@ -157,7 +180,7 @@ export class Preloader extends Scene {
                 repeat: -1,
             });
             this.anims.create({
-                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_DOWN}`,
+                key: `Cat-${i}-${CAT_ANIMATIONS.SLEEP}`,
                 frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
                     start: 4,
                     end: 7,
@@ -166,7 +189,7 @@ export class Preloader extends Scene {
                 repeat: -1,
             });
             this.anims.create({
-                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_UP}`,
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_DOWN}`,
                 frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
                     start: 8,
                     end: 11,
@@ -175,7 +198,7 @@ export class Preloader extends Scene {
                 repeat: -1,
             });
             this.anims.create({
-                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_UP}`,
                 frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
                     start: 12,
                     end: 15,
@@ -184,10 +207,78 @@ export class Preloader extends Scene {
                 repeat: -1,
             });
             this.anims.create({
-                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_LEFT}`,
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
                 frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
                     start: 16,
                     end: 19,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_LEFT}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
+                    start: 20,
+                    end: 23,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+        }
+    }
+
+    createCatApronAnimations() {
+        for (let i = 1; i < CATS_COUNT + 1; i++) {
+            this.anims.create({
+                key: `Cat-${i}-Apron-${CAT_ANIMATIONS.IDLE}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
+                    start: 0,
+                    end: 3,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-Apron-${CAT_ANIMATIONS.SLEEP}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
+                    start: 4,
+                    end: 7,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_DOWN}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
+                    start: 8,
+                    end: 11,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_UP}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
+                    start: 12,
+                    end: 15,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_RIGHT}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
+                    start: 16,
+                    end: 19,
+                }),
+                frameRate: CATS_FRAME_RATE,
+                repeat: -1,
+            });
+            this.anims.create({
+                key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_LEFT}`,
+                frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
+                    start: 20,
+                    end: 23,
                 }),
                 frameRate: CATS_FRAME_RATE,
                 repeat: -1,
@@ -198,6 +289,7 @@ export class Preloader extends Scene {
     async waitBeforeGoToGame() {
         //@TODO: Remove this
         this.createCatAnimations();
+        this.createCatApronAnimations();
         await waitForSeconds(1);
         this.scene.start("Game");
     }

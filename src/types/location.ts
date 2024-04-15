@@ -25,6 +25,7 @@ export type LocationsData = {
 
 export type LocationData = {
     assets: any;
+    spawnPoints: AssetData[];
     paths: PathData[];
 };
 

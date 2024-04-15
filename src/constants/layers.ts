@@ -4,7 +4,7 @@ export const LAYERS = {
     OBJECT: 2,
     STAFF: 3,
     DIALOG: 98,
-    DEBUG: 99,
     UI: 100,
+    DEBUG: 101,
 };
 

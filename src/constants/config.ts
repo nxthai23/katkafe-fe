@@ -30,14 +30,22 @@ export enum COLLISION_CATEGORIES {
 }
 
 //@TODO: Load from server/config
-export const CATS_COUNT = 1;
+export const CATS_COUNT = 15;
 export const CATS_FRAME_RATE = 8;
 
+export const CAT_MAX_LEVEL = 44;
 export const CAT_MAX_SPEED = 50;
 export const CAT_MIN_SPEED = 10;
-
-export const CAT_MAX_ANIM_DURATION = 4000;
-export const CAT_MIN_ANIM_DURATION = 1000;
+export const CAT_CHANGE_DISPLAY_LEVELS = [
+    {
+        level: 0,
+        type: "none"
+    },
+    {
+        level: 10,
+        type: "Apron"
+    }
+]
 
 export const GUEST_SPEED = 50;
 export const MAX_GUESTS = 6;
@@ -47,7 +55,6 @@ export const GUEST_MAX_ORDER_DELAY = 8000;
 export const GUEST_MIN_ORDER_DELAY = 3000;
 
 export const DIALOG_MAX_GEN_DELAY = 60000;
-export const DIALOG_MIN_GEN_DELAY = 10000;
+export const DIALOG_MIN_GEN_DELAY = 20000;
 export const DIALOG_MIN_DURATION = 3000;
 export const DIALOG_MAX_DURATION = 8000;
-

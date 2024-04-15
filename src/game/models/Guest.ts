@@ -20,6 +20,9 @@ import {
     GUEST_LEAVE_DIALOG_TYPES,
     GUEST_ORDER_DIALOG_TYPES,
 } from "@/constants/dialog";
+import { EventBus } from "../EventBus";
+import { AUDIO_EVENTS } from "@/constants/events";
+import { GUEST_AUDIO_COUNT } from "@/constants/audio";
 
 export class GuestObject extends Phaser.Physics.Arcade.Sprite {
     id: number;
@@ -118,6 +121,7 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
                 this.showOrderDialog();
                 this.setVelocityByState();
                 this.playAnimation();
+                this.playCatSound();
                 this.scene.time.addEvent({
                     delay: Phaser.Math.Between(
                         GUEST_MIN_ORDER_DELAY,
@@ -175,6 +179,7 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
             this.path[this.path.length - 1].behavior?.direction || "down"
         );
         this.playAnimation();
+        this.playCatSound();
         this.setVelocityByState();
         this.showLeaveDialog();
     }
@@ -244,6 +249,17 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
                 }
                 break;
         }
+    }
+
+    private playCatSound() {
+        const rndIndex = Phaser.Math.Between(1, GUEST_AUDIO_COUNT);
+        EventBus.emit(
+            AUDIO_EVENTS.PLAY_SFX,
+            `guest-${rndIndex}`,
+            {
+                volume: 1
+            }
+        );
     }
 }
 
