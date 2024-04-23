@@ -41,10 +41,24 @@ const Shop = () => {
     };
     const [showDialog, setShowDialog] = useState(false);
 
-    const toggleDialog = () => {
-        console.log("bbbbbbb");
-
+    const confirmBundleDialog = () => {
         setShowDialog(!showDialog);
+    };
+
+    const confirmCatDialog = () => {
+        setShowDialog(!showDialog);
+    };
+
+    const dataBundle = {
+        title: "Congratulation!",
+        description: "You purchased Bundle's Name successfully! You received:",
+        imageUrl: "/images/test-bundle.png",
+    };
+
+    const dataCat = {
+        title: "Congratulation!",
+        description: "You purchased a staff successfully!",
+        imageUrl: "/images/test-cat.png",
     };
 
     const { fetchBundles } = useFetchBundles();
@@ -106,7 +120,10 @@ const Shop = () => {
                                         <div className="w-[100px] h-[130px]">
                                             <CatCard cat={catDeal} />
                                         </div>
-                                        <div className="w-[88px] h-[30px]">
+                                        <div
+                                            className="w-[88px] h-[30px]"
+                                            onClick={confirmCatDialog}
+                                        >
                                             <Button>{catDeal.price} $</Button>
                                         </div>
                                     </div>
@@ -130,7 +147,7 @@ const Shop = () => {
                                     >
                                         <CardBundle
                                             bundle={bundle}
-                                            handleClick={toggleDialog}
+                                            handleClick={confirmBundleDialog}
                                         />
                                     </div>
                                 ))}
@@ -142,7 +159,11 @@ const Shop = () => {
             {showDialog && (
                 <>
                     <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
-                    <ConfirmDialog />
+                    <ConfirmDialog
+                        data={activeTab === "Bundle" ? dataBundle : dataCat}
+                        onClose={() => setShowDialog(false)}
+                        closeShopPanel={() => setShowShopPanel(false)}
+                    />
                 </>
             )}
         </div>
