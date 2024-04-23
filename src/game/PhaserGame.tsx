@@ -12,6 +12,7 @@ import { useLayoutStore } from "@/stores/layoutStore";
 
 import Staff from "@/components/panels/staff/UserStaffList";
 import Manage from "@/components/panels/manage/Manage";
+import Friend from "@/components/panels/friend/Friend";
 import { EVENT_BUS_TYPES } from "@/constants/events";
 import { useEventBus } from "@/lib/hooks/useEventBus";
 
@@ -59,31 +60,28 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
   }, [ref]);
 
   useEffect(() => {
-    EventBus.on(
-        EVENT_BUS_TYPES.SCENE_READY,
-        (scene_instance: Phaser.Scene) => {
-            if (typeof ref === "function") {
-                ref({ game: game.current, scene: scene_instance });
-            } else if (ref) {
-                ref.current = {
-                    game: game.current,
-                    scene: scene_instance,
-                };
-            }
+    EventBus.on(EVENT_BUS_TYPES.SCENE_READY, (scene_instance: Phaser.Scene) => {
+      if (typeof ref === "function") {
+        ref({ game: game.current, scene: scene_instance });
+      } else if (ref) {
+        ref.current = {
+          game: game.current,
+          scene: scene_instance,
+        };
+      }
 
-            if (scene_instance.scene.key === "Game") {
-                setIsGameScene(true);
-            } else {
-                setIsGameScene(false);
-            }
-        }
-    );
+      if (scene_instance.scene.key === "Game") {
+        setIsGameScene(true);
+      } else {
+        setIsGameScene(false);
+      }
+    });
 
     registerEventListeners();
 
     return () => {
-        EventBus.removeListener("current-scene-ready");
-        removeAllEventListeners();
+      EventBus.removeListener("current-scene-ready");
+      removeAllEventListeners();
     };
   }, [ref]);
 
@@ -91,7 +89,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     <div className="mx-auto">
       <div id="game-container" className="relative">
         {isGameScene && <InGameUI />}
-        {/* {showFriendPanel && <Friend />} */}
+        {showFriendPanel && <Friend />}
         {showStaffPanel && <Staff />}
         {showManagePanel && <Manage />}
         {/* {showShopPanel && <Shop />} */}

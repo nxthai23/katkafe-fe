@@ -27,14 +27,6 @@ const Friend: React.FC = () => {
     setActiveTab("Leader");
   };
 
-  const [showDialog, setShowDialog] = useState(false);
-
-  const toggleDialog = () => {
-    console.log("bbbbbbb");
-
-    setShowDialog(!showDialog);
-  };
-
   const { fetchFriends } = useFetchFriends();
 
   useEffect(() => {
@@ -60,7 +52,7 @@ const Friend: React.FC = () => {
                 activeTab === "Friend" ? isActive : ""
               }`}
             >
-              Friend zone
+              Friendzone
             </div>
             <div
               onClick={handleLeaderTabClick}
@@ -68,7 +60,7 @@ const Friend: React.FC = () => {
                 activeTab === "Leader" ? isActive : ""
               }`}
             >
-              Top leader
+              Top barista
             </div>
           </div>
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
@@ -99,21 +91,46 @@ const Friend: React.FC = () => {
             </div>
           )}
           {activeTab === "Friend" && (
-            <div
-              className="bg-[#fffeec] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-4 overflow-y-auto mt-8 w-full flex flex-col justify-between"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                {friends.map((friend) => (
-                  <div key={friend.id} className="w-full h-full cursor-pointer">
-                    <CardFriend friend={friend} />
+            <>
+              <div
+                className="bg-[#fffeec] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#666666 #ffe",
+                }}
+              >
+                <div className="w-[320px] h-[164px] relative">
+                  <img
+                    className="absolute top-1 right-1 w-8 h-8"
+                    src="/images/btn-invite.png"
+                    alt=""
+                  />
+                  <img
+                    className="w-full h-full rounded-lg"
+                    src="/images/bg-deploy.png"
+                    alt=""
+                  />
+                </div>
+                <div className="text-center mt-6 mb-4 text-xl">Friend list</div>
+                <div className="overflow-y-auto">
+                  <div className="flex flex-col gap-2">
+                    {friends.map((friend) => (
+                      <div
+                        key={friend.id}
+                        className="w-full h-full cursor-pointer"
+                      >
+                        <CardFriend friend={friend} />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+                <div className="mt-3 justify-center flex">
+                  <div className="w-[172px] h-[39px]">
+                    <Button>Invite Friend</Button>
+                  </div>
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

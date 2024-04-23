@@ -3,6 +3,7 @@ import Image from "next/image";
 import { get } from "lodash";
 
 type FriendData = {
+  id: string;
   name: string;
   imageUrl: string;
   balance: number;
@@ -14,14 +15,16 @@ type Props = {
 };
 
 const CardFriend = ({ friend }: Props) => {
+  const id = get(friend, "id", "");
   const imageUrl = get(friend, "imageUrl", "");
   const name = get(friend, "name", "");
   const totalFriend = get(friend, "totalFriend", 0);
   const balance = get(friend, "balance", 0);
 
   return (
-    <div className="bg-[#f4f2d6] border-[#e8ddbd] border rounded-lg w-full h-full p-4 flex gap-8 items-center justify-between">
+    <div className="bg-[#f4f2d6] border-[#e8ddbd] border rounded-lg w-full h-full p-2 flex gap-8 items-center justify-between">
       <div className="flex gap-2 items-center text-center">
+        <div>{id}</div>
         <div className="rounded-full w-6 h-6">
           <Image src={imageUrl} alt="cat pic" width={24} height={24} />
         </div>
