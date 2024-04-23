@@ -4,4 +4,18 @@ export const AUDIO_EVENTS = {
     STOP_BGM: "stop-bgm",
     STOP_AMBIENCE: "stop-ambience",
     PLAY_SFX: "play-sfx",
+};
+
+export const EVENT_BUS_TYPES = {
+    SCENE_READY: "current-scene-ready",
+    UI_BUTTON_CLICK: "ui-button-click",
+};
+
+export const UI_BUTTON = {
+    FRIEND: 'friend',
+    GACHA: 'gacha',
+    RANK: 'rank',
+    QUEST: 'quest',
+    GUIDE: 'guide',
 }
+

@@ -2,7 +2,6 @@ import {
     forwardRef,
     useEffect,
     useLayoutEffect,
-    useMemo,
     useRef,
     useState,
 } from "react";
@@ -15,6 +14,8 @@ import Staff from "@/components/panels/staff/UserStaffList";
 import Manage from "@/components/panels/manage/Manage";
 import Shop from "@/components/panels/shop/Shop";
 // import Friend from "@/components/panels/friend/Friend";
+import { EVENT_BUS_TYPES } from "@/constants/events";
+import { useEventBus } from "@/lib/hooks/useEventBus";
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -25,17 +26,18 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     props,
     ref
 ) {
-    const game = useRef<Phaser.Game | null>(null!);
+    const game = useRef<Phaser.Game | null>(null);
 
     const [isGameScene, setIsGameScene] = useState(false);
+    const { registerEventListeners, removeAllEventListeners } = useEventBus();
 
-    const [showFriendPanel, showManagePanel, showStaffPanel, showShopPanel] =
-        useLayoutStore((state) => [
-            state.showFriendPanel,
+    const [showManagePanel, showStaffPanel, showShopPanel] = useLayoutStore(
+        (state) => [
             state.showManagePanel,
             state.showStaffPanel,
             state.showShopPanel,
-        ]);
+        ]
+    );
 
     useLayoutEffect(() => {
         if (game.current === null) {
@@ -47,36 +49,34 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
                 ref.current = { game: game.current, scene: null };
             }
         }
-
-        return () => {
-            if (game.current) {
-                game.current.destroy(true);
-                if (game.current !== null) {
-                    game.current = null;
-                }
-            }
-        };
-    }, [ref]);
+    }, []);
 
     useEffect(() => {
-        EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
-            if (typeof ref === "function") {
-                ref({ game: game.current, scene: scene_instance });
-            } else if (ref) {
-                ref.current = {
-                    game: game.current,
-                    scene: scene_instance,
-                };
-            }
+        EventBus.on(
+            EVENT_BUS_TYPES.SCENE_READY,
+            (scene_instance: Phaser.Scene) => {
+                if (typeof ref === "function") {
+                    ref({ game: game.current, scene: scene_instance });
+                } else if (ref) {
+                    ref.current = {
+                        game: game.current,
+                        scene: scene_instance,
+                    };
+                }
 
-            if (scene_instance.scene.key === "Game") {
-                setIsGameScene(true);
-            } else {
-                setIsGameScene(false);
+                if (scene_instance.scene.key === "Game") {
+                    setIsGameScene(true);
+                } else {
+                    setIsGameScene(false);
+                }
             }
-        });
+        );
+
+        registerEventListeners();
+
         return () => {
             EventBus.removeListener("current-scene-ready");
+            removeAllEventListeners();
         };
     }, [ref]);
 
@@ -84,7 +84,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         <div className="mx-auto">
             <div id="game-container" className="relative">
                 {isGameScene && <InGameUI />}
-                {/* {showFriendPanel && <Friend />} */}
                 {showStaffPanel && <Staff />}
                 {showManagePanel && <Manage />}
                 {showShopPanel && <Shop />}
