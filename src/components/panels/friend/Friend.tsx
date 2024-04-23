@@ -4,6 +4,9 @@ import { useLayoutStore } from "@/stores/layoutStore";
 import { useFriendStore } from "@/stores/friendStore";
 import { useFetchFriends } from "@/lib/hooks/useFriend";
 import CardFriend from "@/components/ui/CardFriend";
+import CardBarista from "@/components/ui/CardBarista";
+import { useBaristaStore } from "@/stores/baristaStore";
+import { useFetchBaristas } from "@/lib/hooks/useBarista";
 
 const Friend: React.FC = () => {
   const [setShowFriendPanel] = useLayoutStore((state) => [
@@ -17,6 +20,10 @@ const Friend: React.FC = () => {
     state.friends,
     state.setCurrentFriend,
   ]);
+  const [baristas, setCurrentBarista] = useBaristaStore((state) => [
+    state.baristas,
+    state.setCurrentBarista,
+  ]);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-[#5e5745] !bg-[#fffeec]";
   const handleFriendTabClick = () => {
@@ -26,11 +33,16 @@ const Friend: React.FC = () => {
   const handleLeaderTabClick = () => {
     setActiveTab("Leader");
   };
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+  };
 
+  const { fetchBaristas } = useFetchBaristas();
   const { fetchFriends } = useFetchFriends();
 
   useEffect(() => {
     fetchFriends();
+    fetchBaristas();
   }, []);
 
   return (
@@ -48,7 +60,7 @@ const Friend: React.FC = () => {
           <div className="flex">
             <div
               onClick={handleFriendTabClick}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[140px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-[#5e5745] ${
+              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-[#5e5745] ${
                 activeTab === "Friend" ? isActive : ""
               }`}
             >
@@ -56,7 +68,7 @@ const Friend: React.FC = () => {
             </div>
             <div
               onClick={handleLeaderTabClick}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-[#5e5745] ${
+              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-[#5e5745] ${
                 activeTab === "Leader" ? isActive : ""
               }`}
             >
@@ -69,24 +81,28 @@ const Friend: React.FC = () => {
             <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
           </span>
           {activeTab === "Leader" && (
-            <div className="bg-[#fffeec] rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-[#b5b5b5] w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
-              <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
-                <div className="text-center uppercase">deal of the day</div>
+            <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col items-center justify-center rounded-t border border-[#b5b5b5] w-full overflow-y-auto h-[calc(100%-32px)] p-2 mt-8">
+              <div className="mt-4">
+                <img src="/images/gold.png" alt="" />
               </div>
-              <div className="w-full flex flex-wrap gap-10 justify-center">
-                {friends.map((friend) => (
+              <div className="text-xl mt-2">TOP BARISTA</div>
+              <div className="text-sm mb-6">
+                Invite more friend to get to the top
+              </div>
+              <div className="w-full flex flex-wrap gap-1 justify-center overflow-y-auto">
+                {baristas.map((barista) => (
                   <div
-                    key={friend.id}
-                    className="flex flex-col items-center gap-4"
+                    key={barista.id}
+                    className="w-full flex flex-col items-center"
                   >
-                    <div className="w-[100px] h-[130px]">
-                      {/* <CatCard cat={friend} /> */}
-                    </div>
-                    <div className="w-[88px] h-[30px]">
-                      {/* <Button>{friend.price} $</Button> */}
-                    </div>
+                    <CardBarista barista={barista} />
                   </div>
                 ))}
+              </div>
+              <div className="mt-3 justify-center flex">
+                <div className="w-[172px] h-[39px]">
+                  <Button>Invite Friend</Button>
+                </div>
               </div>
             </div>
           )}
@@ -104,6 +120,7 @@ const Friend: React.FC = () => {
                     className="absolute top-1 right-1 w-8 h-8"
                     src="/images/btn-invite.png"
                     alt=""
+                    onClick={handleClick}
                   />
                   <img
                     className="w-full h-full rounded-lg"

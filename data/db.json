@@ -212,36 +212,31 @@
       "id": "1",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "2",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "3",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "4",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "5",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     }
   ],
   "invites": [
@@ -254,6 +249,43 @@
       "id": "2",
       "title": "Invite Premium Telegram user",
       "bonus": "43"
+    }
+  ],
+  "baristas": [
+    {
+      "id": "1",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "2",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "3",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "4",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "5",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
     }
   ]
 }
