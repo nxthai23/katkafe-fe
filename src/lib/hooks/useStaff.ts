@@ -1,23 +1,20 @@
 "use client";
-import { getStaff } from "@/requests/staff";
-import { Staff } from "@/types/common-types";
-import { useEffect, useState } from "react";
+import { getStaffs } from "@/requests/staff";
+import { useStaffStore } from "@/stores/staffStore";
 
-export const useStaffs = () => {
-    const [staffs, setStaffs] = useState<Staff[]>([]);
+export const useFetchStaffs = () => {
+    const [setStaffs] = useStaffStore((state) => [state.setStaffs]);
 
-    useEffect(() => {
-        const fetchStaffs = async () => {
-            try {
-                const response = await getStaff();
-                setStaffs(response);
-            } catch (error) {
-                console.error("Error fetching", error);
-            }
-        };
+    const fetchStaffs = async () => {
+        try {
+            const response = await getStaffs();
+            setStaffs(response);
+        } catch (error) {
+            console.error("Error fetching", error);
+        }
+    };
 
-        fetchStaffs();
-    }, []);
-
-    return staffs;
+    return {
+        fetchStaffs,
+    };
 };

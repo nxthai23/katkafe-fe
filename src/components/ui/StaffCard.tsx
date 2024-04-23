@@ -17,9 +17,10 @@ type Props = {
     cat: CatData;
     active?: boolean;
     onViewClick: (id: number) => void;
+    onRemoveClick: (id: number) => void;
 };
 
-const StaffCard = ({ cat, active, onViewClick }: Props) => {
+const StaffCard = ({ cat, active, onViewClick, onRemoveClick }: Props) => {
     const [isActive, setIsActive] = useState(false);
     const handleCardClick = () => {
         if (isActive) {
@@ -32,6 +33,12 @@ const StaffCard = ({ cat, active, onViewClick }: Props) => {
     ) => {
         e.stopPropagation();
         onViewClick(cat.id);
+    };
+    const handleRemoveClick = (
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        e.stopPropagation();
+        onRemoveClick(cat.id);
     };
     const customClass = "w-4 h-4";
 
@@ -52,7 +59,7 @@ const StaffCard = ({ cat, active, onViewClick }: Props) => {
                     !active ? "hidden" : ""
                 }`}
             >
-                <div className="w-6 h-6">
+                <div onClick={handleRemoveClick} className="w-6 h-6">
                     <img src="/images/btn-close.png" alt="" />
                 </div>
                 <div onClick={handleViewClick} className="w-6 h-6">
