@@ -6,6 +6,8 @@ import {
     drawSpriteButton,
 } from "../utils/ui/sprite";
 import { LAYERS } from "@/constants/layers";
+import { EventBus } from "../EventBus";
+import { EVENT_BUS_TYPES, UI_BUTTON } from "@/constants/events";
 
 export class GameUI {
     //Texts
@@ -58,7 +60,9 @@ export class GameUI {
             {
                 title: "Quest",
                 offset: 36,
-            }
+            },
+            () =>
+                EventBus.emit(EVENT_BUS_TYPES.UI_BUTTON_CLICK, UI_BUTTON.QUEST)
         );
         this.btnQuest = renderedBtnQuest.sprite;
         this.txtQuest = renderedBtnQuest.text;
@@ -73,7 +77,9 @@ export class GameUI {
             {
                 title: "Gacha",
                 offset: 64,
-            }
+            },
+            () =>
+                EventBus.emit(EVENT_BUS_TYPES.UI_BUTTON_CLICK, UI_BUTTON.GACHA)
         );
         this.btnGacha = renderedBtnGacha.sprite;
         this.txtGacha = renderedBtnGacha.text;
@@ -88,7 +94,9 @@ export class GameUI {
             {
                 title: "Party",
                 offset: 64,
-            }
+            },
+            () =>
+                EventBus.emit(EVENT_BUS_TYPES.UI_BUTTON_CLICK, UI_BUTTON.GUIDE)
         );
         this.btnParty = renderedBtnParty.sprite;
         this.txtParty = renderedBtnParty.text;
@@ -103,7 +111,8 @@ export class GameUI {
             {
                 title: "Rank",
                 offset: 24,
-            }
+            },
+            () => EventBus.emit(EVENT_BUS_TYPES.UI_BUTTON_CLICK, UI_BUTTON.RANK)
         );
         this.btnRank = renderedBtnRank.sprite;
         this.txtRank = renderedBtnRank.text;
@@ -118,7 +127,9 @@ export class GameUI {
             {
                 title: "Friend",
                 offset: 24,
-            }
+            },
+            () =>
+                EventBus.emit(EVENT_BUS_TYPES.UI_BUTTON_CLICK, UI_BUTTON.FRIEND)
         );
         this.btnRank = renderedBtnFriend.sprite;
         this.txtRank = renderedBtnFriend.text;

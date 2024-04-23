@@ -21,11 +21,13 @@ export const drawSprite = (
     posX: number = 0,
     posY: number = 0,
     scale: number = 1,
-    layer: number = LAYERS.UI
+    layer: number = LAYERS.UI,
+    onClick?: Function
 ) => {
     const sprite = scene.add.image(posX, posY, name);
     sprite.setScale(scale);
     sprite.setDepth(layer);
+    onClick && sprite.setInteractive().on("pointerdown", onClick);
     return sprite;
 };
 
@@ -39,9 +41,10 @@ export const drawSpriteButton = (
     text: {
         title: string;
         offset: number;
-    }
+    },
+    onClick?: Function
 ) => {
-    const sprite = drawSprite(scene, name, posX, posY, scale, layer);
+    const sprite = drawSprite(scene, name, posX, posY, scale, layer, onClick);
     const txt = scene.add.text(posX, posY + text.offset, text.title, {
         fontFamily: "Pixelify Sans",
         fontSize: 14,
@@ -58,6 +61,7 @@ export const drawSpriteButton = (
     });
     txt.setOrigin(0.5);
     txt.setDepth(layer + 1);
+
     return {
         sprite,
         text: txt,
