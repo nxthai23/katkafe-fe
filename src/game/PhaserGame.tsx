@@ -15,6 +15,7 @@ import Manage from "@/components/panels/manage/Manage";
 import Friend from "@/components/panels/friend/Friend";
 import { EVENT_BUS_TYPES } from "@/constants/events";
 import { useEventBus } from "@/lib/hooks/useEventBus";
+import InviteInfo from "@/components/panels/invite/InviteInfo";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -30,13 +31,19 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
   const [isGameScene, setIsGameScene] = useState(false);
   const { registerEventListeners, removeAllEventListeners } = useEventBus();
 
-  const [showFriendPanel, showManagePanel, showStaffPanel, showShopPanel] =
-    useLayoutStore((state) => [
-      state.showFriendPanel,
-      state.showManagePanel,
-      state.showStaffPanel,
-      state.showShopPanel,
-    ]);
+  const [
+    showFriendPanel,
+    showManagePanel,
+    showStaffPanel,
+    showShopPanel,
+    showInviteInfoPanel,
+  ] = useLayoutStore((state) => [
+    state.showFriendPanel,
+    state.showManagePanel,
+    state.showStaffPanel,
+    state.showShopPanel,
+    state.showInviteInfoPanel,
+  ]);
 
   useLayoutEffect(() => {
     if (game.current === null) {
@@ -92,6 +99,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showFriendPanel && <Friend />}
         {showStaffPanel && <Staff />}
         {showManagePanel && <Manage />}
+        {showInviteInfoPanel && <InviteInfo />}
         {/* {showShopPanel && <Shop />} */}
       </div>
     </div>

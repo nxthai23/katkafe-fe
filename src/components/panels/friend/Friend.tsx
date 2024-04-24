@@ -7,6 +7,7 @@ import CardFriend from "@/components/ui/CardFriend";
 import CardBarista from "@/components/ui/CardBarista";
 import { useBaristaStore } from "@/stores/baristaStore";
 import { useFetchBaristas } from "@/lib/hooks/useBarista";
+import InviteInfo from "../invite/InviteInfo";
 
 const Friend: React.FC = () => {
   const [setShowFriendPanel] = useLayoutStore((state) => [
@@ -24,6 +25,10 @@ const Friend: React.FC = () => {
     state.baristas,
     state.setCurrentBarista,
   ]);
+  const [setShowInviteInfoPanel] = useLayoutStore((state) => [
+    state.setShowInviteInfoPanel,
+  ]);
+  // const [showInviteInfoPanel, setShowInviteInfoPanel] = useState(false);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-[#5e5745] !bg-[#fffeec]";
   const handleFriendTabClick = () => {
@@ -35,6 +40,8 @@ const Friend: React.FC = () => {
   };
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
+    setShowInviteInfoPanel(true);
+    console.log("llllllll");
   };
 
   const { fetchBaristas } = useFetchBaristas();
@@ -117,7 +124,7 @@ const Friend: React.FC = () => {
               >
                 <div className="w-[320px] h-[164px] relative">
                   <img
-                    className="absolute top-1 right-1 w-8 h-8"
+                    className="absolute top-1 right-1 w-8 h-8 z-50 pointer-events-auto cursor-pointer"
                     src="/images/btn-invite.png"
                     alt=""
                     onClick={handleClick}
@@ -151,6 +158,7 @@ const Friend: React.FC = () => {
           )}
         </div>
       </div>
+      {/* {showInviteInfoPanel && <InviteInfo />} */}
     </div>
   );
 };
