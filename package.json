@@ -29,6 +29,7 @@
         "@designbycode/tailwindcss-text-stroke": "^1.2.1",
         "@radix-ui/react-dialog": "^1.0.5",
         "axios": "^1.6.8",
+        "classnames": "^2.5.1",
         "clsx": "^2.1.0",
         "json-server": "^1.0.0-alpha.23",
         "lodash": "^4.17.21",
