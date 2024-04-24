@@ -4,7 +4,6 @@ import { useBonusStore } from "@/stores/bonusStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import CardBonus from "@/components/ui/CardBonus";
 import Button from "@/components/ui/Button";
-import { BONUS_HEADERS } from "@/constants/bonus";
 
 const InviteInfo: React.FC = () => {
   const { fetchBonuss } = useFetchBonuss();
