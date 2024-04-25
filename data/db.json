@@ -1,247 +1,327 @@
 {
-  "restaurants": [
-    {
-      "id": "1",
-      "name": "Cafe's staff",
-      "level": 1,
-      "imageUrl": "/images/bg-deploy.png",
-      "numberStaff": "9",
-      "totalSPB": "10933",
-      "staffSlot": "4",
-      "balance": "12",
-      "staff": [
+    "restaurants": [
         {
-          "id": "1",
-          "name": "Cat 1",
-          "level": 2,
-          "avatar": "/images/Cat.png",
-          "numberStar": 1,
-          "backgroundUrl": "/images/background-cat.png"
-        },
-        {
-          "id": "2",
-          "name": "Cat 2",
-          "level": 2,
-          "avatar": "/images/Cat.png",
-          "numberStar": 2,
-          "backgroundUrl": "/images/background-cat.png"
-        },
-        {
-          "id": "3",
-          "name": "Cat 3",
-          "level": 2,
-          "avatar": "/images/Cat.png",
-          "numberStar": 3,
-          "backgroundUrl": "/images/background-cat.png"
+            "id": "1",
+            "name": "Cafe's staff",
+            "level": 1,
+            "imageUrl": "/images/bg-deploy.png",
+            "numberStaff": "9",
+            "totalSPB": "10933",
+            "staffSlot": "4",
+            "balance": "12",
+            "staff": [
+                {
+                    "id": "1",
+                    "name": "Cat 1",
+                    "level": 2,
+                    "avatar": "/images/Cat.png",
+                    "numberStar": 1,
+                    "backgroundUrl": "/images/background-cat.png"
+                },
+                {
+                    "id": "2",
+                    "name": "Cat 2",
+                    "level": 2,
+                    "avatar": "/images/Cat.png",
+                    "numberStar": 2,
+                    "backgroundUrl": "/images/background-cat.png"
+                },
+                {
+                    "id": "3",
+                    "name": "Cat 3",
+                    "level": 2,
+                    "avatar": "/images/Cat.png",
+                    "numberStar": 3,
+                    "backgroundUrl": "/images/background-cat.png"
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "staffs": [
-    {
-      "id": "1",
-      "name": "Cat 1",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "2",
-      "name": "Cat 2",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "3",
-      "name": "Cat 3",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "4",
-      "name": "Cat 4",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "5",
-      "name": "Cat 5",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "6",
-      "name": "Cat 6",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "7",
-      "name": "Cat 7",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "8",
-      "name": "Cat 8",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "9",
-      "name": "Cat 9",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png"
-    },
-    {
-      "id": "10",
-      "name": "Cat 10",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
-    }
-  ],
-  "bundles": [
-    {
-      "id": "1",
-      "name": "Tiny Bundle 100",
-      "imageUrl": "/images/bg-deploy.png",
-      "price": "12"
-    },
-    {
-      "id": "2",
-      "name": "Tiny Bundle 200",
-      "imageUrl": "/images/bg-deploy.png",
-      "price": "12"
-    },
-    {
-      "id": "3",
-      "name": "Tiny Bundle 300",
-      "imageUrl": "/images/bg-deploy.png",
-      "price": "12"
-    },
-    {
-      "id": "4",
-      "name": "Tiny Bundle 300",
-      "imageUrl": "/images/bg-deploy.png",
-      "price": "12"
-    },
-    {
-      "id": "5",
-      "name": "Tiny Bundle 300",
-      "imageUrl": "/images/bg-deploy.png",
-      "price": "12"
-    }
-  ],
-  "catDeals": [
-    {
-      "id": "1",
-      "name": "Cat 1",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png",
-      "price": "12"
-    },
-    {
-      "id": "2",
-      "name": "Cat 2",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png",
-      "price": "12"
-    },
-    {
-      "id": "3",
-      "name": "Cat 3",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png",
-      "price": "12"
-    },
-    {
-      "id": "4",
-      "name": "Cat 4",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png",
-      "price": "12"
-    },
-    {
-      "id": "5",
-      "name": "Cat 5",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png",
-      "price": "12"
-    },
-    {
-      "id": "6",
-      "name": "Cat 6",
-      "level": 2,
-      "avatar": "/images/Cat.png",
-      "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png",
-      "price": "12"
-    }
-  ],
-  "friends": [
-    {
-      "id": "1",
-      "name": "Mizu Waha",
-      "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
-    },
-    {
-      "id": "2",
-      "name": "Mizu Waha",
-      "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
-    },
-    {
-      "id": "3",
-      "name": "Mizu Waha",
-      "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
-    },
-    {
-      "id": "4",
-      "name": "Mizu Waha",
-      "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
-    },
-    {
-      "id": "5",
-      "name": "Mizu Waha",
-      "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
-    }
-  ]
+    ],
+    "staffs": [
+        {
+            "id": "1",
+            "name": "Cat 1",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 1,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "2",
+            "name": "Cat 2",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 2,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "3",
+            "name": "Cat 3",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 3,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "4",
+            "name": "Cat 4",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 1,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "5",
+            "name": "Cat 5",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 2,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "6",
+            "name": "Cat 6",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 3,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "7",
+            "name": "Cat 7",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 2,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "8",
+            "name": "Cat 8",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 3,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "9",
+            "name": "Cat 9",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 1,
+            "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+            "id": "10",
+            "name": "Cat 10",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 3,
+            "backgroundUrl": "/images/background-cat.png"
+        }
+    ],
+    "bundles": [
+        {
+            "id": "1",
+            "name": "Tiny Bundle 100",
+            "imageUrl": "/images/bg-deploy.png",
+            "price": "12"
+        },
+        {
+            "id": "2",
+            "name": "Tiny Bundle 200",
+            "imageUrl": "/images/bg-deploy.png",
+            "price": "12"
+        },
+        {
+            "id": "3",
+            "name": "Tiny Bundle 300",
+            "imageUrl": "/images/bg-deploy.png",
+            "price": "12"
+        },
+        {
+            "id": "4",
+            "name": "Tiny Bundle 300",
+            "imageUrl": "/images/bg-deploy.png",
+            "price": "12"
+        },
+        {
+            "id": "5",
+            "name": "Tiny Bundle 300",
+            "imageUrl": "/images/bg-deploy.png",
+            "price": "12"
+        }
+    ],
+    "catDeals": [
+        {
+            "id": "1",
+            "name": "Cat 1",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 1,
+            "backgroundUrl": "/images/background-cat.png",
+            "price": "12"
+        },
+        {
+            "id": "2",
+            "name": "Cat 2",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 2,
+            "backgroundUrl": "/images/background-cat.png",
+            "price": "12"
+        },
+        {
+            "id": "3",
+            "name": "Cat 3",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 3,
+            "backgroundUrl": "/images/background-cat.png",
+            "price": "12"
+        },
+        {
+            "id": "4",
+            "name": "Cat 4",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 1,
+            "backgroundUrl": "/images/background-cat.png",
+            "price": "12"
+        },
+        {
+            "id": "5",
+            "name": "Cat 5",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 2,
+            "backgroundUrl": "/images/background-cat.png",
+            "price": "12"
+        },
+        {
+            "id": "6",
+            "name": "Cat 6",
+            "level": 2,
+            "avatar": "/images/Cat.png",
+            "numberStar": 3,
+            "backgroundUrl": "/images/background-cat.png",
+            "price": "12"
+        }
+    ],
+    "friends": [
+        {
+            "id": "1",
+            "name": "Mizu Waha",
+            "imageUrl": "/images/cat.png",
+            "balance": "12",
+            "totalFriend": "12"
+        },
+        {
+            "id": "2",
+            "name": "Mizu Waha",
+            "imageUrl": "/images/cat.png",
+            "balance": "12",
+            "totalFriend": "12"
+        },
+        {
+            "id": "3",
+            "name": "Mizu Waha",
+            "imageUrl": "/images/cat.png",
+            "balance": "12",
+            "totalFriend": "12"
+        },
+        {
+            "id": "4",
+            "name": "Mizu Waha",
+            "imageUrl": "/images/cat.png",
+            "balance": "12",
+            "totalFriend": "12"
+        },
+        {
+            "id": "5",
+            "name": "Mizu Waha",
+            "imageUrl": "/images/cat.png",
+            "balance": "12",
+            "totalFriend": "12"
+        }
+    ],
+    "bronzeRanks": [
+        {
+            "id": "1",
+            "title": "bronze",
+            "imageUrl": "/images/bronze.png",
+            "balance": "60000",
+            "totalPeople": "6",
+            "people": [
+                {
+                    "id": "1",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "2",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "3",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "4",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "5",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "title": "bronze",
+            "imageUrl": "/images/bronze.png",
+            "balance": "60000",
+            "totalPeople": "6",
+            "people": [
+                {
+                    "id": "1",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "2",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "3",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "4",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                },
+                {
+                    "id": "5",
+                    "name": "Mizu Waha",
+                    "imageUrl": "/images/cat.png",
+                    "balance": "488888"
+                }
+            ]
+        }
+    ]
 }
