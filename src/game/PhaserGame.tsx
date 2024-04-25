@@ -38,6 +38,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     showStaffPanel,
     showShopPanel,
     showInviteInfoPanel,
+    showRankPanel,
   ] = useLayoutStore((state) => [
     state.showFriendPanel,
     state.showManagePanel,
@@ -101,7 +102,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showFriendPanel && <Friend />}
         {showStaffPanel && <Staff />}
         {showManagePanel && <Manage />}
-        {/* {showRankPanel && <Rank />} */}
+        {showRankPanel && <Rank />}
         {showInviteInfoPanel && <InviteInfo />}
         {/* {showShopPanel && <Shop />} */}
       </div>
