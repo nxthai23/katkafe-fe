@@ -199,6 +199,12 @@
           "name": "Mizu Waha",
           "imageUrl": "/images/cat.png",
           "balance": "488888"
+        },
+        {
+          "id": "5",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
         }
       ]
     },
@@ -402,5 +408,12 @@
       "regular": "44",
       "premium": "868"
     }
-  ]
+  ],
+  "user": {
+    "id": "1",
+    "name": "Kei BAKATATO",
+    "rank": "13333",
+    "imageUrl": "/images/Cat.png",
+    "balance": "745"
+  }
 }
