@@ -212,36 +212,110 @@
       "id": "1",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "2",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "3",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "4",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
     },
     {
       "id": "5",
       "name": "Mizu Waha",
       "imageUrl": "/images/cat.png",
-      "balance": "12",
-      "totalFriend": "12"
+      "balance": "122332"
+    }
+  ],
+  "invites": [
+    {
+      "id": "1",
+      "title": "Invite Regular user",
+      "bonus": "3"
+    },
+    {
+      "id": "2",
+      "title": "Invite Premium Telegram user",
+      "bonus": "43"
+    }
+  ],
+  "baristas": [
+    {
+      "id": "1",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "2",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "3",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "4",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    },
+    {
+      "id": "5",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": "12323",
+      "totalFriend": "1224"
+    }
+  ],
+  "bonuss": [
+    {
+      "id": "1",
+      "title": "Bronze",
+      "imageUrl": "/images/bronze.png",
+      "regular": "6",
+      "premium": "108"
+    },
+    {
+      "id": "2",
+      "title": "Sliver",
+      "imageUrl": "/images/sliver.png",
+      "regular": "12",
+      "premium": "216"
+    },
+    {
+      "id": "3",
+      "title": "Gold",
+      "imageUrl": "/images/gold.png",
+      "regular": "22",
+      "premium": "434"
+    },
+    {
+      "id": "4",
+      "title": "Platinum",
+      "imageUrl": "/images/platinum.png",
+      "regular": "44",
+      "premium": "868"
     }
   ]
 }
