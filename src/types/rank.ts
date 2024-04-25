@@ -1,4 +1,4 @@
-export type BronzeRank = {
+export type Rank = {
   id: number;
   title: string;
   imageUrl: string;

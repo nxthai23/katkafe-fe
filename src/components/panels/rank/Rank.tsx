@@ -2,8 +2,8 @@ import Slider from "@/components/ui/Slider";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
-import { useFetchBronzeRanks } from "@/lib/hooks/useBronzeRank";
-import { useBronzeRankStore } from "@/stores/rankBronzeStore";
+import { useFetchRanks } from "@/lib/hooks/useRank";
+import { useRankStore } from "@/stores/rankStore";
 
 type Props = {};
 
@@ -11,15 +11,15 @@ function Rank({}: Props) {
   const [setShowRankPanel] = useLayoutStore((state) => [
     state.setShowRankPanel,
   ]);
-  const [bronzeRanks] = useBronzeRankStore((state) => [state.bronzeRanks]);
-  const { fetchBronzeRanks } = useFetchBronzeRanks();
+  const [ranks] = useRankStore((state) => [state.ranks]);
+  const { fetchRanks } = useFetchRanks();
 
   const handleClose = () => {
     setShowRankPanel(false);
   };
 
   useEffect(() => {
-    fetchBronzeRanks();
+    fetchRanks();
   }, []);
 
   return (
@@ -45,7 +45,7 @@ function Rank({}: Props) {
             <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
           </span>
           <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">
-            <Slider bronzeRanks={bronzeRanks} />
+            <Slider ranks={ranks} />
           </div>
         </div>
       </div>

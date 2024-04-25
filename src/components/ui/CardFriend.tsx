@@ -24,10 +24,10 @@ const CardFriend = ({ friend }: Props) => {
         <div>{name}</div>
       </div>
       <div className="flex items-center gap-1">
+        <div>{balance}M</div>
         <div>
           <img src="/images/coin.png" alt="" />
         </div>
-        <div>{balance}M</div>
       </div>
     </div>
   );

@@ -162,7 +162,7 @@
       "totalFriend": "12"
     }
   ],
-  "bronzeRanks": [
+  "ranks": [
     {
       "id": "1",
       "title": "bronze",
@@ -201,7 +201,7 @@
           "balance": "488888"
         },
         {
-          "id": "5",
+          "id": "6",
           "name": "Mizu Waha",
           "imageUrl": "/images/cat.png",
           "balance": "488888"
@@ -210,8 +210,125 @@
     },
     {
       "id": "2",
-      "title": "bronze",
-      "imageUrl": "/images/bronze.png",
+      "title": "Sliver",
+      "imageUrl": "/images/sliver.png",
+      "balance": "60000",
+      "totalPeople": "6",
+      "people": [
+        {
+          "id": "1",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "2",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "3",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "4",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "5",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Gold",
+      "imageUrl": "/images/gold.png",
+      "balance": "60000",
+      "totalPeople": "6",
+      "people": [
+        {
+          "id": "1",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "2",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "3",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "4",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "5",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Platinum",
+      "imageUrl": "/images/platinum.png",
+      "balance": "60000",
+      "totalPeople": "6",
+      "people": [
+        {
+          "id": "1",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "2",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "3",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "4",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        },
+        {
+          "id": "5",
+          "name": "Mizu Waha",
+          "imageUrl": "/images/cat.png",
+          "balance": "488888"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Emerald League",
+      "imageUrl": "/images/emerald-league.png",
       "balance": "60000",
       "totalPeople": "6",
       "people": [
