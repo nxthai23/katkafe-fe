@@ -6,3 +6,4 @@ export const API_FRIEND = "http://localhost:3501/friends";
 export const API_INVITE = "http://localhost:3501/invites";
 export const API_BARISTA = "http://localhost:3501/baristas";
 export const API_BONUS = "http://localhost:3501/bonuss";
+export const API_GUILD = "http://localhost:3501/guilds";
