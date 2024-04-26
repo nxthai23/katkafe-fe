@@ -1,7 +1,11 @@
 import { EVENT_BUS_TYPES, UI_BUTTON } from "@/constants/events";
 import { EventBus } from "@/game/EventBus";
+import { useLayoutStore } from "@/stores/layoutStore";
 
 export const useEventBus = () => {
+    const [setShowRankPanel] = useLayoutStore((state) => [
+        state.setShowRankPanel,
+    ]);
     const registerUIButtonClicked = () => {
         EventBus.on(EVENT_BUS_TYPES.UI_BUTTON_CLICK, (uiButton: string) => {
             switch (uiButton) {
@@ -24,6 +28,7 @@ export const useEventBus = () => {
                 case UI_BUTTON.RANK:
                     console.log("Rank button clicked");
                     //Open Rank UI
+                    setShowRankPanel(true);
                     break;
             }
         });
@@ -47,4 +52,3 @@ export const useEventBus = () => {
         removeEventListener,
     };
 };
-
