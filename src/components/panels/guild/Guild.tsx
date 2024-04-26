@@ -1,10 +1,8 @@
 import Button from "@/components/ui/Button";
 import { useFetchGuilds } from "@/lib/hooks/useGuild";
-import { useGuildStore } from "@/stores/guildStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect } from "react";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
 
 type Props = {};
 
@@ -13,17 +11,13 @@ function Guild({}: Props) {
     state.setShowGuildPanel,
     state.setShowFindGuildPanel,
   ]);
-  const [guilds, setCurrentGuild] = useGuildStore((state) => [
-    state.guilds,
-    state.setCurrentGuild,
-  ]);
   const { fetchGuilds } = useFetchGuilds();
 
   const handleClose = () => {
     setShowGuildPanel(false);
   };
 
-  const handleClick = () => {
+  const handleFindGuildClick = () => {
     setShowFindGuildPanel(true);
   };
 
@@ -69,7 +63,10 @@ function Guild({}: Props) {
               </div>
               <div className="mt-8">
                 <div className="flex gap-2 justify-center">
-                  <div className="w-[156px] h-[39px]" onClick={handleClick}>
+                  <div
+                    className="w-[156px] h-[39px]"
+                    onClick={handleFindGuildClick}
+                  >
                     <Button>Find a Guild</Button>
                   </div>
                   <div className="w-[156px] h-[39px]">

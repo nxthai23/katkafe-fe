@@ -11,6 +11,7 @@ type States = {
   showGuildPanel: boolean;
   showFindGuildPanel: boolean;
   showRankPanel: boolean;
+  showGuildDetailPanel: boolean;
   // showStaffDetailPanel: boolean;
 
   // previousPanel: "staff" | "manage" | "staff-detail" | "Friend" | null;
@@ -27,6 +28,7 @@ type Actions = {
   setShowGuildPanel: (show: boolean) => void;
   setShowFindGuildPanel: (show: boolean) => void;
   setShowRankPanel: (show: boolean) => void;
+  setShowGuildDetailPanel: (show: boolean) => void;
 
   // setStaffDetailPanel: (show: boolean) => void;
 };
@@ -42,6 +44,7 @@ const defaultStates = {
   showGuildPanel: false,
   showFindGuildPanel: false,
   showRankPanel: false,
+  showGuildDetailPanel: false,
 
   // showStaffDetailPanel: false,
 };
@@ -96,6 +99,11 @@ export const useLayoutStore = create<States & Actions>((set) => ({
   setShowRankPanel: (show: boolean) => {
     set({
       showRankPanel: show,
+    });
+  },
+  setShowGuildDetailPanel: (show: boolean) => {
+    set({
+      showGuildDetailPanel: show,
     });
   },
   // setStaffDetailPanel: (show: boolean) => {

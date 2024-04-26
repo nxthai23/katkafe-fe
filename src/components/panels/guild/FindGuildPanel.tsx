@@ -1,10 +1,10 @@
-import Button from "@/components/ui/Button";
 import CardGuild from "@/components/ui/CardGuild";
 import { useFetchGuilds } from "@/lib/hooks/useGuild";
 import { useGuildStore } from "@/stores/guildStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect } from "react";
 import Image from "next/image";
+import { Guild } from "@/types/guild";
 
 type Props = {};
 
@@ -12,6 +12,12 @@ function FindGuild({}: Props) {
   const [setShowFindGuildPanel] = useLayoutStore((state) => [
     state.setShowFindGuildPanel,
   ]);
+  const [showGuildDetailPanel, setShowGuildDetailPanel, setShowGuildPanel] =
+    useLayoutStore((state) => [
+      state.showGuildDetailPanel,
+      state.setShowGuildDetailPanel,
+      state.setShowGuildPanel,
+    ]);
   const [guilds, setCurrentGuild] = useGuildStore((state) => [
     state.guilds,
     state.setCurrentGuild,
@@ -19,6 +25,14 @@ function FindGuild({}: Props) {
   const { fetchGuilds } = useFetchGuilds();
 
   const handleClose = () => {
+    setShowGuildPanel(false);
+    setShowFindGuildPanel(false);
+  };
+  const handleChooseClick = (guild: Guild) => {
+    setCurrentGuild(guild);
+    setShowGuildDetailPanel(!showGuildDetailPanel);
+  };
+  const handleBack = () => {
     setShowFindGuildPanel(false);
   };
 
@@ -30,11 +44,21 @@ function FindGuild({}: Props) {
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
         <div className="rounded-[21px] border-solid border-[#ffedbb] border-4 bg-[#ffedbb] h-full relative">
+          <div className="absolute -top-4 -left-3 bg-[#fffde9] rounded-full border-[#ededed] cursor-pointer">
+            <Image
+              src="/images/back.png"
+              alt="cat pic"
+              width={32}
+              height={32}
+              onClick={handleBack}
+            />
+          </div>
           <div className="absolute -right-[15px] -top-[13px] bg-[#fffde9] rounded-full border-[#ededed] cursor-pointer">
-            <img
-              className="w-6 h-6"
+            <Image
               src="/images/btn-close.png"
-              alt=""
+              alt="cat pic"
+              width={24}
+              height={24}
               onClick={handleClose}
             />
           </div>
@@ -62,7 +86,10 @@ function FindGuild({}: Props) {
             <div className="overflow-y-auto">
               {guilds.map((guild) => (
                 <div key={guild.id}>
-                  <div className="w-full">
+                  <div
+                    className="w-full"
+                    onClick={() => handleChooseClick(guild)}
+                  >
                     <CardGuild guild={guild} />
                   </div>
                 </div>

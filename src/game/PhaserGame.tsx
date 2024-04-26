@@ -19,6 +19,7 @@ import Rank from "@/components/panels/rank/Rank";
 import InviteInfo from "@/components/panels/invite/InviteInfo";
 import Guild from "@/components/panels/guild/Guild";
 import FindGuild from "@/components/panels/guild/FindGuildPanel";
+import GuildDetail from "@/components/panels/guild/GuildDetailPanel";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -43,6 +44,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     showGuildPanel,
     showFindGuildPanel,
     showRankPanel,
+    showGuildDetailPanel,
   ] = useLayoutStore((state) => [
     state.showFriendPanel,
     state.showManagePanel,
@@ -52,6 +54,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     state.showGuildPanel,
     state.showFindGuildPanel,
     state.showRankPanel,
+    state.showGuildDetailPanel,
   ]);
 
   useLayoutEffect(() => {
@@ -112,6 +115,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showInviteInfoPanel && <InviteInfo />}
         {showGuildPanel && <Guild />}
         {showFindGuildPanel && <FindGuild />}
+        {showGuildDetailPanel && <GuildDetail />}
         {/* {showShopPanel && <Shop />} */}
       </div>
     </div>
