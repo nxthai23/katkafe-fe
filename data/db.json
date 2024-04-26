@@ -317,5 +317,74 @@
       "regular": "44",
       "premium": "868"
     }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "2",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "3",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "4",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "5",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "1",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "50"
+    },
+    {
+      "id": "2",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "100"
+    },
+    {
+      "id": "3",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "150"
+    },
+    {
+      "id": "4",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "50"
+    },
+    {
+      "id": "5",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "50"
+    }
   ]
 }

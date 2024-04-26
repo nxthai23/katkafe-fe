@@ -41,7 +41,6 @@ const Friend: React.FC = () => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     setShowInviteInfoPanel(true);
-    console.log("llllllll");
   };
 
   const { fetchBaristas } = useFetchBaristas();
