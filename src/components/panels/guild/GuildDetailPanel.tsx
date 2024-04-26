@@ -23,6 +23,7 @@ function GuildDetail() {
   const handleBack = () => {
     setShowGuildDetailPanel(false);
   };
+  console.log("totalMember", currentGuild?.totalMember);
 
   const handleClick = () => {
     console.log("mmmmmmmm");
@@ -60,11 +61,7 @@ function GuildDetail() {
             <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
             <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
           </span>
-          <div className="bg-[#fff8de] w-full rounded-b-[20px] flex flex-col justify-between rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
-            <div className="flex items-center gap-1 text-[#A61D47]">
-              <LogOut size={18} className="text-[#A61D47]" />
-              <span>Leave Guild</span>
-            </div>
+          <div className="bg-[#fff8de] w-full rounded-b-[20px] flex flex-col justify-between rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-4 overflow-hidden mt-8">
             <div className="flex justify-center">
               <Image
                 src={currentGuild?.backgroundUrl || "/images/bg-deploy.png"}

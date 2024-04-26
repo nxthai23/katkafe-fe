@@ -1,5 +1,4 @@
-"use client";
-import { getGuilds } from "@/requests/guild";
+import { getGuilds, getOneGuild } from "@/requests/guild";
 import { useGuildStore } from "@/stores/guildStore";
 
 export const useFetchGuilds = () => {
@@ -16,5 +15,22 @@ export const useFetchGuilds = () => {
 
   return {
     fetchGuilds,
+  };
+};
+
+export const useFetchOneGuild = () => {
+  const setGuild = useGuildStore((state) => state.setGuild);
+
+  const fetchOneGuild = async (guildId: string) => {
+    try {
+      const response = await getOneGuild(guildId);
+      setGuild(response);
+    } catch (error) {
+      console.error("Error fetching", error);
+    }
+  };
+
+  return {
+    fetchOneGuild,
   };
 };

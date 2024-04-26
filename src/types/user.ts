@@ -4,4 +4,5 @@ export type UserType = {
   imageUrl: string;
   balance: string;
   rank: string;
+  guildId: string;
 };
