@@ -16,6 +16,7 @@ const defaultUser = {
     imageUrl: "",
     balance: "",
     rank: "",
+    guildId: "",
   },
 };
 
