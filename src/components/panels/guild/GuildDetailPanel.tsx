@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useGuildStore } from "@/stores/guildStore";
 import CardFriend from "@/components/ui/CardFriend";
-import { LogOut } from "lucide-react";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 function GuildDetail() {
   const [setShowGuildDetailPanel, setShowGuildPanel, setShowFindGuildPanel] =
@@ -70,16 +70,19 @@ function GuildDetail() {
                 height={200}
               />
             </div>
-            <div className="flex gap1 items-center justify-center mb-2">
-              <div>
-                <Image
-                  src={currentGuild?.imageUrl || "/images/bg-deploy.png"}
-                  alt="cat pic"
-                  width={28}
-                  height={28}
-                />
+            <div className="flex justify-center">
+              <div className="flex gap-1 items-center justify-center mb-2 bg-[#EEEDD8] rounded-lg w-fit pr-2">
+                <div>
+                  <Image
+                    src={currentGuild?.imageUrl || "/images/bg-deploy.png"}
+                    alt="cat pic"
+                    width={28}
+                    height={28}
+                  />
+                </div>
+                <div className="text-xl">{currentGuild?.title}</div>
+                <SquareArrowOutUpRight size={16} />
               </div>
-              <div className="text-xl">{currentGuild?.title}</div>
             </div>
             <div className="flex items-center gap-8 mb-4">
               <div>
