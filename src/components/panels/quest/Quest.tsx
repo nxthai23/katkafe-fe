@@ -75,7 +75,7 @@ function Task({}: Props) {
           </span>
           <div className="bg-[#fff8de] w-full rounded-b-[20px] flex flex-col justify-between rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
             {activeTab === "Task" && (
-              <div className="w-full flex flex-wrap gap-1 justify-center overflow-y-auto">
+              <div className="w-full flex flex-wrap gap-1 justify-start overflow-y-auto">
                 <div>Telegram task</div>
                 {tasks.map((task) => (
                   <div
@@ -88,7 +88,7 @@ function Task({}: Props) {
               </div>
             )}
             {activeTab === "Achievement" && (
-              <div className="w-full flex flex-wrap gap-1 justify-center overflow-y-auto">
+              <div className="w-full flex flex-wrap gap-1 justify-start overflow-y-auto">
                 <div>Cumulative Invitations</div>
                 {achievements.map((achievement) => (
                   <div
