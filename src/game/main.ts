@@ -13,52 +13,51 @@ export const GAME_SCENES = [Boot, Preloader, MainMenu, MainGame, GameOver];
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
-    type: AUTO,
+  type: AUTO,
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
+  parent: "game-container",
+  scene: GAME_SCENES,
+  scale: {
+    mode: Phaser.Scale.NONE,
+    parent: "game-container",
     width: GAME_WIDTH,
     height: GAME_HEIGHT,
-    parent: "game-container",
-    scene: GAME_SCENES,
-    scale: {
-        mode: Phaser.Scale.NONE,
-        parent: "game-container",
-        width: GAME_WIDTH,
-        height: GAME_HEIGHT,
+  },
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 0, x: 0 },
+      // debug: true,
+      // debugShowBody: true,
+      // debugShowStaticBody: true,
     },
-    physics: {
-        default: "arcade",
-        arcade: {
-            gravity: { y: 0, x: 0 },
-            // debug: true,
-            // debugShowBody: true,
-            // debugShowStaticBody: true,
-        },
-    },
+  },
 };
 
 const StartGame = (parent: string) => {
-    try {
-        // (window as any).Telegram.WebApp.expand();
-        //@TODO: load config from server here
-        //const config = await fetchConfig();
+  try {
+    // (window as any).Telegram.WebApp.expand();
+    //@TODO: load config from server here
+    //const config = await fetchConfig();
 
-        //@TODO: load plugins
+    //@TODO: load plugins
 
-        //@TODO: load webfont
-        WebFontLoader.load({
-            google: {
-                families: ["Pixelify Sans"],
-            },
-            active: () => {
-                console.log("Fonts loaded");
-            },
-        });
+    //@TODO: load webfont
+    WebFontLoader.load({
+      google: {
+        families: ["Pixelify Sans"],
+      },
+      active: () => {
+        console.log("Fonts loaded");
+      },
+    });
 
-        return new Game({ ...config, parent });
-    } catch (error) {
-        console.error("Failed to launch the game.", error);
-        return null;
-    }
+    return new Game({ ...config, parent });
+  } catch (error) {
+    console.error("Failed to launch the game.", error);
+    return null;
+  }
 };
 
 export default StartGame;
-

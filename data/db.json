@@ -526,6 +526,38 @@
       "premium": "868"
     }
   ],
+  "rolls": [
+    {
+      "id": "1",
+      "imageUrl": "/images/Brew-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "2",
+      "imageUrl": "/images/Mega-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "3",
+      "imageUrl": "/images/Moon-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "4",
+      "imageUrl": "/images/Regular-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "5",
+      "imageUrl": "/images/Brew-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "6",
+      "imageUrl": "/images/Moon-Pack.png",
+      "price": "100"
+    }
+  ],
   "tasks": [
     {
       "id": "1",
