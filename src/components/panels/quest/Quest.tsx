@@ -1,4 +1,3 @@
-import CardAchievement from "@/components/ui/CardAchievement";
 import CardTask from "@/components/ui/CardTask";
 import { useFetchAchievements } from "@/lib/hooks/quest/useAchievement";
 import { useFetchTasks } from "@/lib/hooks/quest/useTask";
@@ -36,7 +35,7 @@ function Task({}: Props) {
   useEffect(() => {
     fetchTasks();
     fetchAchievements();
-  }, []);
+  }, [fetchAchievements, fetchTasks]);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -82,7 +81,20 @@ function Task({}: Props) {
                     key={task.id}
                     className="w-full flex flex-col items-center"
                   >
-                    <CardTask task={task} />
+                    <CardTask
+                      type="task"
+                      content={task.title}
+                      img={{
+                        url: task.imageUrl,
+                        width: 24,
+                        height: 24,
+                      }}
+                      reward={{
+                        type: "token",
+                        quantity: task.claim,
+                      }}
+                      button={{ text: "Go" }}
+                    />
                   </div>
                 ))}
               </div>
@@ -95,7 +107,24 @@ function Task({}: Props) {
                     key={achievement.id}
                     className="w-full flex flex-col items-center"
                   >
-                    <CardAchievement achievement={achievement} />
+                    <CardTask
+                      type="achievement"
+                      content={achievement.title}
+                      img={{
+                        url: achievement.imageUrl,
+                        width: 24,
+                        height: 24,
+                      }}
+                      reward={{
+                        type: "token",
+                        quantity: achievement.claim,
+                      }}
+                      button={{ text: "Claim" }}
+                      progress={{
+                        current: 5,
+                        total: achievement.totalAchievement,
+                      }}
+                    />
                   </div>
                 ))}
               </div>

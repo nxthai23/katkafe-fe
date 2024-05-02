@@ -3,10 +3,10 @@ import { EventBus } from "@/game/EventBus";
 import { useLayoutStore } from "@/stores/layoutStore";
 
 export const useEventBus = () => {
-  const [setShowQuestPanel] = useLayoutStore((state) => [
+  const [setShowQuestPanel, setShowRankPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
+    state.setShowRankPanel,
   ]);
-
   const registerUIButtonClicked = () => {
     EventBus.on(EVENT_BUS_TYPES.UI_BUTTON_CLICK, (uiButton: string) => {
       switch (uiButton) {
@@ -23,13 +23,14 @@ export const useEventBus = () => {
           //Open Guide UI
           break;
         case UI_BUTTON.QUEST:
-          setShowQuestPanel(true);
           console.log("Quest button clicked");
+          setShowQuestPanel(true);
           //Open Quest UI
           break;
         case UI_BUTTON.RANK:
           console.log("Rank button clicked");
           //Open Rank UI
+          setShowRankPanel(true);
           break;
       }
     });

@@ -3,27 +3,29 @@
 @tailwind utilities;
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #000000;
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
 }
 
 #app {
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .game-ui {
-    width: 384px;
-    height: 608px;
+  width: 384px;
+  height: 608px;
 }
 
 .info-box {
-    width: 112px;
-    height: 48px;
+  width: 112px;
+  height: 48px;
 }
-
+.slick-arrow::before {
+  display: none;
+}

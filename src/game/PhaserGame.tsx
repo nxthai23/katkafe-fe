@@ -12,9 +12,12 @@ import { useLayoutStore } from "@/stores/layoutStore";
 
 import Staff from "@/components/panels/staff/UserStaffList";
 import Manage from "@/components/panels/manage/Manage";
+import Shop from "@/components/panels/shop/Shop";
+// import Friend from "@/components/panels/friend/Friend";
 import Friend from "@/components/panels/friend/Friend";
 import { EVENT_BUS_TYPES } from "@/constants/events";
 import { useEventBus } from "@/lib/hooks/useEventBus";
+import Rank from "@/components/panels/rank/Rank";
 import InviteInfo from "@/components/panels/invite/InviteInfo";
 import Task from "@/components/panels/quest/Quest";
 
@@ -27,7 +30,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
   props,
   ref
 ) {
-  const game = useRef<Phaser.Game | null>(null!);
+  const game = useRef<Phaser.Game | null>(null);
 
   const [isGameScene, setIsGameScene] = useState(false);
   const { registerEventListeners, removeAllEventListeners } = useEventBus();
@@ -39,6 +42,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     showShopPanel,
     showInviteInfoPanel,
     showQuestPanel,
+    showRankPanel,
   ] = useLayoutStore((state) => [
     state.showFriendPanel,
     state.showManagePanel,
@@ -46,6 +50,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     state.showShopPanel,
     state.showInviteInfoPanel,
     state.showQuestPanel,
+    state.showRankPanel,
   ]);
 
   useLayoutEffect(() => {
@@ -58,16 +63,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         ref.current = { game: game.current, scene: null };
       }
     }
-
-    return () => {
-      if (game.current) {
-        game.current.destroy(true);
-        if (game.current !== null) {
-          game.current = null;
-        }
-      }
-    };
-  }, [ref]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     EventBus.on(EVENT_BUS_TYPES.SCENE_READY, (scene_instance: Phaser.Scene) => {
@@ -93,7 +90,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       EventBus.removeListener("current-scene-ready");
       removeAllEventListeners();
     };
-  }, [ref]);
+  }, [ref, registerEventListeners, removeAllEventListeners]);
 
   return (
     <div className="mx-auto">
@@ -102,9 +99,10 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showFriendPanel && <Friend />}
         {showStaffPanel && <Staff />}
         {showManagePanel && <Manage />}
+        {showRankPanel && <Rank />}
         {showInviteInfoPanel && <InviteInfo />}
         {showQuestPanel && <Task />}
-        {/* {showShopPanel && <Shop />} */}
+        {showShopPanel && <Shop />}
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ const Friend: React.FC = () => {
   useEffect(() => {
     fetchFriends();
     fetchBaristas();
-  }, []);
+  }, [fetchBaristas, fetchFriends]);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">

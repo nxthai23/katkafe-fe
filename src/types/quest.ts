@@ -10,5 +10,5 @@ export type Achievement = {
   title: string;
   imageUrl: string;
   claim: string;
-  totalInvitation: string;
+  totalAchievement: string | number;
 };
