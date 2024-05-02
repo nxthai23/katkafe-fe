@@ -3,9 +3,16 @@ import { EventBus } from "@/game/EventBus";
 import { useLayoutStore } from "@/stores/layoutStore";
 
 export const useEventBus = () => {
-  const [setShowGuildPanel, setShowRankPanel] = useLayoutStore((state) => [
-    state.setShowGuildPanel,
+  const [
+    setShowQuestPanel,
+    setShowRankPanel,
+    setShowRollPanel,
+    setShowGuildPanel,
+  ] = useLayoutStore((state) => [
+    state.setShowQuestPanel,
     state.setShowRankPanel,
+    state.setShowRollPanel,
+    state.setShowGuildPanel,
   ]);
   const registerUIButtonClicked = () => {
     EventBus.on(EVENT_BUS_TYPES.UI_BUTTON_CLICK, (uiButton: string) => {
@@ -16,6 +23,7 @@ export const useEventBus = () => {
           break;
         case UI_BUTTON.GACHA:
           console.log("Gacha button clicked");
+          setShowRollPanel(true);
           //Open Gacha UI
           break;
         case UI_BUTTON.GUIDE:
@@ -25,6 +33,7 @@ export const useEventBus = () => {
           break;
         case UI_BUTTON.QUEST:
           console.log("Quest button clicked");
+          setShowQuestPanel(true);
           //Open Quest UI
           break;
         case UI_BUTTON.RANK:

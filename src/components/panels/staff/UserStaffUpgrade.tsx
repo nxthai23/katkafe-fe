@@ -76,7 +76,7 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
   };
   useEffect(() => {
     fetchStaffs();
-  }, []);
+  }, [fetchStaffs]);
 
   return (
     <div className="grade-panel bg-[#2e2e2e] w-full h-full absolute z-50 p-4">

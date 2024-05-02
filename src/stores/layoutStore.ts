@@ -10,6 +10,8 @@ type States = {
   showInviteInfoPanel: boolean;
   showGuildPanel: boolean;
   showFindGuildPanel: boolean;
+  showRollPanel: boolean;
+  showQuestPanel: boolean;
   showRankPanel: boolean;
   showGuildDetailPanel: boolean;
   // showStaffDetailPanel: boolean;
@@ -27,6 +29,8 @@ type Actions = {
   setShowInviteInfoPanel: (show: boolean) => void;
   setShowGuildPanel: (show: boolean) => void;
   setShowFindGuildPanel: (show: boolean) => void;
+  setShowRollPanel: (show: boolean) => void;
+  setShowQuestPanel: (show: boolean) => void;
   setShowRankPanel: (show: boolean) => void;
   setShowGuildDetailPanel: (show: boolean) => void;
 
@@ -43,6 +47,8 @@ const defaultStates = {
   showInviteInfoPanel: false,
   showGuildPanel: false,
   showFindGuildPanel: false,
+  showRollPanel: false,
+  showQuestPanel: false,
   showRankPanel: false,
   showGuildDetailPanel: false,
 
@@ -94,6 +100,16 @@ export const useLayoutStore = create<States & Actions>((set) => ({
   setShowFindGuildPanel: (show: boolean) => {
     set({
       showFindGuildPanel: show,
+    })
+  },
+  setShowRollPanel: (show: boolean) => {
+    set({
+      showRollPanel: show,
+    });
+  },
+  setShowQuestPanel: (show: boolean) => {
+    set({
+      showQuestPanel: show,
     });
   },
   setShowRankPanel: (show: boolean) => {

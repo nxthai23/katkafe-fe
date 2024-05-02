@@ -733,6 +733,107 @@
       ]
     }
   ],
+  "rolls": [
+    {
+      "id": "1",
+      "imageUrl": "/images/Brew-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "2",
+      "imageUrl": "/images/Mega-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "3",
+      "imageUrl": "/images/Moon-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "4",
+      "imageUrl": "/images/Regular-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "5",
+      "imageUrl": "/images/Brew-Pack.png",
+      "price": "100"
+    },
+    {
+      "id": "6",
+      "imageUrl": "/images/Moon-Pack.png",
+      "price": "100"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "2",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "3",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "4",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "5",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "1",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "50"
+    },
+    {
+      "id": "2",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "100"
+    },
+    {
+      "id": "3",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "150"
+    },
+    {
+      "id": "4",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100",
+      "totalAchievement": "50"
+    },
+    {
+      "id": "5",
+      "title": "Total invitations",
+      "imageUrl": "/images/user-task.png",
+      "claim": "150",
+      "totalAchievement": "50"
+    }
+  ],
   "user": {
     "id": "1",
     "name": "Kei BAKATATO",

@@ -9,3 +9,6 @@ export const API_BARISTA = "http://localhost:3501/baristas";
 export const API_BONUS = "http://localhost:3501/bonuss";
 export const API_GUILD = "http://localhost:3501/guilds";
 export const API_USER = "http://localhost:3501/user";
+export const API_ROLL = "http://localhost:3501/rolls";
+export const API_TASK = "http://localhost:3501/tasks";
+export const API_ACHIEVEMENT = "http://localhost:3501/achievements";
