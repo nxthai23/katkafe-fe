@@ -1,9 +1,5 @@
-export type CatDeal = {
-    id: number;
-    name: string;
-    level: number;
-    avatar: string;
-    numberStar: number;
-    backgroundUrl: string;
-    price: number;
+import { Staff } from "./common-types";
+
+export type CatDeal = Staff & {
+  price: number;
 };
