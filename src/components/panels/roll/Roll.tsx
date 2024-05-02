@@ -10,13 +10,12 @@ function Roll() {
     state.setShowRollPanel,
   ]);
   const [rolls] = useRollStore((state) => [state.rolls]);
-  console.log("rolls", rolls);
 
   const { fetchRolls } = useFetchRolls();
 
   useEffect(() => {
     fetchRolls();
-  }, []);
+  }, [fetchRolls]);
 
   const handleClose = () => {
     setShowRollPanel(false);
