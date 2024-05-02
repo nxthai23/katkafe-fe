@@ -38,7 +38,8 @@ function FindGuild({}: Props) {
 
   useEffect(() => {
     fetchGuilds();
-  }, [fetchGuilds]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
