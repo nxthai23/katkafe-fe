@@ -7,6 +7,8 @@ type States = {
   showUpgradePanel: boolean;
   showAssignPanel: boolean;
   showShopPanel: boolean;
+  showInviteInfoPanel: boolean;
+  showRankPanel: boolean;
   // showStaffDetailPanel: boolean;
 
   // previousPanel: "staff" | "manage" | "staff-detail" | "Friend" | null;
@@ -19,6 +21,9 @@ type Actions = {
   setShowUpgradePanel: (show: boolean) => void;
   setShowAssignPanel: (show: boolean) => void;
   setShowShopPanel: (show: boolean) => void;
+  setShowInviteInfoPanel: (show: boolean) => void;
+  setShowRankPanel: (show: boolean) => void;
+
   // setStaffDetailPanel: (show: boolean) => void;
 };
 
@@ -29,6 +34,9 @@ const defaultStates = {
   showUpgradePanel: false,
   showAssignPanel: false,
   showShopPanel: false,
+  showInviteInfoPanel: false,
+  showRankPanel: false,
+
   // showStaffDetailPanel: false,
 };
 
@@ -62,6 +70,16 @@ export const useLayoutStore = create<States & Actions>((set) => ({
   setShowShopPanel: (show: boolean) => {
     set({
       showShopPanel: show,
+    });
+  },
+  setShowInviteInfoPanel: (show: boolean) => {
+    set({
+      showInviteInfoPanel: show,
+    });
+  },
+  setShowRankPanel: (show: boolean) => {
+    set({
+      showRankPanel: show,
     });
   },
   // setStaffDetailPanel: (show: boolean) => {
