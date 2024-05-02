@@ -19,6 +19,9 @@ import { EVENT_BUS_TYPES } from "@/constants/events";
 import { useEventBus } from "@/lib/hooks/useEventBus";
 import Rank from "@/components/panels/rank/Rank";
 import InviteInfo from "@/components/panels/invite/InviteInfo";
+import Guild from "@/components/panels/guild/Guild";
+import FindGuild from "@/components/panels/guild/FindGuildPanel";
+import GuildDetail from "@/components/panels/guild/GuildDetailPanel";
 import Roll from "@/components/panels/roll/Roll";
 import Task from "@/components/panels/quest/Quest";
 
@@ -42,18 +45,24 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     showStaffPanel,
     showShopPanel,
     showInviteInfoPanel,
+    showGuildPanel,
+    showFindGuildPanel,
     showRollPanel,
     showQuestPanel,
     showRankPanel,
+    showGuildDetailPanel,
   ] = useLayoutStore((state) => [
     state.showFriendPanel,
     state.showManagePanel,
     state.showStaffPanel,
     state.showShopPanel,
     state.showInviteInfoPanel,
+    state.showGuildPanel,
+    state.showFindGuildPanel,
     state.showRollPanel,
     state.showQuestPanel,
     state.showRankPanel,
+    state.showGuildDetailPanel,
   ]);
 
   useLayoutEffect(() => {
@@ -107,6 +116,9 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showRollPanel && <Roll />}
         {showQuestPanel && <Task />}
         {showShopPanel && <Shop />}
+        {showGuildPanel && <Guild />}
+        {showFindGuildPanel && <FindGuild />}
+        {showGuildDetailPanel && <GuildDetail />}
       </div>
     </div>
   );

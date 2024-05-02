@@ -38,7 +38,12 @@ const CardFriend = () => {
           <div className="flex items-center gap-1">
             <div>{balance}M</div>
             <div>
-              <img src="/images/coin.png" alt="" />
+              <Image
+                src="/images/coin.png"
+                alt="cat pic"
+                width={16}
+                height={16}
+              />
             </div>
           </div>
         </>
