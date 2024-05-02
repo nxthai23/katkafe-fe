@@ -60,6 +60,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         ref.current = { game: game.current, scene: null };
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -86,7 +87,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       EventBus.removeListener("current-scene-ready");
       removeAllEventListeners();
     };
-  }, [ref]);
+  }, [ref, registerEventListeners, removeAllEventListeners]);
 
   return (
     <div className="mx-auto">
