@@ -7,4 +7,6 @@ export const API_RANK = "http://localhost:3501/ranks";
 export const API_INVITE = "http://localhost:3501/invites";
 export const API_BARISTA = "http://localhost:3501/baristas";
 export const API_BONUS = "http://localhost:3501/bonuss";
+export const API_TASK = "http://localhost:3501/tasks";
+export const API_ACHIEVEMENT = "http://localhost:3501/achievements";
 export const API_USER = "http://localhost:3501/user";

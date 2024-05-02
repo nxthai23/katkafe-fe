@@ -25,7 +25,8 @@
         "dev": "next dev -p 8080",
         "build": "next build",
         "start-server:local": "npx json-server -p 3501 -w data/db.json",
-        "lint:fix": "npx eslint src/** --fix"
+        "lint:fix": "npx eslint src/** --fix",
+        "format": "prettier --write ./src"
     },
     "dependencies": {
         "@designbycode/tailwindcss-text-stroke": "^1.2.1",
