@@ -3,7 +3,6 @@ import Button from "../../ui/Button";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useFriendStore } from "@/stores/friendStore";
 import { useFetchFriends } from "@/lib/hooks/useFriend";
-import CardFriend from "@/components/ui/CardFriend";
 import CardBarista from "@/components/ui/CardBarista";
 import { useBaristaStore } from "@/stores/baristaStore";
 import { useFetchBaristas } from "@/lib/hooks/useBarista";
@@ -92,32 +91,6 @@ const Friend: React.FC = () => {
             <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
             <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
           </span>
-          {activeTab === "Leader" && (
-            <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col items-center justify-center rounded-t border border-[#b5b5b5] w-full overflow-y-auto h-[calc(100%-32px)] p-2 mt-8">
-              <div className="mt-4">
-                <img src="/images/barista.png" alt="" />
-              </div>
-              <div className="text-xl mt-2">TOP BARISTA</div>
-              <div className="text-sm mb-6">
-                Invite more friend to get to the top
-              </div>
-              <div className="w-full flex flex-wrap gap-1 justify-center overflow-y-auto">
-                {baristas.map((barista) => (
-                  <div
-                    key={barista.id}
-                    className="w-full flex flex-col items-center"
-                  >
-                    <CardBarista barista={barista} />
-                  </div>
-                ))}
-              </div>
-              <div className="mt-3 justify-center flex">
-                <div className="w-[172px] h-[39px]">
-                  <Button>Invite Friend</Button>
-                </div>
-              </div>
-            </div>
-          )}
           {activeTab === "Friend" && (
             <>
               <div
@@ -183,7 +156,19 @@ const Friend: React.FC = () => {
                         key={friend.id}
                         className="w-full h-full cursor-pointer bg-[#f7f5dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
                       >
-                        <CardFriend friend={friend} />
+                        <CardBarista
+                          type={"friendzone"}
+                          id={friend.id}
+                          img={{
+                            url: friend.imageUrl,
+                            width: 24,
+                            height: 24,
+                          }}
+                          balance={friend.balance}
+                          name={friend.name}
+                          totalBonus={friend.totalFriend}
+                          totalFriend={friend.totalFriend}
+                        />
                       </div>
                     ))}
                   </div>
@@ -195,6 +180,46 @@ const Friend: React.FC = () => {
                 </div>
               </div>
             </>
+          )}
+          {activeTab === "Leader" && (
+            <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col items-center justify-center rounded-t border border-[#b5b5b5] w-full overflow-y-auto h-[calc(100%-32px)] p-2 mt-8">
+              <div className="mt-4 w-[120px] h-[120px]">
+                <img src="/images/barista.png" alt="" />
+              </div>
+              <div className="text-xl mt-2">TOP BARISTA</div>
+              <div className="text-sm mb-6">
+                Invite more friend to get to the top
+              </div>
+              <div className="overflow-y-auto w-full">
+                <div className="flex flex-col bg-[#fffeec] border-[#e8ddbd] border rounded-lg">
+                  {baristas.map((barista) => (
+                    <div
+                      key={barista.id}
+                      className="w-full h-full cursor-pointer bg-[#f7f5dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
+                    >
+                      <CardBarista
+                        type={"barista"}
+                        id={barista.id}
+                        img={{
+                          url: barista.imageUrl,
+                          width: 24,
+                          height: 24,
+                        }}
+                        balance={0}
+                        name={barista.name}
+                        totalBonus={barista.totalBonus}
+                        totalFriend={barista.totalFriend}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-3 justify-center flex">
+                <div className="w-[172px] h-[39px]">
+                  <Button>Invite Friend</Button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

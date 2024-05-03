@@ -1,20 +1,20 @@
 "use client";
-import { getBonuss } from "@/requests/bonus";
+import { getBonuses } from "@/requests/bonus";
 import { useBonusStore } from "../../stores/bonusStore";
 
-export const useFetchBonuss = () => {
-  const [setBonuss] = useBonusStore((state) => [state.setBonuss]);
+export const useFetchBonuses = () => {
+  const [setBonuses] = useBonusStore((state) => [state.setBonuses]);
 
-  const fetchBonuss = async () => {
+  const fetchBonuses = async () => {
     try {
-      const response = await getBonuss();
-      setBonuss(response);
+      const response = await getBonuses();
+      setBonuses(response);
     } catch (error) {
       console.error("Error fetching", error);
     }
   };
 
   return {
-    fetchBonuss,
+    fetchBonuses,
   };
 };

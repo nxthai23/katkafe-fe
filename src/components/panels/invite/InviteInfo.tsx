@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
-import { useFetchBonuss } from "@/lib/hooks/useBonus";
+import { useFetchBonuses } from "@/lib/hooks/useBonus";
 import { useBonusStore } from "@/stores/bonusStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import CardBonus from "@/components/ui/CardBonus";
 import Button from "@/components/ui/Button";
 
 const InviteInfo: React.FC = () => {
-  const { fetchBonuss } = useFetchBonuss();
-  const [bonuss, setCurrentBonus] = useBonusStore((state) => [
-    state.bonuss,
+  const { fetchBonuses } = useFetchBonuses();
+  const [bonuses, setCurrentBonus] = useBonusStore((state) => [
+    state.bonuses,
     state.setCurrentBonus,
   ]);
   const [setShowInviteInfoPanel] = useLayoutStore((state) => [
@@ -20,8 +20,8 @@ const InviteInfo: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchBonuss();
-  }, [fetchBonuss]);
+    fetchBonuses();
+  }, [fetchBonuses]);
 
   return (
     <div className="invite-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -94,7 +94,7 @@ const InviteInfo: React.FC = () => {
                   <span className="text-center col-span-3">Regular</span>
                   <span className="text-center col-span-3">Premium</span>
                 </div>
-                {bonuss.map((bonus) => (
+                {bonuses.map((bonus) => (
                   <div key={bonus.id} className="w-full h-full cursor-pointer">
                     <CardBonus bonus={bonus} />
                   </div>
