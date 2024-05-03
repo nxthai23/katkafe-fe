@@ -3,7 +3,6 @@ import { useFetchGuilds, useFetchOneGuild } from "@/lib/hooks/useGuild";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect } from "react";
 import Image from "next/image";
-import { useFetchUser } from "@/lib/hooks/useUser";
 import { useUserStore } from "@/stores/userStore";
 import { LogOut } from "lucide-react";
 import { useGuildStore } from "@/stores/guildStore";
@@ -23,7 +22,6 @@ function Guild({}: Props) {
     state.setCurrentGuild,
   ]);
 
-  const { fetchUser } = useFetchUser();
   const { fetchGuilds } = useFetchGuilds();
   const { fetchOneGuild } = useFetchOneGuild();
 
@@ -38,7 +36,6 @@ function Guild({}: Props) {
   const isGuildIdInList = guilds.some((guild) => guild.id === userGuildId);
 
   useEffect(() => {
-    fetchUser();
     fetchGuilds();
     if (userGuildId) {
       fetchOneGuild(userGuildId);

@@ -15,7 +15,7 @@ const CardFriend = () => {
 
   useEffect(() => {
     fetchUser();
-  }, [fetchUser]);
+  }, []);
 
   if (!user) {
     return null;

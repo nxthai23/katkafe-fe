@@ -7,8 +7,8 @@ import { Rank } from "@/types/rank";
 import CardFriend from "./CardFriend";
 import CardUser from "./CardUser";
 import { useUserStore } from "@/stores/userStore";
-import { useFetchUser } from "@/lib/hooks/useUser";
 import { get } from "lodash";
+import { Progress } from "@radix-ui/react-progress";
 
 type Props = {
   ranks: Rank[];
@@ -56,13 +56,7 @@ const PrevArrow = (props: { className: any; style: any; onClick: any }) => {
 
 const ImageSlider = ({ ranks }: Props) => {
   const user = useUserStore((state) => state.user);
-  const { fetchUser } = useFetchUser();
 
-  const balance = get(user, "balance", 0);
-
-  useEffect(() => {
-    fetchUser();
-  });
   const settings = {
     dots: false,
     arrows: true,
@@ -89,6 +83,7 @@ const ImageSlider = ({ ranks }: Props) => {
               <div className="text-center text-sm">
                 {user.balance}M/{rank.balance}M
               </div>
+              <Progress value={33} />
             </div>
           </div>
           <div className="overflow-y-auto h-[204px]">
