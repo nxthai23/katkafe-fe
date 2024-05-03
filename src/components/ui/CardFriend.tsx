@@ -26,7 +26,7 @@ const CardFriend = ({ friend }: Props) => {
       <div className="flex items-center gap-1">
         <div>{balance}M</div>
         <div className="w-4 h-4">
-          <img src="/images/bonus.png" alt="" />
+          <img src="/images/kbuck.png" alt="" />
         </div>
       </div>
     </div>

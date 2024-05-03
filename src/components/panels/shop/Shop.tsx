@@ -3,14 +3,11 @@ import { useBundleStore } from "@/stores/bundleStore";
 import { useCatDealStore } from "@/stores/catDealStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useState } from "react";
-import CardBundle from "@/components/ui/CardBundle";
 import { useFetchBundles } from "@/lib/hooks/useBundle";
 import { useFetchCatDeals } from "@/lib/hooks/useCatDeal";
 import CatCard from "@/components/ui/CatCard";
-// import { Dialog, DialogFooter, DialogTrigger } from "@/components/ui/Dialog";
-import { LogOut, MoreHorizontal } from "lucide-react";
-import { DialogContent } from "@radix-ui/react-dialog";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import BundleCard from "@/components/ui/BundleCard";
 
 const Shop = () => {
   const [setShowShopPanel] = useLayoutStore((state) => [
@@ -140,7 +137,7 @@ const Shop = () => {
               <div className="flex flex-col gap-2">
                 {bundles.map((bundle) => (
                   <div key={bundle.id} className="w-full h-full cursor-pointer">
-                    <CardBundle
+                    <BundleCard
                       bundle={bundle}
                       handleClick={confirmBundleDialog}
                     />

@@ -103,7 +103,7 @@ const Friend: React.FC = () => {
                 <div className="w-[320px] h-[164px] relative">
                   <div className="flex justify-between mb-4 mt-2">
                     <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
-                      <img src="/images/bonus.png" alt="" />
+                      <img src="/images/kbuck.png" alt="" />
                       <div>{user.balance}M</div>
                     </div>
                     <img
