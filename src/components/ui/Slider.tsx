@@ -8,7 +8,8 @@ import CardFriend from "./CardFriend";
 import CardUser from "./CardUser";
 import { useUserStore } from "@/stores/userStore";
 import { get } from "lodash";
-import { Progress } from "@radix-ui/react-progress";
+import ProgressBar from "./ProgressBar";
+// import { Progress } from "@/components/ui/progress";
 
 type Props = {
   ranks: Rank[];
@@ -71,6 +72,8 @@ const ImageSlider = ({ ranks }: Props) => {
       <PrevArrow className="slick-prev" style={{}} onClick={undefined} />
     ),
   };
+  const value = 45;
+  const max = 100;
 
   return (
     <Slider {...settings}>
@@ -83,8 +86,10 @@ const ImageSlider = ({ ranks }: Props) => {
               <div className="text-center text-sm">
                 {user.balance}M/{rank.balance}M
               </div>
-              <Progress value={33} />
             </div>
+          </div>
+          <div className="rounded-[10]">
+            <ProgressBar value={value} max={max} color="#FC9B53" />
           </div>
           <div className="overflow-y-auto h-[204px]">
             <div className="flex flex-col gap-1">

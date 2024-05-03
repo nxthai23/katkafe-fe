@@ -1,15 +1,6 @@
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { get } from "lodash";
 import { DEFAULT_QUEST_ICON } from "@/constants/config";
-
-type BaristaData = {
-  id: string;
-  name: string;
-  imageUrl: string;
-  totalBonus: number;
-  totalFriend: number;
-};
 
 type Props = {
   type: "friendzone" | "barista";
