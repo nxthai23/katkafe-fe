@@ -32,7 +32,7 @@ const CardBarista = ({ barista }: Props) => {
       </div>
       <div>
         <div className="flex items-center gap-1">
-          <div>
+          <div className="w-4 h-4">
             <img src="/images/coin.png" alt="" />
           </div>
           <div>+{totalBonus}</div>

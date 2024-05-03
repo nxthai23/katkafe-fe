@@ -8,6 +8,8 @@ import CardBarista from "@/components/ui/CardBarista";
 import { useBaristaStore } from "@/stores/baristaStore";
 import { useFetchBaristas } from "@/lib/hooks/useBarista";
 import InviteInfo from "../invite/InviteInfo";
+import { useFetchUser } from "@/lib/hooks/useUser";
+import { useUserStore } from "@/stores/userStore";
 
 const Friend: React.FC = () => {
   const [setShowFriendPanel] = useLayoutStore((state) => [
@@ -25,6 +27,7 @@ const Friend: React.FC = () => {
     state.baristas,
     state.setCurrentBarista,
   ]);
+  const user = useUserStore((state) => state.user);
   const [setShowInviteInfoPanel] = useLayoutStore((state) => [
     state.setShowInviteInfoPanel,
   ]);
@@ -45,10 +48,12 @@ const Friend: React.FC = () => {
 
   const { fetchBaristas } = useFetchBaristas();
   const { fetchFriends } = useFetchFriends();
+  const { fetchUser } = useFetchUser();
 
   useEffect(() => {
     fetchFriends();
     fetchBaristas();
+    fetchUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -90,7 +95,7 @@ const Friend: React.FC = () => {
           {activeTab === "Leader" && (
             <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col items-center justify-center rounded-t border border-[#b5b5b5] w-full overflow-y-auto h-[calc(100%-32px)] p-2 mt-8">
               <div className="mt-4">
-                <img src="/images/gold.png" alt="" />
+                <img src="/images/barista.png" alt="" />
               </div>
               <div className="text-xl mt-2">TOP BARISTA</div>
               <div className="text-sm mb-6">
@@ -123,25 +128,60 @@ const Friend: React.FC = () => {
                 }}
               >
                 <div className="w-[320px] h-[164px] relative">
-                  <img
-                    className="absolute top-1 right-1 w-8 h-8 z-50 pointer-events-auto cursor-pointer"
-                    src="/images/btn-invite.png"
-                    alt=""
-                    onClick={handleClick}
-                  />
-                  <img
-                    className="w-full h-full rounded-lg"
-                    src="/images/bg-deploy.png"
-                    alt=""
-                  />
+                  <div className="flex justify-between mb-4 mt-2">
+                    <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
+                      <img src="/images/bonus.png" alt="" />
+                      <div>{user.balance}M</div>
+                    </div>
+                    <img
+                      className="w-8 h-8 pointer-events-auto cursor-pointer"
+                      src="/images/btn-invite.png"
+                      alt=""
+                      onClick={handleClick}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between items-center border-[#eeedd8] border rounded-lg p-2 mb-1">
+                    <div className="flex justify-between items-center w-full mb-1">
+                      <div className="flex flex-col gap-1">
+                        <div>Invite Regular user</div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-4 h-4">
+                            <img src="/images/coin.png" alt="" />
+                          </div>
+                          <span className="text-[#6F6F6F]">
+                            +3 For you and your Friend
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <img src="/images/info-1.png" alt="" className="w-10" />
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center w-full">
+                      <div className="flex flex-col gap-1">
+                        <div>Invite Regular user</div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-4 h-4">
+                            <img src="/images/coin.png" alt="" />
+                          </div>
+                          <span className="text-[#6F6F6F]">
+                            +3 For you and your Friend
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <img src="/images/info-2.png" alt="" className="w-10" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center mt-6 mb-4 text-xl">Friend list</div>
+                <div className="text-center mt-8 mb-2 text-xl">Friend list</div>
                 <div className="overflow-y-auto">
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col bg-[#fffeec] border-[#e8ddbd] border rounded-lg">
                     {friends.map((friend) => (
                       <div
                         key={friend.id}
-                        className="w-full h-full cursor-pointer"
+                        className="w-full h-full cursor-pointer bg-[#f7f5dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
                       >
                         <CardFriend friend={friend} />
                       </div>

@@ -15,9 +15,9 @@ const Button = ({ children, onClick, disabled = false }: Props) => {
   return (
     <button
       style={{
-        boxShadow: "0px -4px 0px 0px #BC9D9B inset",
+        boxShadow: "0px -4px 0px 0px #cccbbd inset",
       }}
-      className="border-[#5d5d5d] border w-full h-full rounded-2xl text-[#6f6f6f] flex items-center justify-center"
+      className="border-[#5e5745] border-2 w-full h-full rounded-lg text-[#5e5745] flex items-center justify-center"
       onClick={handleOnClick}
       disabled={disabled}
     >

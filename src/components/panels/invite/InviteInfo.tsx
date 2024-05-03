@@ -54,28 +54,32 @@ const InviteInfo: React.FC = () => {
                   <div className="flex flex-col gap-1">
                     <div>Invite Regular user</div>
                     <div className="flex items-center gap-1">
-                      <img src="/images/coin.png" alt="" />
+                      <div className="w-4 h-4">
+                        <img src="/images/coin.png" alt="" />
+                      </div>
                       <span className="text-[#6F6F6F]">
                         +3 For you and your Friend
                       </span>
                     </div>
                   </div>
                   <div>
-                    <img src="/images/bronze.png" alt="" className="w-10" />
+                    <img src="/images/info-1.png" alt="" className="w-10" />
                   </div>
                 </div>
                 <div className="flex justify-between items-center w-full">
                   <div className="flex flex-col gap-1">
                     <div>Invite Regular user</div>
                     <div className="flex items-center gap-1">
-                      <img src="/images/coin.png" alt="" />
+                      <div className="w-4 h-4">
+                        <img src="/images/coin.png" alt="" />
+                      </div>
                       <span className="text-[#6F6F6F]">
                         +3 For you and your Friend
                       </span>
                     </div>
                   </div>
                   <div>
-                    <img src="/images/gold.png" alt="" className="w-10" />
+                    <img src="/images/info-2.png" alt="" className="w-10" />
                   </div>
                 </div>
               </div>

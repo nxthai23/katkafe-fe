@@ -160,6 +160,20 @@
       "imageUrl": "/images/cat.png",
       "balance": "12",
       "totalFriend": "12"
+    },
+    {
+      "id": "6",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "balance": "12",
+      "totalFriend": "12"
+    },
+    {
+      "id": "7",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "balance": "12",
+      "totalFriend": "12"
     }
   ],
   "ranks": [
