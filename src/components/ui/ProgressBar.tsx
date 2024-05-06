@@ -20,12 +20,12 @@ const Progress: React.FC<ProgressProps> = ({
   return (
     <div
       className={classNames(
-        "w-full rounded-[100px] border-t-2 bg-[#EEEDD8] border-t-[#d6d5c2] h-fit",
+        "w-full rounded-[100px] border-t-2 bg-[#EEEDD8] border-t-[#d6d5c2] h-full",
         className
       )}
     >
       <div
-        className="h-4 rounded-l-[100px] border-b-2 border-[#e38b4b]"
+        className="h-full rounded-l-[100px] border-b-2 border-[#e38b4b]"
         style={{ width: `${percentage}%`, backgroundColor: color }}
       />
     </div>
