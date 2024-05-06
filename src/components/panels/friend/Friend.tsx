@@ -103,7 +103,7 @@ const Friend: React.FC = () => {
                 <div className="w-[320px] h-[164px] relative">
                   <div className="flex justify-between mb-4 mt-2">
                     <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
-                      <img src="/images/kbuck.png" alt="" />
+                      <img className="w-6 h-6" src="/images/kbuck.png" alt="" />
                       <div>{user.balance}M</div>
                     </div>
                     <img
@@ -119,7 +119,7 @@ const Friend: React.FC = () => {
                         <div>Invite Regular user</div>
                         <div className="flex items-center gap-1">
                           <div className="w-4 h-4">
-                            <img src="/images/coin.png" alt="" />
+                            <img src="/images/kbuck.png" alt="" />
                           </div>
                           <span className="text-[#6F6F6F]">
                             +3 For you and your Friend
@@ -135,7 +135,7 @@ const Friend: React.FC = () => {
                         <div>Invite Regular user</div>
                         <div className="flex items-center gap-1">
                           <div className="w-4 h-4">
-                            <img src="/images/coin.png" alt="" />
+                            <img src="/images/kbuck.png" alt="" />
                           </div>
                           <span className="text-[#6F6F6F]">
                             +3 For you and your Friend

@@ -55,7 +55,7 @@ const CardBarista = ({
           <div className="flex items-center justify-end gap-1">
             <div>{totalFriend}</div>
             <div className="w-4 h-4">
-              <img src="/images/people.png" alt="" />
+              <img src="/images/friend.png" alt="" />
             </div>
           </div>
         )}

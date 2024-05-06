@@ -55,7 +55,7 @@ const InviteInfo: React.FC = () => {
                     <div>Invite Regular user</div>
                     <div className="flex items-center gap-1">
                       <div className="w-4 h-4">
-                        <img src="/images/coin.png" alt="" />
+                        <img src="/images/kbuck.png" alt="" />
                       </div>
                       <span className="text-[#6F6F6F]">
                         +3 For you and your Friend
@@ -71,7 +71,7 @@ const InviteInfo: React.FC = () => {
                     <div>Invite Regular user</div>
                     <div className="flex items-center gap-1">
                       <div className="w-4 h-4">
-                        <img src="/images/coin.png" alt="" />
+                        <img src="/images/kbuck.png" alt="" />
                       </div>
                       <span className="text-[#6F6F6F]">
                         +3 For you and your Friend
@@ -88,7 +88,7 @@ const InviteInfo: React.FC = () => {
               <div className="text-center text-lg mb-4">
                 Friend level up bonus
               </div>
-              <div className="flex flex-col justify-between items-center border-[#eeedd8] border rounded-lg p-2">
+              <div className="bg-[#f7f6dc] flex flex-col justify-between items-center border-[#eeedd8] border rounded-lg p-2">
                 <div className="justify-between w-full grid grid-cols-10 mb-1">
                   <span className="text-center col-span-4">Level up</span>
                   <span className="text-center col-span-3">Regular</span>

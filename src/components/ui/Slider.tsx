@@ -72,7 +72,7 @@ const ImageSlider = ({ ranks }: Props) => {
       <PrevArrow className="slick-prev" style={{}} onClick={undefined} />
     ),
   };
-  const value = 45;
+  const value = 33;
   const max = 100;
 
   return (
@@ -88,10 +88,10 @@ const ImageSlider = ({ ranks }: Props) => {
               </div>
             </div>
           </div>
-          <div className="rounded-[10]">
+          <div className="mb-4">
             <ProgressBar value={value} max={max} color="#FC9B53" />
           </div>
-          <div className="overflow-y-auto h-[204px]">
+          <div className="overflow-y-auto h-[187px] w-full cursor-pointer bg-[#f7f5dc] border-[#EEEDD8] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg">
             <div className="flex flex-col gap-1">
               {[...Array(Number(rank.totalPeople))].map((_, index) =>
                 rank.people[index] ? (
