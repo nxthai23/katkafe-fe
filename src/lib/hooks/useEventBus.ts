@@ -41,7 +41,7 @@ export const useEventBus = () => {
           break;
         case UI_BUTTON.RANK:
           console.log("Rank button clicked");
-          setShowRankPanel(true);
+          // setShowRankPanel(true);
           //Open Rank UI
           break;
       }

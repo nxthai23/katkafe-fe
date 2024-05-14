@@ -446,7 +446,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "2",
@@ -454,7 +455,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "3",
@@ -462,7 +464,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "4",
@@ -470,7 +473,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "5",
@@ -478,7 +482,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "6",
@@ -486,7 +491,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "7",
@@ -494,7 +500,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 2,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "8",
@@ -502,7 +509,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "9",
@@ -510,7 +518,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 1,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     },
     {
       "id": "10",
@@ -518,7 +527,8 @@
       "level": 2,
       "avatar": "/images/Cat.png",
       "numberStar": 3,
-      "backgroundUrl": "/images/background-cat.png"
+      "backgroundUrl": "/images/background-cat.png",
+      "speed": "12.24242"
     }
   ],
   "invites": [

@@ -46,16 +46,16 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
           </span>
           <div className="bg-[#fffeec] h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-[#b5b5b5]">
             <div className="w-full flex flex-col items-center">
-              <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[260px] w-[200px] mt-6">
+              <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
                 <div className="rounded-xl border-solid border-[#eeedd8] border-[3px] h-full w-full">
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
                     <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
-                      <div className="flex justify-center mt-14">
+                      <div className="flex justify-center mt-20">
                         <Image
                           src={staff?.avatar || ""}
                           alt="cat pic"
-                          width={160}
-                          height={106}
+                          width={80}
+                          height={80}
                         />
                       </div>
                     </div>
@@ -84,43 +84,45 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
                 </div>
               </div>
               <div className="w-full font-normal mt-4">
-                <div className="flex justify-between items-center">
-                  <span>Level</span>
-                  <span>{staff?.level}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>SPD</span>
-                  <span className="flex items-center gap-1">
-                    <img src="/images/coin.png" alt="" />
-                    100/s
+                <div className="text-sm text-[#6F6F6F]">Earning Speed</div>
+                <div className="flex gap-1 items-center">
+                  <span>
+                    <img className="w-4 h-4" src="/images/speed.png" alt="" />
                   </span>
+                  <span>{staff?.speed}</span>
+                </div>
+                <hr className="border-[#B5B5B5] mt-3 mb-2" />
+                <div>Upgrade Fee</div>
+                {/* TODO: chưa có API */}
+                <div className="flex items-center">
+                  <span>
+                    <img className="h-4 w-4" src="/images/coin.png" alt="" />
+                  </span>
+                  <div>12 M / </div>
+                  <span>
+                    <img className="h-4 w-4" src="/images/coin.png" alt="" />
+                  </span>
+                  <div> 124.987 M</div>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <span>Upgrade Fee</span>
-                  {/* TODO: chưa có API */}
-                  <span className="flex items-center gap-1">
-                    <img src="/images/coin.png" alt="" />
-                    100M
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
+                <div className="items-center">
                   <span>Cat require</span>
-                  <span className="flex items-center gap-1">0/3</span>
+                  <span className="flex items-center gap-1">0 / 3</span>
                 </div>
               </div>
             </div>
             <div className="w-full text-center">
               <hr className="mt-4 my-2 border-[#e8ddbd]" />
-              <div
-                className="flex flex-wrap gap-2 justify-center"
-                onClick={handleShowStaffUpgrade}
-              >
-                {["Upgrade"].map((item, index) => (
-                  <div key={index} className="w-[172px] h-[39px]">
-                    <Button>{item}</Button>
-                  </div>
-                ))}
+              <div className="flex gap-2 justify-center">
+                <div
+                  className="w-[172px] h-[39px]"
+                  onClick={handleShowStaffUpgrade}
+                >
+                  <Button>Pick Cat</Button>
+                </div>
+                <div className="w-[172px] h-[39px]">
+                  <Button disabled>Upgrade</Button>
+                </div>
               </div>
             </div>
           </div>

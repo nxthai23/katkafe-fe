@@ -14,7 +14,6 @@ const Progress: React.FC<ProgressProps> = ({
   className,
   color,
 }) => {
-  console.log("value", value);
   const percentage = Math.min((value / max) * 100, 100);
 
   return (

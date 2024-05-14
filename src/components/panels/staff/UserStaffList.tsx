@@ -68,7 +68,6 @@ const StaffList: React.FC = () => {
     } else {
       setIsActive(staff.id);
     }
-    setShowStaffList(false);
     setShowCardInfo(!showCardInfo);
   };
 
@@ -86,7 +85,8 @@ const StaffList: React.FC = () => {
 
   useEffect(() => {
     fetchStaffs();
-  }, [fetchStaffs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">

@@ -76,7 +76,8 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
 
   useEffect(() => {
     fetchStaffs();
-  }, [fetchStaffs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="Game-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4">

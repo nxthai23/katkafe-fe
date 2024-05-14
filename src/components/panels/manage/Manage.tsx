@@ -166,7 +166,11 @@ const Manage: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <span>Total SPD</span>
                         <span className="flex items-center gap-1">
-                          <img src="/images/coin.png" alt="" />
+                          <img
+                            className="w-4 h-4"
+                            src="/images/coin.png"
+                            alt=""
+                          />
                           {restaurant.totalSPB}/s
                         </span>
                       </div>
@@ -182,14 +186,22 @@ const Manage: React.FC = () => {
                         <span>Upgrade Fee</span>
                         {/* TODO: chưa có API */}
                         <span className="flex items-center gap-1">
-                          <img src="/images/coin.png" alt="" />
+                          <img
+                            className="w-4 h-4"
+                            src="/images/coin.png"
+                            alt=""
+                          />
                           12M
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Total SPD</span>
                         <span className="flex items-center gap-1">
-                          <img src="/images/coin.png" alt="" />
+                          <img
+                            className="w-4 h-4"
+                            src="/images/coin.png"
+                            alt=""
+                          />
                           {restaurant.balance}M
                         </span>
                       </div>

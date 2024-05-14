@@ -21,7 +21,8 @@ const InviteInfo: React.FC = () => {
 
   useEffect(() => {
     fetchBonuses();
-  }, [fetchBonuses]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="invite-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
