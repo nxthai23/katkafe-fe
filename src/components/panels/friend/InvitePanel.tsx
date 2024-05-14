@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useFriendStore } from "@/stores/friendStore";
-import { useFetchFriends } from "@/lib/hooks/useFriend";
+import { useFriendStore } from "@/stores/friend/friendStore";
+import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardFriend from "@/components/ui/CardFriend";
 
 const Friend: React.FC = () => {

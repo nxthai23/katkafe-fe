@@ -1,11 +1,11 @@
 import Button from "@/components/ui/Button";
-import { useFetchGuilds, useFetchOneGuild } from "@/lib/hooks/useGuild";
+import { useFetchGuilds, useFetchOneGuild } from "@/lib/hooks/guild/useGuild";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { useUserStore } from "@/stores/userStore";
 import { LogOut } from "lucide-react";
-import { useGuildStore } from "@/stores/guildStore";
+import { useGuildStore } from "@/stores/guild/guildStore";
 import CardFriend from "@/components/ui/CardFriend";
 
 type Props = {};

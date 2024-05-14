@@ -1,6 +1,6 @@
 "use client";
 import { getFriends } from "@/requests/friend";
-import { useFriendStore } from "@/stores/friendStore";
+import { useFriendStore } from "@/stores/friend/friendStore";
 
 export const useFetchFriends = () => {
   const [setFriends] = useFriendStore((state) => [state.setFriends]);

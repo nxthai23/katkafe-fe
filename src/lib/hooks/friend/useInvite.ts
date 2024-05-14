@@ -1,6 +1,6 @@
 ("use client");
 import { getInvites } from "@/requests/invite";
-import { useInviteStore } from "./../../stores/InviteStore";
+import { useInviteStore } from "../../../stores/friend/InviteStore";
 
 export const useFetchInvites = () => {
   const [setInvites] = useInviteStore((state) => [state.setInvites]);

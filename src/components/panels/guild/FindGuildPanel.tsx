@@ -1,6 +1,6 @@
 import CardGuild from "@/components/ui/CardGuild";
-import { useFetchGuilds } from "@/lib/hooks/useGuild";
-import { useGuildStore } from "@/stores/guildStore";
+import { useFetchGuilds } from "@/lib/hooks/guild/useGuild";
+import { useGuildStore } from "@/stores/guild/guildStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect } from "react";
 import Image from "next/image";

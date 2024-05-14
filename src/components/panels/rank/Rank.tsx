@@ -2,8 +2,8 @@ import Slider from "@/components/ui/Slider";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
-import { useFetchRanks } from "@/lib/hooks/useRank";
-import { useRankStore } from "@/stores/rankStore";
+import { useFetchRanks } from "@/lib/hooks/rank/useRank";
+import { useRankStore } from "@/stores/rank/rankStore";
 
 type Props = {};
 

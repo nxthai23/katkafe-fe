@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-dropdown-select";
-import { useFetchStaffs } from "@/lib/hooks/useStaff";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import Button from "@/components/ui/Button";
 import StaffCardAssign from "@/components/ui/StaffCardAssign";
 import { useStaffStore } from "@/stores/staffStore";

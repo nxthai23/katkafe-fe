@@ -1,6 +1,6 @@
 "use client";
 import { getBonuses } from "@/requests/bonus";
-import { useBonusStore } from "../../stores/bonusStore";
+import { useBonusStore } from "../../../stores/friend/bonusStore";
 
 export const useFetchBonuses = () => {
   const [setBonuses] = useBonusStore((state) => [state.setBonuses]);

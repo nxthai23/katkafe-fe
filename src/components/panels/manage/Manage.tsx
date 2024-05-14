@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Button from "../../ui/Button";
-import { useRestaurants } from "@/lib/hooks/useRestaurant";
+import { useRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import StaffCard from "../../ui/StaffCard";
 import Image from "next/image";
 import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
-import { useDeleteOneStaffOfRestaurant } from "@/lib/hooks/useDeleteOneStaffOfRestaurant";
+import { useDeleteOneStaffOfRestaurant } from "@/lib/hooks/restaurant/useDeleteOneStaffOfRestaurant";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { Staff } from "@/types/common-types";
 import { useStaffStore } from "@/stores/staffStore";

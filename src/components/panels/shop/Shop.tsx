@@ -1,10 +1,10 @@
 import Button from "@/components/ui/Button";
-import { useBundleStore } from "@/stores/bundleStore";
-import { useCatDealStore } from "@/stores/catDealStore";
+import { useBundleStore } from "@/stores/shop/bundleStore";
+import { useCatDealStore } from "@/stores/shop/catDealStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useState } from "react";
-import { useFetchBundles } from "@/lib/hooks/useBundle";
-import { useFetchCatDeals } from "@/lib/hooks/useCatDeal";
+import { useFetchBundles } from "@/lib/hooks/shop/useBundle";
+import { useFetchCatDeals } from "@/lib/hooks/shop/useCatDeal";
 import CatCard from "@/components/ui/CatCard";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import BundleCard from "@/components/ui/BundleCard";

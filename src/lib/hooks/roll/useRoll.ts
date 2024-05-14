@@ -1,5 +1,5 @@
 import { getRolls } from "@/requests/roll";
-import { useRollStore } from "../../stores/rollStore";
+import { useRollStore } from "../../../stores/roll/rollStore";
 
 export const useFetchRolls = () => {
   const [setRolls] = useRollStore((state) => [state.setRolls]);

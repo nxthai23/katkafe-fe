@@ -1,6 +1,6 @@
 "use client";
 import { getBaristas } from "@/requests/barista";
-import { useBaristaStore } from "../../stores/baristaStore";
+import { useBaristaStore } from "../../../stores/friend/baristaStore";
 
 export const useFetchBaristas = () => {
   const [setBaristas] = useBaristaStore((state) => [state.setBaristas]);

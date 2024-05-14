@@ -1,7 +1,7 @@
 import Button from "@/components/ui/Button";
-import { useFetchRolls } from "@/lib/hooks/useRoll";
+import { useFetchRolls } from "@/lib/hooks/roll/useRoll";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useRollStore } from "@/stores/rollStore";
+import { useRollStore } from "@/stores/roll/rollStore";
 import React, { useEffect } from "react";
 import Image from "next/image";
 

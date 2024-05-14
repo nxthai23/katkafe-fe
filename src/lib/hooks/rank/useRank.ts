@@ -1,6 +1,6 @@
 "use client";
 import { getRanks } from "@/requests/rank";
-import { useRankStore } from "@/stores/rankStore";
+import { useRankStore } from "@/stores/rank/rankStore";
 
 export const useFetchRanks = () => {
   const [setRanks] = useRankStore((state) => [state.setRanks]);

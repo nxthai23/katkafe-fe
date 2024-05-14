@@ -1,5 +1,5 @@
 import { getGuilds, getOneGuild } from "@/requests/guild";
-import { useGuildStore } from "@/stores/guildStore";
+import { useGuildStore } from "@/stores/guild/guildStore";
 
 export const useFetchGuilds = () => {
   const [setGuilds] = useGuildStore((state) => [state.setGuilds]);

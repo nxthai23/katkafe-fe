@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../../ui/Button";
 import Image from "next/image";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useGuildStore } from "@/stores/guildStore";
+import { useGuildStore } from "@/stores/guild/guildStore";
 import CardFriend from "@/components/ui/CardFriend";
 import { SquareArrowOutUpRight } from "lucide-react";
 

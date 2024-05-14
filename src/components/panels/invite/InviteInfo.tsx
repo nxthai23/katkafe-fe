@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useFetchBonuses } from "@/lib/hooks/useBonus";
-import { useBonusStore } from "@/stores/bonusStore";
+import { useFetchBonuses } from "@/lib/hooks/friend/useBonus";
+import { useBonusStore } from "@/stores/friend/bonusStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import CardBonus from "@/components/ui/CardBonus";
 import Button from "@/components/ui/Button";

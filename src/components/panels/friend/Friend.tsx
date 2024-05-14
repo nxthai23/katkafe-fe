@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useFriendStore } from "@/stores/friendStore";
-import { useFetchFriends } from "@/lib/hooks/useFriend";
+import { useFriendStore } from "@/stores/friend/friendStore";
+import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardBarista from "@/components/ui/CardBarista";
-import { useBaristaStore } from "@/stores/baristaStore";
-import { useFetchBaristas } from "@/lib/hooks/useBarista";
+import { useBaristaStore } from "@/stores/friend/baristaStore";
+import { useFetchBaristas } from "@/lib/hooks/friend/useBarista";
 import InviteInfo from "../invite/InviteInfo";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import { useUserStore } from "@/stores/userStore";

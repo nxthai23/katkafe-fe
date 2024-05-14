@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import CatCard from "../../ui/CatCard";
 import Select from "react-dropdown-select";
-import { useFetchStaffs } from "@/lib/hooks/useStaff";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import CardInfo from "@/components/ui/CardInfo";
 import { useStaffStore } from "@/stores/staffStore";
 import { Staff } from "@/types/common-types";
