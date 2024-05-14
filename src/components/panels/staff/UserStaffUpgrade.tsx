@@ -66,7 +66,7 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
 
   const handleChooseClick = (staff: any) => {
     if (selectedCards.includes(staff)) {
-      setSelectedCards(selectedCards.filter((id) => id !== staff));
+      setSelectedCards(selectedCards.filter((item) => item !== staff));
     } else {
       setSelectedCards([...selectedCards, staff]);
     }
@@ -76,7 +76,8 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
   };
   useEffect(() => {
     fetchStaffs();
-  }, [fetchStaffs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="grade-panel bg-[#2e2e2e] w-full h-full absolute z-50 p-4">
