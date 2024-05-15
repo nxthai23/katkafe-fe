@@ -75,7 +75,6 @@ function Guild({}: Props) {
                     alt="cat pic"
                     width={200}
                     height={200}
-                    className=""
                   />
                 </div>
                 <div className="text-center max-w-[260px] mx-auto">

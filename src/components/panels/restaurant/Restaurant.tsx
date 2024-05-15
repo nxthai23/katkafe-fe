@@ -7,6 +7,7 @@ import RestaurantCard from "@/components/ui/RestaurantCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { divide } from "lodash";
 import UnlockRestaurantCard from "@/components/ui/UnlockRestaurantCard";
+import UnlockDialog from "@/components/ui/UnlockDialog";
 
 const itemsPerPage = 2;
 
@@ -15,8 +16,8 @@ function Restaurant() {
     state.setShowRestaurantPanel,
   ]);
   const [restaurants] = useRestaurantStore((state) => [state.restaurants]);
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDialog, setShowDialog] = useState(false);
 
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -29,6 +30,16 @@ function Restaurant() {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
+  const { fetchRestaurants } = useFetchRestaurants();
+
+  const dataUnlock = {
+    title: "Unlock the coffee shop!",
+    description: "To unlock this coffee shopo you'll need:",
+    catOwned: 4,
+    shopLevel: 9,
+    fee: 20000,
+  };
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentRestaurants =
@@ -36,20 +47,18 @@ function Restaurant() {
       ? []
       : restaurants.slice(startIndex, endIndex) || [];
 
-  console.log(restaurants);
-  const { fetchRestaurants } = useFetchRestaurants();
-
   const handleBack = () => {
     setShowRestaurantPanel(false);
   };
   const handleClick = () => {
     console.log("Unlock");
-    setShowRestaurantPanel(false);
+    setShowDialog(true);
   };
 
   useEffect(() => {
     fetchRestaurants();
   }, []);
+
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
@@ -104,6 +113,16 @@ function Restaurant() {
           </div>
         </div>
       </div>
+      {showDialog && (
+        <>
+          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
+          <UnlockDialog
+            data={dataUnlock}
+            onClose={() => setShowDialog(false)}
+            closeShopPanel={() => setShowRestaurantPanel(false)}
+          />
+        </>
+      )}
     </div>
   );
 }

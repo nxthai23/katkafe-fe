@@ -102,7 +102,7 @@ const Manage: React.FC = () => {
           </span>
           {activeTab === "Staff" && (
             <div className="bg-[#fff8de] rounded-b-[20px] flex flex-col justify-between rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
-              <div className="">
+              <div>
                 <>
                   <div
                     key={currentRestaurant.id}
