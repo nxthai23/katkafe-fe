@@ -41,8 +41,8 @@ const StaffCard = ({ cat, active }: Props) => {
     >
       <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
         <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
-          <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-contain h-full">
-            <div className="flex justify-center mt-3">
+          <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-contain h-full flex items-end justify-center">
+            <div className="flex justify-center">
               <Image src={imageUrl} alt="cat pic" width={92.5} height={106} />
             </div>
           </div>

@@ -9,7 +9,9 @@ import CatCard from "@/components/ui/CatCard";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import BundleCard from "@/components/ui/BundleCard";
 import { use } from "matter";
-import { Bundle } from "@/types/bundle";
+import { Bundle, ShopType } from "@/types/bundle";
+import { CatDeal } from "@/types/catDeal";
+import CardInfo from "@/components/ui/CardInfo";
 
 const Shop = () => {
   const [setShowShopPanel] = useLayoutStore((state) => [
@@ -25,6 +27,10 @@ const Shop = () => {
     state.catDeals,
     state.setCurrentCatDeal,
   ]);
+  const [showCardInfo, setShowCardInfo] = useState(false);
+  const handleViewDetail = (catDeal: CatDeal) => {
+    setShowCardInfo(true);
+  };
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleBundleTabClick = () => {
@@ -41,25 +47,22 @@ const Shop = () => {
 
   const confirmBundleDialog = (bundle: Bundle) => {
     setCurrentBundle(bundle);
-    // show info bundle selected
-    console.log("confirmBundleDialog", bundle);
     setShowDialog(!showDialog);
   };
 
-  const confirmCatDialog = () => {
+  const confirmCatDialog = (catDeal: CatDeal) => {
     setShowDialog(!showDialog);
+    setCurrentCatDeal(catDeal);
   };
 
   const dataBundle = {
     title: "Congratulation!",
     description: "You purchased Bundle's Name successfully! You received:",
-    imageUrl: "/images/test-bundle.png",
   };
 
   const dataCat = {
     title: "Congratulation!",
     description: "You purchased a staff successfully!",
-    imageUrl: "/images/test-cat.png",
   };
 
   const { fetchBundles } = useFetchBundles();
@@ -122,7 +125,9 @@ const Shop = () => {
                     </div>
                     <div
                       className="w-[88px] h-[30px]"
-                      onClick={confirmCatDialog}
+                      onClick={(event: React.MouseEvent<HTMLDivElement>) =>
+                        confirmCatDialog(catDeal)
+                      }
                     >
                       <Button>{catDeal.price} $</Button>
                     </div>
@@ -157,11 +162,19 @@ const Shop = () => {
         <>
           <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
           <ConfirmDialog
-            data={activeTab === "Bundle" ? dataBundle : dataCat}
+            type={activeTab === "Bundle" ? ShopType.Bundle : ShopType.Cat}
+            // data={activeTab === "Bundle" ? dataBundle : dataCat}
             onClose={() => setShowDialog(false)}
             closeShopPanel={() => setShowShopPanel(false)}
+            button={{ type: "coin" }}
+            handleChooseDetail={handleViewDetail}
           />
         </>
+      )}
+      {showCardInfo && (
+        <div className="absolute z-30 w-full h-full top-0 left-0">
+          <CardInfo onClose={() => setShowCardInfo(false)} />
+        </div>
       )}
     </div>
   );

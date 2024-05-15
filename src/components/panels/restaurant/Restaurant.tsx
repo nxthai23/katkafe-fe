@@ -51,15 +51,14 @@ function Restaurant() {
     setShowRestaurantPanel(false);
   };
   const handleClick = () => {
-    console.log("Unlock");
     setShowDialog(true);
   };
   const handleClickOutside = (e: any) => {
-    console.log("aaaaaa", showDialog);
     setShowDialog(false);
   };
   useEffect(() => {
     fetchRestaurants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

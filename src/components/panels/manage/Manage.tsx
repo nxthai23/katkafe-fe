@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import StaffCard from "../../ui/StaffCard";
 import Image from "next/image";
@@ -20,6 +20,7 @@ const Manage: React.FC = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [activeTab, setActiveTab] = useState("Cafe");
+  const { fetchRestaurants } = useFetchRestaurants();
 
   const handleClose = () => {
     setShowManagePanel(false);
@@ -62,6 +63,10 @@ const Manage: React.FC = () => {
       alert("Failed to delete staff. Please try again.");
     }
   };
+  useEffect(() => {
+    fetchRestaurants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
