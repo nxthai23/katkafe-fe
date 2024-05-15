@@ -73,24 +73,24 @@ function FindGuild({}: Props) {
             <p className="bg-red-10 h-[2px] w-[70%]"></p>
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          <div className="bg-[#fff8de] w-full rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
+          <div className="bg-[#fffeec] w-full rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
             <div className="flex justify-center mt-3">
               <Image
-                src="/images/bg-deploy.png"
+                src="/images/guild.png"
                 alt="cat pic"
-                width={200}
+                width={84}
                 height={84}
               />
             </div>
-            <div className="text-center my-4">These guilds are hiring</div>
+            <div className="text-center my-2">These guilds are hiring</div>
 
             <div className="overflow-y-auto">
               {guilds.map((guild) => (
-                <div key={guild.id}>
-                  <div
-                    className="w-full"
-                    onClick={() => handleChooseClick(guild)}
-                  >
+                <div
+                  key={guild.id}
+                  className="bg-[#f7f6dc] w-full border-[#EEEDD8] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
+                >
+                  <div onClick={() => handleChooseClick(guild)}>
                     <CardGuild guild={guild} />
                   </div>
                 </div>

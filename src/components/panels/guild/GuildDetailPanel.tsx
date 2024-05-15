@@ -110,7 +110,7 @@ function GuildDetail() {
                 </div>
               </div>
             </div>
-            <div className="overflow-y-auto">
+            <div className="overflow-y-auto bg-[#f7f6dc] w-full border-[#EEEDD8] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg">
               {[...Array(Number(currentGuild?.totalMember))].map((_, index) =>
                 currentGuild?.member[index] ? (
                   <div key={index} className="mb-1">

@@ -71,7 +71,7 @@ function Guild({}: Props) {
               <div className="w-full bg-[#fff8de] rounded-b-[20px] flex flex-col rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-hidden mt-8">
                 <div className="flex justify-center mt-14 mb-4">
                   <Image
-                    src="/images/bg-deploy.png"
+                    src="/images/guild.png"
                     alt="cat pic"
                     width={200}
                     height={200}

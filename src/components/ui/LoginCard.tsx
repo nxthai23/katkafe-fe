@@ -2,6 +2,7 @@ import React from "react";
 import Button from "./Button";
 import Image from "next/image";
 
+// @TODO: check login first time login or not
 const ConfirmDialog = () => {
   return (
     <div className="bg-orange-10 absolute rounded-2xl w-[95%] text-center pt-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
