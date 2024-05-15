@@ -1,23 +1,22 @@
 "use client";
-import { getRestaurant } from "@/requests/restaurant";
-import { Restaurant } from "@/types/common-types";
-import { useEffect, useState } from "react";
+import { getRestaurants } from "@/requests/restaurant";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
-export const useRestaurants = () => {
-    const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+export const useFetchRestaurants = () => {
+  const [setRestaurants] = useRestaurantStore((state) => [
+    state.setRestaurants,
+  ]);
 
-    useEffect(() => {
-        const fetchRestaurants = async () => {
-            try {
-                const response = await getRestaurant();
-                setRestaurants(response);
-            } catch (error) {
-                console.error("Error fetching", error);
-            }
-        };
+  const fetchRestaurants = async () => {
+    try {
+      const response = await getRestaurants();
+      setRestaurants(response);
+    } catch (error) {
+      console.error("Error fetching", error);
+    }
+  };
 
-        fetchRestaurants();
-    }, []);
-
-    return restaurants;
+  return {
+    fetchRestaurants,
+  };
 };

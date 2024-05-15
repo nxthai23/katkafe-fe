@@ -9,11 +9,13 @@ export const InGameUI = () => {
     setShowManagePanel,
     setShowStaffPanel,
     setShowShopPanel,
+    setShowRestaurantPanel,
   ] = useLayoutStore((state) => [
     state.setShowFriendPanel,
     state.setShowManagePanel,
     state.setShowStaffPanel,
     state.setShowShopPanel,
+    state.setShowRestaurantPanel,
   ]);
 
   return (
@@ -39,7 +41,11 @@ export const InGameUI = () => {
       </div>
 
       <div className="absolute flex w-full justify-between bottom-4 px-8">
-        <MenuButton key="home" title="Home" />
+        <MenuButton
+          key="home"
+          title="Home"
+          onClick={() => setShowRestaurantPanel(true)}
+        />
         <MenuButton
           key="list"
           title="List"

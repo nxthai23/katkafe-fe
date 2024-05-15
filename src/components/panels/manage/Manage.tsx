@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Button from "../../ui/Button";
-import { useRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import StaffCard from "../../ui/StaffCard";
 import Image from "next/image";
 import StaffAssign from "../staff/UserStaffAssign";
@@ -9,6 +8,8 @@ import { useDeleteOneStaffOfRestaurant } from "@/lib/hooks/restaurant/useDeleteO
 import { useLayoutStore } from "@/stores/layoutStore";
 import { Staff } from "@/types/common-types";
 import { useStaffStore } from "@/stores/staffStore";
+import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
@@ -23,7 +24,13 @@ const Manage: React.FC = () => {
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const restaurants = useRestaurants();
+  const [restaurants, setCurrentRestaurant] = useRestaurantStore((state) => [
+    state.restaurants,
+    state.currentRestaurant,
+  ]);
+  console.log("restaurants", restaurants);
+  const currentRestaurant = restaurants[0];
+  console.log("currentRestaurant", currentRestaurant);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-[#5e5745] !bg-[#fffeec]";
 
@@ -96,42 +103,40 @@ const Manage: React.FC = () => {
           {activeTab === "Staff" && (
             <div className="bg-[#fff8de] rounded-b-[20px] flex flex-col justify-between rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
               <div className="">
-                {restaurants.map((restaurant) => (
-                  <>
-                    <div
-                      key={restaurant.id}
-                      className="flex justify-center flex-wrap gap-x-2 gap-y-4 mt-2"
-                    >
-                      {[...Array(Number(restaurant.numberStaff))].map(
-                        (_, index) =>
-                          !restaurant.staff[index] ? (
-                            <img
-                              key={index}
-                              src="/images/empty-cat.png"
-                              alt="Empty Cat"
-                              className="w-[100px] h-[130px] cursor-pointer"
-                              onClick={toggleStaffPanel}
+                <>
+                  <div
+                    key={currentRestaurant.id}
+                    className="flex justify-center flex-wrap gap-x-2 gap-y-4 mt-2"
+                  >
+                    {[...Array(Number(currentRestaurant.numberStaff))].map(
+                      (_, index) =>
+                        !currentRestaurant.staff[index] ? (
+                          <img
+                            key={index}
+                            src="/images/empty-cat.png"
+                            alt="Empty Cat"
+                            className="w-[100px] h-[130px] cursor-pointer"
+                            onClick={toggleStaffPanel}
+                          />
+                        ) : (
+                          <div
+                            key={index}
+                            className="w-[100px] h-[130px]"
+                            onClick={() => handleCardClick(index)}
+                          >
+                            <StaffCard
+                              onRemoveClick={handleRemoveClick}
+                              onViewClick={() =>
+                                handleViewClick(currentRestaurant.staff[index])
+                              }
+                              cat={currentRestaurant.staff[index]}
+                              active={index === activeCard}
                             />
-                          ) : (
-                            <div
-                              key={index}
-                              className="w-[100px] h-[130px]"
-                              onClick={() => handleCardClick(index)}
-                            >
-                              <StaffCard
-                                onRemoveClick={handleRemoveClick}
-                                onViewClick={() =>
-                                  handleViewClick(restaurant.staff[index])
-                                }
-                                cat={restaurant.staff[index]}
-                                active={index === activeCard}
-                              />
-                            </div>
-                          )
-                      )}
-                    </div>
-                  </>
-                ))}
+                          </div>
+                        )
+                    )}
+                  </div>
+                </>
               </div>
               <div>
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
@@ -148,66 +153,50 @@ const Manage: React.FC = () => {
           {activeTab === "Cafe" && (
             <div className="bg-[#fff8de] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8 w-full flex flex-col justify-between">
               <div className="gap-6">
-                {restaurants.map((restaurant) => (
-                  <>
-                    <div>
-                      <Image
-                        src={restaurant.imageUrl}
-                        alt="cat pic"
-                        width={312}
-                        height={200}
-                        className="flex aspect-[312/200] !rounded"
-                      />
-                    </div>
-                    <div className="bg-[url('/images/bg-name.png')] h-[42px] bg-contain bg-center bg-no-repeat text-center -translate-y-[30px]">
-                      <div>{restaurant.name}</div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between items-center">
-                        <span>Total SPD</span>
-                        <span className="flex items-center gap-1">
-                          <img
-                            className="w-4 h-4"
-                            src="/images/coin.png"
-                            alt=""
-                          />
-                          {restaurant.totalSPB}/s
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Shop level</span>
-                        <span>{restaurant.level}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Staff slot</span>
-                        <span>{restaurant.staffSlot}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Upgrade Fee</span>
-                        {/* TODO: chưa có API */}
-                        <span className="flex items-center gap-1">
-                          <img
-                            className="w-4 h-4"
-                            src="/images/coin.png"
-                            alt=""
-                          />
-                          12M
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Total SPD</span>
-                        <span className="flex items-center gap-1">
-                          <img
-                            className="w-4 h-4"
-                            src="/images/coin.png"
-                            alt=""
-                          />
-                          {restaurant.balance}M
-                        </span>
-                      </div>
-                    </div>
-                  </>
-                ))}
+                <div>
+                  <Image
+                    src={currentRestaurant?.imageUrl}
+                    alt="cat pic"
+                    width={312}
+                    height={200}
+                    className="flex aspect-[312/200] !rounded"
+                  />
+                </div>
+                <div className="bg-[url('/images/bg-name.png')] h-[42px] bg-contain bg-center bg-no-repeat text-center -translate-y-[30px]">
+                  <div>{currentRestaurant?.name}</div>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center">
+                    <span>Total SPD</span>
+                    <span className="flex items-center gap-1">
+                      <img className="w-4 h-4" src="/images/coin.png" alt="" />
+                      {currentRestaurant?.totalSPB}/s
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Shop level</span>
+                    <span>{currentRestaurant?.level}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Staff slot</span>
+                    <span>{currentRestaurant?.staffSlot}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Upgrade Fee</span>
+                    {/* TODO: chưa có API */}
+                    <span className="flex items-center gap-1">
+                      <img className="w-4 h-4" src="/images/coin.png" alt="" />
+                      12M
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Total SPD</span>
+                    <span className="flex items-center gap-1">
+                      <img className="w-4 h-4" src="/images/coin.png" alt="" />
+                      {currentRestaurant?.balance}M
+                    </span>
+                  </div>
+                </div>
               </div>
               <div>
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
