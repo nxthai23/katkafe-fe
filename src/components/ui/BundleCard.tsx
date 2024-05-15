@@ -6,7 +6,7 @@ import { Bundle } from "@/types/bundle";
 
 type Props = {
   bundle: Bundle;
-  handleClick?: () => void;
+  handleClick?: (bundle: Bundle) => void;
 };
 
 const BundleCard = ({ bundle, handleClick }: Props) => {
@@ -18,7 +18,7 @@ const BundleCard = ({ bundle, handleClick }: Props) => {
   return (
     <div
       className="bg-[#f4f2d6] rounded-lg w-full h-full p-3 flex gap-8 items-center"
-      onClick={handleClick}
+      onClick={() => handleClick?.(bundle)}
     >
       <div className="flex gap-1">
         {items.map((item, index) => (

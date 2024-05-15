@@ -8,11 +8,14 @@ import { useFetchCatDeals } from "@/lib/hooks/shop/useCatDeal";
 import CatCard from "@/components/ui/CatCard";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import BundleCard from "@/components/ui/BundleCard";
+import { use } from "matter";
+import { Bundle } from "@/types/bundle";
 
 const Shop = () => {
   const [setShowShopPanel] = useLayoutStore((state) => [
     state.setShowShopPanel,
   ]);
+  const [showDialog, setShowDialog] = useState(false);
   const [activeTab, setActiveTab] = useState("Bundle");
   const [bundles, setCurrentBundle] = useBundleStore((state) => [
     state.bundles,
@@ -35,9 +38,11 @@ const Shop = () => {
   const handleClose = () => {
     setShowShopPanel(false);
   };
-  const [showDialog, setShowDialog] = useState(false);
 
-  const confirmBundleDialog = () => {
+  const confirmBundleDialog = (bundle: Bundle) => {
+    setCurrentBundle(bundle);
+    // show info bundle selected
+    console.log("confirmBundleDialog", bundle);
     setShowDialog(!showDialog);
   };
 

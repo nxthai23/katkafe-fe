@@ -105,9 +105,9 @@ const StaffList: React.FC = () => {
           </div>
 
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
-            <p className="bg-red-10 h-[2px] w-[13%]"></p>
-            <p className="bg-red-10 h-[2px] w-[70%]"></p>
-            <p className="bg-red-10 h-[2px] w-[13%]"></p>
+            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
+            <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
+            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
           </span>
 
           <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">

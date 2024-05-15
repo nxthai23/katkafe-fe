@@ -28,9 +28,7 @@ const Manage: React.FC = () => {
     state.restaurants,
     state.currentRestaurant,
   ]);
-  console.log("restaurants", restaurants);
   const currentRestaurant = restaurants[0];
-  console.log("currentRestaurant", currentRestaurant);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
