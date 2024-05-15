@@ -54,7 +54,10 @@ function Restaurant() {
     console.log("Unlock");
     setShowDialog(true);
   };
-
+  const handleClickOutside = (e: any) => {
+    console.log("aaaaaa", showDialog);
+    setShowDialog(false);
+  };
   useEffect(() => {
     fetchRestaurants();
   }, []);
@@ -115,11 +118,13 @@ function Restaurant() {
       </div>
       {showDialog && (
         <>
-          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
+          <div
+            className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"
+            onClick={handleClickOutside}
+          ></div>
           <UnlockDialog
             data={dataUnlock}
             onClose={() => setShowDialog(false)}
-            closeShopPanel={() => setShowRestaurantPanel(false)}
           />
         </>
       )}

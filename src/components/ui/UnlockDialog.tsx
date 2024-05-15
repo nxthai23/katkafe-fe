@@ -10,12 +10,11 @@ type Props = {
     fee: number;
   };
   onClose?: () => void;
-  closeShopPanel?: () => void;
 };
 
-const UnlockDialog: React.FC<Props> = ({ data, closeShopPanel }: Props) => {
+const UnlockDialog: React.FC<Props> = ({ data }: Props) => {
   const handleClick = () => {
-    closeShopPanel?.();
+    console.log("Unlock");
   };
 
   return (
