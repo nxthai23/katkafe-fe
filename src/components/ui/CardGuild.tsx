@@ -17,7 +17,7 @@ const CardGuild = ({ guild }: Props) => {
   const rank = get(guild, "rank", 0);
 
   return (
-    <div className="bg-[#fffeec] mt-1 w-full border-[#e8ddbd] border rounded-lg h-full p-2 flex items-center gap-1 justify-between">
+    <div className="bg-orange-10 mt-1 w-full border-[#e8ddbd] border rounded-lg h-full p-2 flex items-center gap-1 justify-between">
       <div className="flex">
         <Image src={backgroundUrl} alt="cat pic" width={48} height={48}></Image>
         <div>

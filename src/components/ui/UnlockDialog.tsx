@@ -19,7 +19,7 @@ const UnlockDialog: React.FC<Props> = ({ data, closeShopPanel }: Props) => {
   };
 
   return (
-    <div className="bg-[#fffeec] absolute rounded-2xl w-[95%] text-center p-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+    <div className="bg-orange-10 absolute rounded-2xl w-[95%] text-center p-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
       <div className="p-4">
         <div className="text-xl">{data.title}</div>
         <div className="mx-auto font-light mb-4">{data.description}</div>

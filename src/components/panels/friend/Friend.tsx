@@ -32,7 +32,7 @@ const Friend: React.FC = () => {
   ]);
   // const [showInviteInfoPanel, setShowInviteInfoPanel] = useState(false);
 
-  const isActive = "!py-2 !-translate-y-[28px] !border-[#5e5745] !bg-[#fffeec]";
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleFriendTabClick = () => {
     setActiveTab("Friend");
   };
@@ -58,8 +58,8 @@ const Friend: React.FC = () => {
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
-      <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
-        <div className="rounded-[21px] border-solid border-[#ffedbb] border-4 bg-[#ffedbb] h-full relative">
+      <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
+        <div className="rounded-[21px] border-solid border-orange-30 border-4 bg-orange-30 h-full relative">
           <div className="absolute -right-[15px] -top-[13px] bg-[#fffde9] rounded-full border-[#ededed] cursor-pointer">
             <img
               className="w-6 h-6"
@@ -71,7 +71,7 @@ const Friend: React.FC = () => {
           <div className="flex">
             <div
               onClick={handleFriendTabClick}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-[#5e5745] ${
+              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
                 activeTab === "Friend" ? isActive : ""
               }`}
             >
@@ -79,7 +79,7 @@ const Friend: React.FC = () => {
             </div>
             <div
               onClick={handleLeaderTabClick}
-              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-[#5e5745] ${
+              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
                 activeTab === "Leader" ? isActive : ""
               }`}
             >
@@ -87,14 +87,14 @@ const Friend: React.FC = () => {
             </div>
           </div>
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[70%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           {activeTab === "Friend" && (
             <>
               <div
-                className="bg-[#fffeec] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between"
+                className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#666666 #ffe",
@@ -113,7 +113,7 @@ const Friend: React.FC = () => {
                       onClick={handleClick}
                     />
                   </div>
-                  <div className="flex flex-col justify-between items-center border-[#eeedd8] border rounded-lg p-2 mb-1">
+                  <div className="flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2 mb-1">
                     <div className="flex justify-between items-center w-full mb-1">
                       <div className="flex flex-col gap-1">
                         <div>Invite Regular user</div>
@@ -150,7 +150,7 @@ const Friend: React.FC = () => {
                 </div>
                 <div className="text-center mt-8 mb-2 text-xl">Friend list</div>
                 <div className="overflow-y-auto">
-                  <div className="flex flex-col bg-[#fffeec] border-[#e8ddbd] border rounded-lg">
+                  <div className="flex flex-col bg-orange-10 border-[#e8ddbd] border rounded-lg">
                     {friends.map((friend) => (
                       <div
                         key={friend.id}
@@ -182,7 +182,7 @@ const Friend: React.FC = () => {
             </>
           )}
           {activeTab === "Leader" && (
-            <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col items-center justify-center rounded-t border border-[#b5b5b5] w-full overflow-y-auto h-[calc(100%-32px)] p-2 mt-8">
+            <div className="bg-orange-10 rounded-b-[20px] flex flex-col items-center justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-2 mt-8">
               <div className="mt-4 w-[120px] h-[120px]">
                 <img src="/images/barista.png" alt="" />
               </div>
@@ -191,7 +191,7 @@ const Friend: React.FC = () => {
                 Invite more friend to get to the top
               </div>
               <div className="overflow-y-auto w-full">
-                <div className="flex flex-col bg-[#fffeec] border-[#e8ddbd] border rounded-lg">
+                <div className="flex flex-col bg-orange-10 border-[#e8ddbd] border rounded-lg">
                   {baristas.map((barista) => (
                     <div
                       key={barista.id}

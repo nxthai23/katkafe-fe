@@ -61,8 +61,8 @@ function Restaurant() {
 
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
-      <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
-        <div className="rounded-[21px] border-solid border-[#ffedbb] border-4 bg-[#ffedbb] h-full relative">
+      <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
+        <div className="rounded-[21px] border-solid border-orange-30 border-4 bg-orange-30 h-full relative">
           <div className="absolute -left-[15px] -top-[13px] bg-[#fffde9] rounded-full border-[#ededed] cursor-pointer">
             <Image
               src="/images/back.png"
@@ -72,21 +72,21 @@ function Restaurant() {
               onClick={handleBack}
             />
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-[#5e5745] bg-[#fffeec] rounded-t-xl text-[#5e5745]">
+          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-orange-90 bg-orange-10 rounded-t-xl text-orange-90">
             Coffee spot
           </div>
 
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[70%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          <div className="w-full flex flex-col gap-2 bg-[#fffeec] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-4 overflow-hidden mt-8">
+          <div className="w-full flex flex-col gap-2 bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-hidden mt-8">
             {currentRestaurants.map((restaurant) => (
               <>
                 <div
                   key={restaurant.id}
-                  className="border border-[#cccbbd] bg-[#fffeec] p-2 rounded-lg"
+                  className="border border-[#cccbbd] bg-orange-10 p-2 rounded-lg"
                   style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
                 >
                   <RestaurantCard restaurant={restaurant} />

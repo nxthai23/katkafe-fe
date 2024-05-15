@@ -31,7 +31,7 @@ export const Pagination = ({
         type="button"
         onClick={onClickPrevPage}
         disabled={currentPage === 1}
-        className="inline-flex min-h-[30px] min-w-[30px] items-center justify-center gap-x-2 rounded-xl px-1 py-1 text-sm text-white hover:bg-[#da8c4ce0] bg-[#fda043] focus:bg-[#da8c4ce0] focus:outline-none disabled:bg-[#EEEDD8]"
+        className="inline-flex min-h-[30px] min-w-[30px] items-center justify-center gap-x-2 rounded-xl px-1 py-1 text-sm text-white hover:bg-[#da8c4ce0] bg-orange-40 focus:bg-[#da8c4ce0] focus:outline-none disabled:bg-[#EEEDD8]"
       >
         <ChevronLeft size={20} />
       </button>
@@ -56,7 +56,7 @@ export const Pagination = ({
         type="button"
         onClick={onClickNextPage}
         disabled={currentPage === totalPages}
-        className="inline-flex min-h-[30px] min-w-[30px] items-center justify-center gap-x-2 rounded-xl px-1 py-1 text-sm text-white hover:bg-[#f69241e0] bg-[#fda043] focus:bg-[#da8c4ce0] focus:outline-none disabled:bg-[#EEEDD8]"
+        className="inline-flex min-h-[30px] min-w-[30px] items-center justify-center gap-x-2 rounded-xl px-1 py-1 text-sm text-white hover:bg-[#f69241e0] bg-orange-40 focus:bg-[#da8c4ce0] focus:outline-none disabled:bg-[#EEEDD8]"
       >
         <ChevronRight size={20} />
       </button>

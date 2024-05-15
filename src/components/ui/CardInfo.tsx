@@ -26,8 +26,8 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
 
   return (
     <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-40 p-4 top-0 left-0">
-      <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
-        <div className="rounded-[21px] border-solid border-[#ffedbb] border-4 bg-[#ffedbb] h-full relative">
+      <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
+        <div className="rounded-[21px] border-solid border-orange-30 border-4 bg-orange-30 h-full relative">
           <div className="absolute -top-4 -left-3 cursor-pointer">
             <img
               className="w-8 h-8"
@@ -36,18 +36,18 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
               onClick={handleBack}
             />
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-[#5e5745] bg-[#fffeec] rounded-t-xl text-[#5e5745]">
+          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-orange-90 bg-orange-10 rounded-t-xl text-orange-90">
             Staff Info
           </div>
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[70%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          <div className="bg-[#fffeec] h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-[#b5b5b5]">
+          <div className="bg-orange-10 h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-gray-20">
             <div className="w-full flex flex-col items-center">
               <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
-                <div className="rounded-xl border-solid border-[#eeedd8] border-[3px] h-full w-full">
+                <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
                     <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
                       <div className="flex justify-center mt-20">
