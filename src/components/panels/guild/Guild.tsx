@@ -32,7 +32,7 @@ function Guild({}: Props) {
   const handleFindGuildClick = () => {
     setShowFindGuildPanel(true);
   };
-  const userGuildId = user.guildId;
+  const userGuildId = user?.guildId;
   const isGuildIdInList = guilds.some((guild) => guild.id === userGuildId);
 
   useEffect(() => {

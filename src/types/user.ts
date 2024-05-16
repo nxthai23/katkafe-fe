@@ -6,3 +6,8 @@ export type UserType = {
   rank: string;
   guildId: string;
 };
+
+export type LoginBody = {
+  type: string;
+  telegramId: string;
+};

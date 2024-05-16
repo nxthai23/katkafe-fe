@@ -30,7 +30,7 @@ export const useEventBus = () => {
           //Open Gacha UI
           break;
         case UI_BUTTON.GUIDE:
-          setShowGuildPanel(true);
+          // setShowGuildPanel(true);
           console.log("Guide button clicked");
           //Open Guide UI
           break;

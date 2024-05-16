@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InfoBox } from "./InfoBox";
 import { MenuButton } from "./MenuButton";
 import { useLayoutStore } from "@/stores/layoutStore";
+import { useUserStore } from "@/stores/userStore";
 
 export const InGameUI = () => {
   const [
@@ -17,6 +18,26 @@ export const InGameUI = () => {
     state.setShowShopPanel,
     state.setShowRestaurantPanel,
   ]);
+  console.log("gameUI");
+
+  const [login] = useUserStore((state) => [state.login]);
+  useEffect(() => {
+    const Login = async () => {
+      try {
+        const loginBody = {
+          type: "local",
+          telegramId: "telegramId123",
+        };
+        const user = await login(loginBody);
+        console.log("user", user);
+      } catch (error) {
+        console.error("Error during login:", error);
+      }
+    };
+
+    Login();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="absolute game-ui top-0">

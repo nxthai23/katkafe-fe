@@ -13,3 +13,4 @@ export const API_USER = "http://localhost:3501/user";
 export const API_ROLL = "http://localhost:3501/rolls";
 export const API_TASK = "http://localhost:3501/tasks";
 export const API_ACHIEVEMENT = "http://localhost:3501/achievements";
+export const BASE_URL = "http://localhost:8088";
