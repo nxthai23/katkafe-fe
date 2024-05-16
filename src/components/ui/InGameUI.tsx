@@ -3,6 +3,7 @@ import { InfoBox } from "./InfoBox";
 import { MenuButton } from "./MenuButton";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useUserStore } from "@/stores/userStore";
+import LoginDialog from "./LoginDialog";
 
 export const InGameUI = () => {
   const [
@@ -18,9 +19,14 @@ export const InGameUI = () => {
     state.setShowShopPanel,
     state.setShowRestaurantPanel,
   ]);
-  console.log("gameUI");
-
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [login] = useUserStore((state) => [state.login]);
+
+  const handleClick = () => {
+    console.log("click");
+    setShowLoginDialog(false);
+  };
+
   useEffect(() => {
     const Login = async () => {
       try {
@@ -36,6 +42,7 @@ export const InGameUI = () => {
     };
 
     Login();
+    setShowLoginDialog(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -100,6 +107,7 @@ export const InGameUI = () => {
           onClick={() => setShowFriendPanel(true)}
         />
       </div>
+      {showLoginDialog && <LoginDialog onClick={handleClick} />}
     </div>
   );
 };
