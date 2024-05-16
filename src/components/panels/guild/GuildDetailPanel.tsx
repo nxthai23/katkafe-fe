@@ -81,7 +81,7 @@ function GuildDetail() {
                   />
                 </div>
                 <div className="text-xl">{currentGuild?.title}</div>
-                <SquareArrowOutUpRight size={16} />
+                <SquareArrowOutUpRight size={16} className="cursor-pointer" />
               </div>
             </div>
             <div className="flex items-center gap-8 mb-4">

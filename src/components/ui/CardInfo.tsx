@@ -84,17 +84,17 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
                 </div>
               </div>
               <div className="w-full font-normal mt-4">
-                <div className="text-sm text-[#6F6F6F]">Earning Speed</div>
+                <div className="text-bodyMd text-[#6F6F6F]">Earning Speed</div>
                 <div className="flex gap-1 items-center">
                   <span>
                     <img className="w-4 h-4" src="/images/speed.png" alt="" />
                   </span>
-                  <span>{staff?.speed}</span>
+                  <span>{staff?.speed} / s</span>
                 </div>
                 <hr className="border-[#B5B5B5] mt-3 mb-2" />
-                <div>Upgrade Fee</div>
+                <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>
                 {/* TODO: chưa có API */}
-                <div className="flex items-center">
+                <div className="flex items-center gap-1">
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
                   </span>
@@ -106,7 +106,9 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
                 </div>
 
                 <div className="items-center">
-                  <span>Cat require</span>
+                  <span className="text-bodyMd text-[#6F6F6F]">
+                    Cat require
+                  </span>
                   <span className="flex items-center gap-1">0 / 3</span>
                 </div>
               </div>
