@@ -4,18 +4,24 @@ import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import Button from "@/components/ui/Button";
 import StaffCardAssign from "@/components/ui/StaffCardAssign";
 import { useStaffStore } from "@/stores/staffStore";
+import { assignCat } from "@/requests/restaurant";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
-  const [isActive, setIsActive] = useState<number | null>(null);
+  const [isActive, setIsActive] = useState<string | null>(null);
   const [activeSelect, setActiveSelect] = useState("All");
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
 
   const { fetchStaffs } = useFetchStaffs();
   const [staffs] = useStaffStore((state) => [state.staffs]);
+  const [currentRestaurant, setRestaurants] = useRestaurantStore((state) => [
+    state.currentRestaurant,
+    state.setRestaurants,
+  ]);
 
   const options = [
     {
@@ -63,15 +69,35 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
     setActiveStarFilter(selectName);
   };
 
-  const handleChooseClick = (staffId: number) => {
+  const handleChooseClick = (staffId: string) => {
+    console.log("Choose Staff ID: ", staffId);
+    // const staff = staffs.find((staff) => get(staff, "_id") === staffId);
+    // if (staff) {
+    //   setCurrentStaff(staff);
+    // }
     if (staffId === isActive) {
       setIsActive(null);
     } else {
       setIsActive(staffId);
     }
   };
-  const handleAssign = () => {
-    showStaffPanel(false);
+
+  const handleAssign = async (staffId: string) => {
+    console.log("1111111111");
+
+    if (isActive !== null) {
+      console.log("Assigning Staff ID: ", staffId);
+      showStaffPanel(false);
+    }
+    try {
+      if (!currentRestaurant) return;
+      const body = {
+        locationId: currentRestaurant._id,
+        catIds: [staffId],
+      };
+      const response = await assignCat(body);
+      setRestaurants(response);
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -156,28 +182,29 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
                 scrollbarColor: "#666666 #ffe",
               }}
             >
-              {filteredStaffs.map((staff) => (
-                <div
-                  key={staff.id}
-                  className="w-[100px] h-[130px]"
-                  onClick={() => handleChooseClick(staff.id)}
-                >
-                  <StaffCardAssign cat={staff} active={isActive === staff.id} />
-                </div>
-              ))}
+              {filteredStaffs.map(
+                (staff) =>
+                  !staff.isAssign && (
+                    <div key={staff._id} className="w-[100px] h-[130px]">
+                      <StaffCardAssign
+                        cat={staff}
+                        active={isActive === staff._id}
+                        handleClick={handleChooseClick}
+                      />
+                    </div>
+                  )
+              )}
             </div>
           </div>
           <div className=" absolute z-40 left-1/2 -translate-x-1/2 bottom-[12px]">
             <hr className="w-[330px] border-[#e8ddbd] mb-2" />
             <div
               className="flex flex-wrap gap-2 justify-center"
-              onClick={handleAssign}
+              onClick={() => handleAssign(isActive || "")}
             >
-              {["Assign"].map((item, index) => (
-                <div key={index} className="w-[172px] h-[39px] -mb-[3px]">
-                  <Button>{item}</Button>
-                </div>
-              ))}
+              <div className="w-[172px] h-[39px] -mb-[3px]">
+                <Button>Assign</Button>
+              </div>
             </div>
           </div>
         </div>

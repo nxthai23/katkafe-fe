@@ -32,7 +32,7 @@ export const useUserStore = create<State & Actions>()(
           return;
         }
         set({
-          jwt: response.jwt,
+          jwt: response.accessToken,
           user: response.user,
         });
         return response.user;

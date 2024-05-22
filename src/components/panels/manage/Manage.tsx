@@ -6,30 +6,34 @@ import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
 import { useDeleteOneStaffOfRestaurant } from "@/lib/hooks/restaurant/useDeleteOneStaffOfRestaurant";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { Staff } from "@/types/common-types";
 import { useStaffStore } from "@/stores/staffStore";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import { get } from "lodash";
 
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
     state.setShowManagePanel,
   ]);
-  const [setCurrentStaff] = useStaffStore((state) => [state.setCurrentStaff]);
   const [showStaffPanel, setShowStaffPanel] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [activeTab, setActiveTab] = useState("Cafe");
   const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffs } = useFetchStaffs();
 
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [restaurants, setCurrentRestaurant] = useRestaurantStore((state) => [
-    state.restaurants,
+  const [currentRestaurant] = useRestaurantStore((state) => [
     state.currentRestaurant,
   ]);
-  const currentRestaurant = restaurants[0];
+
+  const [staffs, setCurrentStaff] = useStaffStore((state) => [
+    state.staffs,
+    state.setCurrentStaff,
+  ]);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
@@ -48,9 +52,12 @@ const Manage: React.FC = () => {
   const handleCardClick = (index: number) => {
     setActiveCard(index === activeCard ? null : index);
   };
-  const handleViewClick = (staff: Staff) => {
+  const handleViewClick = (catId: string) => {
+    const staff = staffs.find((staff) => get(staff, "_id") === catId);
+    if (staff) {
+      setCurrentStaff(staff);
+    }
     setShowCardInfo(!showCardInfo);
-    setCurrentStaff(staff);
   };
   const { deleteStaffOfRestaurant } = useDeleteOneStaffOfRestaurant();
   const handleRemoveClick = async (staffId: number) => {
@@ -63,8 +70,10 @@ const Manage: React.FC = () => {
       alert("Failed to delete staff. Please try again.");
     }
   };
+
   useEffect(() => {
     fetchRestaurants();
+    fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -108,19 +117,28 @@ const Manage: React.FC = () => {
               <div>
                 <>
                   <div
-                    key={currentRestaurant.id}
-                    className="flex justify-center flex-wrap gap-x-2 gap-y-4 mt-2"
+                    key={currentRestaurant?._id}
+                    className="flex flex-wrap gap-x-2 gap-y-4 mt-2"
                   >
-                    {[...Array(Number(currentRestaurant.numberStaff))].map(
+                    {Array.from(Array(currentRestaurant?.slot)).map(
                       (_, index) =>
-                        !currentRestaurant.staff[index] ? (
-                          <img
-                            key={index}
-                            src="/images/empty-cat.png"
-                            alt="Empty Cat"
-                            className="w-[100px] h-[130px] cursor-pointer"
-                            onClick={toggleStaffPanel}
-                          />
+                        !currentRestaurant?.cats[index] ? (
+                          <>
+                            <div className="relative">
+                              <img
+                                key={index}
+                                src="/images/empty-cat.png"
+                                alt="Empty Cat"
+                                className="w-[100px] h-[130px]"
+                              />
+                              <img
+                                src="/images/plus.png"
+                                alt=""
+                                className="absolute left-1/2 -translate-x-1/2 bottom-3 cursor-pointer"
+                                onClick={toggleStaffPanel}
+                              />
+                            </div>
+                          </>
                         ) : (
                           <div
                             key={index}
@@ -130,9 +148,9 @@ const Manage: React.FC = () => {
                             <StaffCard
                               onRemoveClick={handleRemoveClick}
                               onViewClick={() =>
-                                handleViewClick(currentRestaurant.staff[index])
+                                handleViewClick(currentRestaurant.cats[index])
                               }
-                              cat={currentRestaurant.staff[index]}
+                              catId={currentRestaurant.cats[index]}
                               active={index === activeCard}
                             />
                           </div>
@@ -158,7 +176,7 @@ const Manage: React.FC = () => {
               <div className="gap-6">
                 <div>
                   <Image
-                    src={currentRestaurant?.imageUrl}
+                    src={currentRestaurant?.imgUrl || ""}
                     alt="cat pic"
                     width={312}
                     height={200}

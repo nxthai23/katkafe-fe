@@ -117,7 +117,7 @@ const Shop = () => {
               <div className="w-full flex flex-wrap gap-10 justify-center">
                 {catDeals.map((catDeal) => (
                   <div
-                    key={catDeal.id}
+                    key={catDeal._id}
                     className="flex flex-col items-center gap-4"
                   >
                     <div className="w-[100px] h-[130px]">

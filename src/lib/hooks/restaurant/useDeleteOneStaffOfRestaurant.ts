@@ -5,17 +5,16 @@ import { Staff } from "@/types/common-types";
 import { useState } from "react";
 
 export const useDeleteOneStaffOfRestaurant = () => {
-    const [staff, setStaff] = useState<Staff | null>(null);
+  const [staff, setStaff] = useState<Staff | null>(null);
 
-    const deleteStaffOfRestaurant = async (id: number) => {
-        try {
-            const response = await deleteOneStaffOfRestaurant(id);
-            console.log("response", response);
-            setStaff(response);
-        } catch (error) {
-            console.error("Error deleting staff", error);
-        }
-    };
+  const deleteStaffOfRestaurant = async (id: number) => {
+    try {
+      const response = await deleteOneStaffOfRestaurant(id);
+      setStaff(response);
+    } catch (error) {
+      console.error("Error deleting staff", error);
+    }
+  };
 
-    return { staff, deleteStaffOfRestaurant };
+  return { staff, deleteStaffOfRestaurant };
 };

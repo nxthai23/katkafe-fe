@@ -3,31 +3,18 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Star from "./Star";
 import { get } from "lodash";
-
-type CatData = {
-  name: string;
-  level: number;
-  avatar: string;
-  numberStar: number;
-  backgroundUrl: string;
-};
+import { Staff } from "@/types/common-types";
 
 type Props = {
-  cat: CatData;
+  cat: Staff;
   active?: boolean;
+  handleClick?: (staffId: string) => void;
 };
 
-const StaffCard = ({ cat, active }: Props) => {
-  const [isActive, setIsActive] = useState(false);
-  const handleCardClick = () => {
-    if (isActive) {
-      setIsActive(false);
-    }
-    setIsActive(!isActive);
-  };
+const StaffCard = ({ cat, active, handleClick }: Props) => {
   const customClass = "w-4 h-4";
 
-  const imageUrl = get(cat, "avatar", "");
+  const imageUrl = get(cat, "imgUrl", "");
   const name = get(cat, "name", "");
   const numberStar = get(cat, "numberStar", 0);
   const level = get(cat, "level", 0);
@@ -37,7 +24,9 @@ const StaffCard = ({ cat, active }: Props) => {
       className={`rounded-xl border-solid border-[#4e4837] border-[3px] h-full w-full cursor-pointer relative ${
         active ? "border-[#FC9B53]" : ""
       }`}
-      onClick={handleCardClick}
+      onClick={() => {
+        handleClick?.(cat._id);
+      }}
     >
       <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
         <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">

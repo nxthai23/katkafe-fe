@@ -1,13 +1,19 @@
 import { Staff } from "./common-types";
 
 export type Restaurant = {
-  id: number;
+  _id: string;
   name: string;
   level: number;
-  imageUrl: string;
-  numberStaff: string;
+  imgUrl: string;
+  maxSlot: string;
+  slot: string;
   totalSPB: number;
   staffSlot: number;
   balance: number;
-  staff: Staff[];
+  cats: string[];
+};
+
+export type AssignBody = {
+  locationId: string;
+  catIds: string[];
 };

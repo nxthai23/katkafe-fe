@@ -6,7 +6,7 @@ import { get } from "lodash";
 type CatData = {
   name: string;
   level: number;
-  avatar: string;
+  imgUrl: string;
   numberStar: number;
   backgroundUrl: string;
 };
@@ -20,7 +20,7 @@ type Props = {
 const CatCard = ({ cat, active, onClick }: Props) => {
   const customClass = "w-4 h-4";
 
-  const imageUrl = get(cat, "avatar", "");
+  const imageUrl = get(cat, "imgUrl", "");
   const name = get(cat, "name", "");
   const numberStar = get(cat, "numberStar", 0);
   const level = get(cat, "level", 0);

@@ -3,25 +3,18 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Star from "./Star";
 import { get } from "lodash";
-
-type CatData = {
-  id: number;
-  name: string;
-  level: number;
-  avatar: string;
-  numberStar: number;
-  backgroundUrl: string;
-};
+import { useOneStaff } from "@/lib/hooks/cat/useOneStaff";
 
 type Props = {
-  cat: CatData;
+  catId: string;
   active?: boolean;
   onViewClick: (id: number) => void;
   onRemoveClick: (id: number) => void;
 };
 
-const StaffCard = ({ cat, active, onViewClick, onRemoveClick }: Props) => {
+const StaffCard = ({ catId, active, onViewClick, onRemoveClick }: Props) => {
   const [isActive, setIsActive] = useState(false);
+  const cat = useOneStaff(catId);
   const handleCardClick = () => {
     if (isActive) {
       setIsActive(false);
@@ -30,17 +23,17 @@ const StaffCard = ({ cat, active, onViewClick, onRemoveClick }: Props) => {
   };
   const handleViewClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    onViewClick(cat.id);
+    onViewClick(Number(catId));
   };
   const handleRemoveClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    onRemoveClick(cat.id);
+    onRemoveClick(Number(cat?._id));
   };
   const customClass = "w-4 h-4";
 
-  const imageUrl = get(cat, "avatar", "");
+  const imageUrl = get(cat, "imgUrl", "");
   const name = get(cat, "name", "");
   const numberStar = get(cat, "numberStar", 0);
   const level = get(cat, "level", 0);

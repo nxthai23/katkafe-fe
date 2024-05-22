@@ -23,7 +23,7 @@ export const useRestaurantStore = create<States & Actions>((set, get) => ({
       restaurants,
     });
   },
-  setCurrentRestaurant: (restaurant: Restaurant) => {
+  setCurrentRestaurant: (restaurant: Restaurant | null) => {
     set({
       currentRestaurant: restaurant,
     });

@@ -4,17 +4,18 @@ export type Restaurant = {
   name: string;
   level: number;
   imageUrl: string;
-  numberStaff: any;
+  maxSlot: any;
   totalSPB: number;
   staffSlot: number;
   balance: number;
 };
+
 export type Staff = {
-  id: number;
+  _id: string;
   name: string;
   level: number;
-  avatar: string;
+  imgUrl: string;
   numberStar: number;
   backgroundUrl: string;
-  speed: string;
+  isAssign: boolean;
 };

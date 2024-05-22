@@ -63,10 +63,10 @@ const StaffList: React.FC = () => {
   const handleChooseClick = (staff: Staff) => {
     setCurrentStaff(staff);
 
-    if (staff.id === isActive) {
+    if (Number(staff.id) === isActive) {
       setIsActive(null);
     } else {
-      setIsActive(staff.id);
+      setIsActive(Number(staff.id));
     }
     setShowCardInfo(!showCardInfo);
   };

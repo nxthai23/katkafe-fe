@@ -4,6 +4,7 @@ import { MenuButton } from "./MenuButton";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useUserStore } from "@/stores/userStore";
 import LoginDialog from "./LoginDialog";
+import { createCat, updateLoginStatus } from "@/requests/login";
 
 export const InGameUI = () => {
   const [
@@ -20,10 +21,23 @@ export const InGameUI = () => {
     state.setShowRestaurantPanel,
   ]);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
-  const [login] = useUserStore((state) => [state.login]);
+  const [user, login, setUser] = useUserStore((state) => [
+    state.user,
+    state.login,
+    state.setUser,
+  ]);
+  const numberCats = 2;
 
-  const handleClick = () => {
-    console.log("click");
+  const handleClick = async () => {
+    try {
+      const response = await updateLoginStatus();
+      if (response) {
+        setUser(response);
+      }
+      Array.from(Array(numberCats)).map(() => createCat());
+    } catch (error) {
+      console.log("Error updating login status", error);
+    }
     setShowLoginDialog(false);
   };
 
@@ -34,8 +48,7 @@ export const InGameUI = () => {
           type: "local",
           telegramId: "telegramId123",
         };
-        const user = await login(loginBody);
-        console.log("user", user);
+        await login(loginBody);
       } catch (error) {
         console.error("Error during login:", error);
       }
@@ -107,7 +120,9 @@ export const InGameUI = () => {
           onClick={() => setShowFriendPanel(true)}
         />
       </div>
-      {showLoginDialog && <LoginDialog onClick={handleClick} />}
+      {user?.isLoginFirstTime && showLoginDialog && (
+        <LoginDialog onClick={handleClick} />
+      )}
     </div>
   );
 };

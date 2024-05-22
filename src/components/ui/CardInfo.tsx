@@ -9,10 +9,9 @@ type Props = {
   onClose?: () => void;
 };
 
-const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
+const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
   const [showStaffUpgradePanel, setShowStaffUpgradePanel] = useState(false);
   const [staff] = useStaffStore((state) => [state.currentStaff]);
-  const [showUpgradePanel, setShowUpgradePanel] = useState(false);
 
   const customClass = "w-4 h-4";
 
@@ -52,7 +51,7 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
                     <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
                       <div className="flex justify-center mt-20">
                         <Image
-                          src={staff?.avatar || ""}
+                          src={staff?.imgUrl || ""}
                           alt="cat pic"
                           width={80}
                           height={80}
@@ -139,4 +138,4 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
   );
 };
 
-export default CatInfo;
+export default CardInfo;
