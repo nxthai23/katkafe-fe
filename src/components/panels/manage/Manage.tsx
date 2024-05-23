@@ -4,16 +4,14 @@ import StaffCard from "../../ui/StaffCard";
 import Image from "next/image";
 import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
-import { useDeleteOneStaffOfRestaurant } from "@/lib/hooks/restaurant/useDeleteOneStaffOfRestaurant";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
-import { get, set } from "lodash";
+import { get } from "lodash";
 import { removeCat } from "@/requests/restaurant";
 import { useUserStore } from "@/stores/userStore";
-import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 
 const Manage: React.FC = () => {
@@ -35,6 +33,7 @@ const Manage: React.FC = () => {
   );
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [staffs, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
@@ -65,6 +64,7 @@ const Manage: React.FC = () => {
       setCurrentStaff(staff);
     }
     setShowCardInfo(!showCardInfo);
+    setActiveCard(null);
   };
   const handleRemoveClick = async () => {
     try {
@@ -109,7 +109,6 @@ const Manage: React.FC = () => {
       setLoading(true);
       const body = {
         locationId: currentRestaurant._id,
-        catIds: user.cats,
         removeAll: true,
       };
 
@@ -122,6 +121,10 @@ const Manage: React.FC = () => {
     } finally {
       setLoading(false);
       setShowDialog(false);
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 1000);
     }
   };
 
@@ -313,6 +316,11 @@ const Manage: React.FC = () => {
             onClose={() => setShowDialog(false)}
           />
         </>
+      )}
+      {showAlert && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Remove Successfully!
+        </div>
       )}
     </div>
   );

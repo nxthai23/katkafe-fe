@@ -6,6 +6,8 @@ import { useUserStore } from "@/stores/userStore";
 import LoginDialog from "./LoginDialog";
 import { createCat, updateLoginStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import LoginAward from "./LoginAward";
+import { UserType } from "@/types/user";
 
 export const InGameUI = () => {
   const [
@@ -22,6 +24,8 @@ export const InGameUI = () => {
     state.setShowRestaurantPanel,
   ]);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [showLoginAward, setShowLoginAward] = useState(false);
+  const [response, setResponse] = useState<UserType | null>(null);
   const [user, login, setUser] = useUserStore((state) => [
     state.user,
     state.login,
@@ -32,16 +36,27 @@ export const InGameUI = () => {
   const numberCats = 4;
 
   const handleClick = async () => {
+    setShowLoginDialog(false);
     try {
       const response = await updateLoginStatus();
       if (response) {
         setUser(response);
+        setResponse(response);
       }
-      Array.from(Array(numberCats)).map(() => createCat());
     } catch (error) {
       console.log("Error updating login status", error);
     }
-    setShowLoginDialog(false);
+    setShowLoginAward(true);
+  };
+  const handleClaim = async () => {
+    try {
+      for (let i = 0; i < numberCats; i++) {
+        await createCat();
+      }
+    } catch (error) {
+      console.log("Create error", error);
+    }
+    setShowLoginAward(false);
   };
 
   useEffect(() => {
@@ -125,6 +140,12 @@ export const InGameUI = () => {
       </div>
       {user?.isLoginFirstTime && showLoginDialog && (
         <LoginDialog onClick={handleClick} />
+      )}
+      {showLoginAward && (
+        <>
+          <div className="bg-[#232322] opacity-80 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
+          <LoginAward handleClaim={handleClaim} response={response} />
+        </>
       )}
     </div>
   );

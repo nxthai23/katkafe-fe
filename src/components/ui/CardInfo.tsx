@@ -49,12 +49,14 @@ const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
                 <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
                     <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
-                      <div className="flex justify-center mt-20">
+                      <div className="flex justify-center mt-14 relative">
+                        <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-30"></div>
                         <Image
                           src={staff?.imgUrl || ""}
                           alt="cat pic"
-                          width={80}
-                          height={80}
+                          width={106}
+                          height={106}
+                          className="relative z-40"
                         />
                       </div>
                     </div>
