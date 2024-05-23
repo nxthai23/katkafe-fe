@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-dropdown-select";
-import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import Button from "@/components/ui/Button";
 import StaffCardAssign from "@/components/ui/StaffCardAssign";
 import { useStaffStore } from "@/stores/staffStore";
@@ -9,19 +8,23 @@ import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
+  onAssignSuccess: () => void;
 };
 
-const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
+const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   const [isActive, setIsActive] = useState<string | null>(null);
   const [activeSelect, setActiveSelect] = useState("All");
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
 
-  const { fetchStaffs } = useFetchStaffs();
   const [staffs] = useStaffStore((state) => [state.staffs]);
   const [currentRestaurant, setRestaurants] = useRestaurantStore((state) => [
     state.currentRestaurant,
     state.setRestaurants,
   ]);
+
+  const staffNotAssign = staffs.filter((staff) => {
+    return !currentRestaurant?.cats.some((cat) => cat === staff._id);
+  });
 
   const options = [
     {
@@ -45,7 +48,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
 
   const filteredStaffs = useMemo(
     () =>
-      staffs.filter((staff) => {
+      staffNotAssign.filter((staff) => {
         if (activeStarFilter === "All") {
           return true;
         } else if (activeStarFilter === "OneStar") {
@@ -57,7 +60,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
         }
         return false;
       }),
-    [activeStarFilter, staffs]
+    [activeStarFilter, staffNotAssign]
   );
 
   const handleClose = () => {
@@ -70,11 +73,6 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
   };
 
   const handleChooseClick = (staffId: string) => {
-    console.log("Choose Staff ID: ", staffId);
-    // const staff = staffs.find((staff) => get(staff, "_id") === staffId);
-    // if (staff) {
-    //   setCurrentStaff(staff);
-    // }
     if (staffId === isActive) {
       setIsActive(null);
     } else {
@@ -83,25 +81,25 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
   };
 
   const handleAssign = async (staffId: string) => {
-    console.log("1111111111");
-
-    if (isActive !== null) {
-      console.log("Assigning Staff ID: ", staffId);
-      showStaffPanel(false);
-    }
     try {
       if (!currentRestaurant) return;
+      if (!staffId) return;
       const body = {
         locationId: currentRestaurant._id,
         catIds: [staffId],
       };
       const response = await assignCat(body);
       setRestaurants(response);
-    } catch (error) {}
+      onAssignSuccess();
+    } catch (error) {
+      console.error("Error assign cat", error);
+    }
+    if (isActive !== null) {
+      showStaffPanel(false);
+    }
   };
 
   useEffect(() => {
-    fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -182,18 +180,15 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel }) => {
                 scrollbarColor: "#666666 #ffe",
               }}
             >
-              {filteredStaffs.map(
-                (staff) =>
-                  !staff.isAssign && (
-                    <div key={staff._id} className="w-[100px] h-[130px]">
-                      <StaffCardAssign
-                        cat={staff}
-                        active={isActive === staff._id}
-                        handleClick={handleChooseClick}
-                      />
-                    </div>
-                  )
-              )}
+              {filteredStaffs.map((staff) => (
+                <div key={staff._id} className="w-[100px] h-[130px]">
+                  <StaffCardAssign
+                    cat={staff}
+                    active={isActive === staff._id}
+                    handleClick={handleChooseClick}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className=" absolute z-40 left-1/2 -translate-x-1/2 bottom-[12px]">

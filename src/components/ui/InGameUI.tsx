@@ -5,6 +5,7 @@ import { useLayoutStore } from "@/stores/layoutStore";
 import { useUserStore } from "@/stores/userStore";
 import LoginDialog from "./LoginDialog";
 import { createCat, updateLoginStatus } from "@/requests/login";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 export const InGameUI = () => {
   const [
@@ -26,7 +27,9 @@ export const InGameUI = () => {
     state.login,
     state.setUser,
   ]);
-  const numberCats = 2;
+  const power = useRestaurantStore((state) => state.power);
+
+  const numberCats = 4;
 
   const handleClick = async () => {
     try {
@@ -57,7 +60,7 @@ export const InGameUI = () => {
     Login();
     setShowLoginDialog(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setUser]);
 
   return (
     <div className="absolute game-ui top-0">
@@ -66,7 +69,7 @@ export const InGameUI = () => {
         <InfoBox
           key="branchSPD"
           title="Branch SPD"
-          content="604/s"
+          content={power ? power + "/s" : "0/s"}
           icon={{
             url: "/icons/ic-farm.png",
           }}
@@ -74,7 +77,7 @@ export const InGameUI = () => {
         <InfoBox
           key="totalSPD"
           title="Total SPD"
-          content="2004/s"
+          content={power ? power + "/s" : "0/s"}
           icon={{
             url: "/icons/ic-farm.png",
           }}

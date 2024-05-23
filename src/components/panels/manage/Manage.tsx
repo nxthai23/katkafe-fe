@@ -10,7 +10,11 @@ import { useStaffStore } from "@/stores/staffStore";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
-import { get } from "lodash";
+import { get, set } from "lodash";
+import { removeCat } from "@/requests/restaurant";
+import { useUserStore } from "@/stores/userStore";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
@@ -26,14 +30,17 @@ const Manage: React.FC = () => {
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [currentRestaurant] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-  ]);
+  const [currentRestaurant, power, setRestaurants] = useRestaurantStore(
+    (state) => [state.currentRestaurant, state.power, state.setRestaurants]
+  );
+  const [loading, setLoading] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   const [staffs, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
     state.setCurrentStaff,
   ]);
+  const [user] = useUserStore((state) => [state.user]);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
@@ -59,15 +66,62 @@ const Manage: React.FC = () => {
     }
     setShowCardInfo(!showCardInfo);
   };
-  const { deleteStaffOfRestaurant } = useDeleteOneStaffOfRestaurant();
-  const handleRemoveClick = async (staffId: number) => {
+  const handleRemoveClick = async () => {
     try {
-      await deleteStaffOfRestaurant(staffId);
-      // dispatch(useRestaurants());
-      alert("Staff deleted successfully!");
+      if (
+        !user ||
+        !currentRestaurant ||
+        user.cats.length === 0 ||
+        activeCard === null
+      )
+        return;
+      const catIdToRemove = currentRestaurant.cats[activeCard];
+      const body = {
+        locationId: currentRestaurant._id,
+        catId: catIdToRemove,
+      };
+      const response = await removeCat(body);
+      setRestaurants(response);
+      await fetchRestaurants();
+      await fetchStaffs();
+      setActiveCard(null);
     } catch (error) {
       console.error("Error removing staff", error);
       alert("Failed to delete staff. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const removeAllClick = () => {
+    setShowDialog(true);
+  };
+  const assignSuccess = async () => {
+    setLoading(true);
+    await fetchRestaurants();
+    await fetchStaffs();
+    setLoading(false);
+    setActiveCard(null);
+  };
+
+  const handleRemoveAll = async () => {
+    try {
+      if (!user || !currentRestaurant || !user.cats) return;
+      setLoading(true);
+      const body = {
+        locationId: currentRestaurant._id,
+        catIds: user.cats,
+        removeAll: true,
+      };
+
+      const response = await removeCat(body);
+      setRestaurants(response);
+      await fetchRestaurants();
+      await fetchStaffs();
+    } catch (error) {
+      console.error("Error remove all", error);
+    } finally {
+      setLoading(false);
+      setShowDialog(false);
     }
   };
 
@@ -114,11 +168,17 @@ const Manage: React.FC = () => {
           </span>
           {activeTab === "Staff" && (
             <div className="bg-[#fff8de] rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
-              <div>
+              <div className="flex items-center bg-orange-20 border border-[#dddcc9] w-fit px-4 rounded relative mx-auto my-2">
+                {power} / s
+                <span className="absolute top-1/2 -translate-y-1/2 -left-[10px]">
+                  <img src="./images/speed.png" alt="" className="w-6 h-6" />
+                </span>
+              </div>
+              <div className="h-[calc(100%-26px-8px)] overflow-y-auto">
                 <>
                   <div
                     key={currentRestaurant?._id}
-                    className="flex flex-wrap gap-x-2 gap-y-4 mt-2"
+                    className="flex flex-wrap gap-x-2 gap-y-4 mt-2 h-full"
                   >
                     {Array.from(Array(currentRestaurant?.slot)).map(
                       (_, index) =>
@@ -162,11 +222,12 @@ const Manage: React.FC = () => {
               <div>
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex gap-2 justify-center">
-                  {["Remove all", "Auto deploy"].map((item, index) => (
-                    <div key={index} className="w-[156px] h-[39px]">
-                      <Button>{item}</Button>
-                    </div>
-                  ))}
+                  <div className="w-[156px] h-[39px]">
+                    <Button onClick={removeAllClick}>Remove all</Button>
+                  </div>
+                  <div className="w-[156px] h-[39px]">
+                    <Button>Auto deploy</Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -175,12 +236,10 @@ const Manage: React.FC = () => {
             <div className="bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8 w-full flex flex-col justify-between">
               <div className="gap-6">
                 <div>
-                  <Image
-                    src={currentRestaurant?.imgUrl || ""}
-                    alt="cat pic"
-                    width={312}
-                    height={200}
-                    className="flex aspect-[312/200] !rounded"
+                  <img
+                    src={currentRestaurant?.imgUrl}
+                    className="w-[312px] h-[200px] !rounded"
+                    alt=""
                   />
                 </div>
                 <div className="bg-[url('/images/bg-name.png')] h-[42px] bg-contain bg-center bg-no-repeat text-center -translate-y-[30px]">
@@ -234,7 +293,10 @@ const Manage: React.FC = () => {
         </div>
         {showStaffPanel && (
           <div className="absolute z-30 w-full h-full top-0 left-0">
-            <StaffAssign showStaffPanel={setShowStaffPanel} />
+            <StaffAssign
+              showStaffPanel={setShowStaffPanel}
+              onAssignSuccess={assignSuccess}
+            />
           </div>
         )}
         {showCardInfo && (
@@ -243,6 +305,15 @@ const Manage: React.FC = () => {
           </div>
         )}
       </div>
+      {showDialog && (
+        <>
+          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
+          <RemoveConfirmDialog
+            handleClick={handleRemoveAll}
+            onClose={() => setShowDialog(false)}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -88,7 +88,7 @@ const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
                   <span>
                     <img className="w-4 h-4" src="/images/speed.png" alt="" />
                   </span>
-                  <span>{staff?.speed} / s</span>
+                  <span>{staff?.power} / s</span>
                 </div>
                 <hr className="border-[#B5B5B5] mt-3 mb-2" />
                 <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>

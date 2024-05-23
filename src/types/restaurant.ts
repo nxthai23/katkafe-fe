@@ -17,3 +17,9 @@ export type AssignBody = {
   locationId: string;
   catIds: string[];
 };
+
+export type RemoveBody = {
+  catIds?: string[];
+  locationId: string;
+  removeAll?: boolean;
+};

@@ -63,10 +63,10 @@ const StaffList: React.FC = () => {
   const handleChooseClick = (staff: Staff) => {
     setCurrentStaff(staff);
 
-    if (Number(staff.id) === isActive) {
+    if (Number(staff._id) === isActive) {
       setIsActive(null);
     } else {
-      setIsActive(Number(staff.id));
+      setIsActive(Number(staff._id));
     }
     setShowCardInfo(!showCardInfo);
   };
@@ -170,7 +170,7 @@ const StaffList: React.FC = () => {
             >
               {filteredStaffs.map((staff) => (
                 <div
-                  key={staff.id}
+                  key={staff._id}
                   className="w-[100px] h-[130px] cursor-pointer"
                   onClick={() => handleChooseClick(staff)}
                 >

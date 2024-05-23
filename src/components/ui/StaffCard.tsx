@@ -61,7 +61,12 @@ const StaffCard = ({ catId, active, onViewClick, onRemoveClick }: Props) => {
         <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
           <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-contain h-full flex items-end justify-center">
             <div className="flex justify-center">
-              <Image src={imageUrl} alt="cat pic" width={92.5} height={106} />
+              {/* <Image src={imageUrl} alt="cat pic" width={92.5} height={106} /> */}
+              <img
+                src={imageUrl}
+                alt=""
+                className="w-[86px] h-[86px] flex items-center"
+              />
             </div>
           </div>
           <div className="absolute top-0 w-full h-4">

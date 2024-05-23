@@ -6,6 +6,7 @@ export type UserType = {
   rank: string;
   guildId: string;
   isLoginFirstTime: boolean;
+  cats: string[];
 };
 
 export type LoginBody = {

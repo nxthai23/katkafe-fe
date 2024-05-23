@@ -1,8 +1,7 @@
 import { API_RESTAURANTS, API_RESTAURANT, BASE_URL } from "@/constants/api-url";
 import axios from "axios";
 import katAxios from "./axios.config";
-import { UserType } from "@/types/user";
-import { AssignBody } from "@/types/restaurant";
+import { AssignBody, RemoveBody } from "@/types/restaurant";
 
 export const getRestaurants = async () => {
   const response = await katAxios.get(`${BASE_URL}/locations`);
@@ -19,11 +18,18 @@ export const deleteOneStaffOfRestaurant = async (id: number) => {
 };
 
 export const assignCat = async (body: AssignBody) => {
-  console.log("Assigning Staff ID1111111: ", body);
-  try {
-    const response = await katAxios.post(`${BASE_URL}/locations/assign`, body);
-    return response.data;
-  } catch (error) {
-    console.error("Error updating location", error);
-  }
+  const response = await katAxios.post(`${BASE_URL}/locations/assign`, body);
+  return response.data;
+};
+
+export const getPower = async (locationId: string) => {
+  const response = await katAxios.get(
+    `${BASE_URL}/locations/power/${locationId}`
+  );
+  return response.data;
+};
+
+export const removeCat = async (body: RemoveBody) => {
+  const response = await katAxios.post(`${BASE_URL}/locations/remove`, body);
+  return response.data;
 };

@@ -87,7 +87,7 @@ function Restaurant() {
             {currentRestaurants.map((restaurant) => (
               <>
                 <div
-                  key={restaurant.id}
+                  key={restaurant._id}
                   className="border border-[#cccbbd] bg-orange-10 p-2 rounded-lg"
                   style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
                 >

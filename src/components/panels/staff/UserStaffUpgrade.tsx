@@ -158,13 +158,13 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
             >
               {filteredStaffs.map((staff) => (
                 <div
-                  key={staff.id}
+                  key={staff._id}
                   className="w-[100px] h-[130px] cursor-pointer"
                 >
                   <CatCard
                     cat={staff}
                     active={selectedCards.includes(staff)}
-                    onClick={() => handleChooseClick(staff.id)}
+                    onClick={() => handleChooseClick(staff._id)}
                   />
                 </div>
               ))}

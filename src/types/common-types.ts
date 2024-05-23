@@ -17,5 +17,5 @@ export type Staff = {
   imgUrl: string;
   numberStar: number;
   backgroundUrl: string;
-  isAssign: boolean;
+  power: string;
 };

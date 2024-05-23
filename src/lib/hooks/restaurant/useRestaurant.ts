@@ -1,6 +1,8 @@
 "use client";
-import { getRestaurants } from "@/requests/restaurant";
+import { getPower, getRestaurants } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import { serverHooks } from "next/dist/server/app-render/entry-base";
+import { useEffect, useState } from "react";
 
 export const useFetchRestaurants = () => {
   const [setRestaurants, setCurrentRestaurant] = useRestaurantStore((state) => [
@@ -22,3 +24,29 @@ export const useFetchRestaurants = () => {
     fetchRestaurants,
   };
 };
+
+const usePower = (locationId: string) => {
+  const [power, setPower] = useState(null);
+
+  useEffect(() => {
+    const fetchPower = async (id: string) => {
+      try {
+        const powerData = await getPower(id);
+        setPower(powerData);
+      } catch (error) {
+        console.error("Error fetching power:", error);
+        setPower(null);
+      }
+    };
+
+    if (locationId) {
+      fetchPower(locationId);
+    } else {
+      setPower(null);
+    }
+  }, [locationId]);
+
+  return power;
+};
+
+export default usePower;
