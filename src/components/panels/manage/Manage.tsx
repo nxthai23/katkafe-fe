@@ -9,10 +9,11 @@ import { useStaffStore } from "@/stores/staffStore";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
-import { get } from "lodash";
-import { removeCat } from "@/requests/restaurant";
+import { get, set } from "lodash";
+import { assignCat, removeCat } from "@/requests/restaurant";
 import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
+import { use } from "matter";
 
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
@@ -33,14 +34,24 @@ const Manage: React.FC = () => {
   );
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-
+  const [showAlertRemove, setShowAlertRemove] = useState(false);
+  const [showAlertAssign, setShowAlertAssign] = useState(false);
+  const [showAlertAvaliable, setShowAlertAvaliable] = useState(false);
   const [staffs, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
     state.setCurrentStaff,
   ]);
   const [user] = useUserStore((state) => [state.user]);
-
+  const [setAutoActives] = useStaffStore((state) => [state.setAutoActives]);
+  const staffNotAssign = staffs
+    .filter((staff) => {
+      return !currentRestaurant?.cats.some((cat) => cat === staff._id);
+    })
+    .sort((a, b) => b.level - a.level);
+  const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
+    state.isOneAssign,
+    state.setIsOneAssign,
+  ]);
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
   const handleCafeTabClick = () => {
@@ -52,6 +63,7 @@ const Manage: React.FC = () => {
   };
 
   const toggleStaffPanel = () => {
+    setIsOneAssign(true);
     setShowStaffPanel(!showStaffPanel);
   };
 
@@ -101,6 +113,12 @@ const Manage: React.FC = () => {
     await fetchStaffs();
     setLoading(false);
     setActiveCard(null);
+    if (!isOneAssign) {
+      setShowAlertAssign(true);
+      setTimeout(() => {
+        setShowAlertAssign(false);
+      }, 1000);
+    }
   };
 
   const handleRemoveAll = async () => {
@@ -121,18 +139,26 @@ const Manage: React.FC = () => {
     } finally {
       setLoading(false);
       setShowDialog(false);
-      setShowAlert(true);
+      setShowAlertRemove(true);
       setTimeout(() => {
-        setShowAlert(false);
+        setShowAlertRemove(false);
       }, 1000);
     }
   };
-
-  useEffect(() => {
-    fetchRestaurants();
-    fetchStaffs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const autoAssign = async () => {
+    if (currentRestaurant === null) return;
+    const emptySlot =
+      Number(currentRestaurant.slot) - (currentRestaurant.cats.length ?? 0);
+    if (emptySlot === 0) {
+      setShowAlertAvaliable(true);
+      setTimeout(() => {
+        setShowAlertAvaliable(false);
+      }, 1000);
+    } else {
+      setIsOneAssign(false);
+      setShowStaffPanel(true);
+    }
+  };
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -187,7 +213,7 @@ const Manage: React.FC = () => {
                       (_, index) =>
                         !currentRestaurant?.cats[index] ? (
                           <>
-                            <div className="relative">
+                            <div className="relative h-fit">
                               <img
                                 key={index}
                                 src="/images/empty-cat.png"
@@ -226,10 +252,10 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex gap-2 justify-center">
                   <div className="w-[156px] h-[39px]">
-                    <Button onClick={removeAllClick}>Remove all</Button>
+                    <Button onClick={removeAllClick}>Remove All</Button>
                   </div>
                   <div className="w-[156px] h-[39px]">
-                    <Button>Auto deploy</Button>
+                    <Button onClick={autoAssign}>Auto Assign</Button>
                   </div>
                 </div>
               </div>
@@ -317,9 +343,19 @@ const Manage: React.FC = () => {
           />
         </>
       )}
-      {showAlert && (
+      {showAlertRemove && (
         <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
           Remove Successfully!
+        </div>
+      )}
+      {showAlertAssign && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Assign Successfully!
+        </div>
+      )}
+      {showAlertAvaliable && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          No slot avaliable!
         </div>
       )}
     </div>

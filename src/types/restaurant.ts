@@ -6,7 +6,7 @@ export type Restaurant = {
   level: number;
   imgUrl: string;
   maxSlot: string;
-  slot: string;
+  slot: number;
   totalSPB: number;
   staffSlot: number;
   balance: number;

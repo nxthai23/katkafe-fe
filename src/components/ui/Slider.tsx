@@ -84,7 +84,7 @@ const ImageSlider = ({ ranks }: Props) => {
               <Image src={rank.imageUrl} alt="rank" width={164} height={164} />
               <div className="uppercase text-center">{rank.title}</div>
               <div className="text-center text-sm">
-                {user?.balance}M/{rank.balance}M
+                {user?.bean}M/{rank.balance}M
               </div>
             </div>
           </div>

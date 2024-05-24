@@ -8,6 +8,8 @@ import { createCat, updateLoginStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
 import { UserType } from "@/types/user";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 
 export const InGameUI = () => {
   const [
@@ -32,6 +34,9 @@ export const InGameUI = () => {
     state.setUser,
   ]);
   const power = useRestaurantStore((state) => state.power);
+  const bean = useUserStore((state) => state.bean);
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffs } = useFetchStaffs();
 
   const numberCats = 4;
 
@@ -76,6 +81,15 @@ export const InGameUI = () => {
     setShowLoginDialog(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchRestaurants();
+      await fetchStaffs();
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="absolute game-ui top-0">

@@ -2,7 +2,7 @@ export type UserType = {
   id: string;
   name: string;
   imageUrl: string;
-  balance: string;
+  bean: string;
   rank: string;
   guildId: string;
   isLoginFirstTime: boolean;

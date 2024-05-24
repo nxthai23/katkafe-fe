@@ -5,6 +5,7 @@ import StaffCardAssign from "@/components/ui/StaffCardAssign";
 import { useStaffStore } from "@/stores/staffStore";
 import { assignCat } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import { set } from "lodash";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,19 +13,27 @@ type Props = {
 };
 
 const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
-  const [isActive, setIsActive] = useState<string | null>(null);
+  const [isActive, setIsActive] = useState<string[]>([]);
   const [activeSelect, setActiveSelect] = useState("All");
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
+  const [autoActives] = useStaffStore((state) => [state.autoActives]);
+  const [setAutoActives] = useStaffStore((state) => [state.setAutoActives]);
 
   const [staffs] = useStaffStore((state) => [state.staffs]);
   const [currentRestaurant, setRestaurants] = useRestaurantStore((state) => [
     state.currentRestaurant,
     state.setRestaurants,
   ]);
+  const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
+    state.isOneAssign,
+    state.setIsOneAssign,
+  ]);
 
-  const staffNotAssign = staffs.filter((staff) => {
-    return !currentRestaurant?.cats.some((cat) => cat === staff._id);
-  });
+  const staffNotAssign = staffs
+    .filter((staff) => {
+      return !currentRestaurant?.cats.some((cat) => cat === staff._id);
+    })
+    .sort((a, b) => b.level - a.level);
 
   const options = [
     {
@@ -72,21 +81,13 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     setActiveStarFilter(selectName);
   };
 
-  const handleChooseClick = (staffId: string) => {
-    if (staffId === isActive) {
-      setIsActive(null);
-    } else {
-      setIsActive(staffId);
-    }
-  };
-
-  const handleAssign = async (staffId: string) => {
+  const handleAssign = async (isActive: string[]) => {
     try {
       if (!currentRestaurant) return;
-      if (!staffId) return;
+      if (!isActive) return;
       const body = {
         locationId: currentRestaurant._id,
-        catIds: [staffId],
+        catIds: [...isActive],
       };
       const response = await assignCat(body);
       setRestaurants(response);
@@ -99,9 +100,31 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     }
   };
 
+  const handleChooseClick = (staffId: string) => {
+    if (isActive?.includes(staffId)) {
+      setIsActive([]);
+    } else {
+      setIsActive([staffId]);
+    }
+  };
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!isOneAssign) {
+      if (currentRestaurant) {
+        const emptySlot =
+          Number(currentRestaurant.slot) - (currentRestaurant.cats.length ?? 0);
+        const autoActives = emptySlot - staffNotAssign.length;
+        if (autoActives >= 0) {
+          setAutoActives(staffNotAssign.length);
+        }
+        setAutoActives(emptySlot);
+      }
+      const activeStaffIds = staffNotAssign
+        .slice(0, autoActives)
+        .map((staff) => staff._id);
+      setIsActive(activeStaffIds);
+    }
+  }, [autoActives]);
 
   return (
     <div className="Game-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4">
@@ -184,7 +207,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                 <div key={staff._id} className="w-[100px] h-[130px]">
                   <StaffCardAssign
                     cat={staff}
-                    active={isActive === staff._id}
+                    active={isActive?.includes(staff._id)}
                     handleClick={handleChooseClick}
                   />
                 </div>
@@ -195,7 +218,9 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
             <hr className="w-[330px] border-[#e8ddbd] mb-2" />
             <div
               className="flex flex-wrap gap-2 justify-center"
-              onClick={() => handleAssign(isActive || "")}
+              onClick={() =>
+                handleAssign(Array.isArray(isActive) ? isActive : [])
+              }
             >
               <div className="w-[172px] h-[39px] -mb-[3px]">
                 <Button>Assign</Button>
