@@ -94,7 +94,11 @@ export const InGameUI = () => {
   return (
     <div className="absolute game-ui top-0">
       <div className="absolute flex w-full justify-between px-2 py-4">
-        <InfoBox key="branch" title="Balance" content="120" />
+        <InfoBox
+          key="branch"
+          title="Balance"
+          content={user ? user?.bean : "0"}
+        />
         <InfoBox
           key="branchSPD"
           title="Branch SPD"

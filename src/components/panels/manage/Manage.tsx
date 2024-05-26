@@ -196,7 +196,7 @@ const Manage: React.FC = () => {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           {activeTab === "Staff" && (
-            <div className="bg-[#fff8de] rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
+            <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
               <div className="flex items-center bg-orange-20 border border-[#dddcc9] w-fit px-4 rounded relative mx-auto my-2">
                 {power} / s
                 <span className="absolute top-1/2 -translate-y-1/2 -left-[10px]">
@@ -271,39 +271,57 @@ const Manage: React.FC = () => {
                     alt=""
                   />
                 </div>
-                <div className="bg-[url('/images/bg-name.png')] h-[42px] bg-contain bg-center bg-no-repeat text-center -translate-y-[30px]">
-                  <div>{currentRestaurant?.name}</div>
+                <div className="flex items-center justify-between">
+                  <span className="text-bodyXl mt-2">
+                    {currentRestaurant?.name}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <img
+                      src="/images/slot_cat.png"
+                      className="w-[18px] h-[18px]"
+                      alt=""
+                    />
+                    <span>
+                      {currentRestaurant?.cats.length} /{" "}
+                      {currentRestaurant?.slot}
+                    </span>
+                  </div>
                 </div>
                 <div>
-                  <div className="flex justify-between items-center">
-                    <span>Total SPD</span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-bodyMd text-[#6f6f6f]">
+                      Earning Speed
+                    </span>
                     <span className="flex items-center gap-1">
-                      <img className="w-4 h-4" src="/images/coin.png" alt="" />
-                      {currentRestaurant?.totalSPB}/s
+                      <img className="w-4 h-4" src="/images/speed.png" alt="" />
+                      {power} / s
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Shop level</span>
-                    <span>{currentRestaurant?.level}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Staff slot</span>
-                    <span>{currentRestaurant?.staffSlot}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Upgrade Fee</span>
+                  <hr className="border-t border-gray-20 my-2" />
+
+                  <div className="flex flex-col">
+                    <span className="text-bodyMd text-[#6f6f6f]">
+                      Upgrade Fee
+                    </span>
                     {/* TODO: chưa có API */}
-                    <span className="flex items-center gap-1">
-                      <img className="w-4 h-4" src="/images/coin.png" alt="" />
-                      12M
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Total SPD</span>
-                    <span className="flex items-center gap-1">
-                      <img className="w-4 h-4" src="/images/coin.png" alt="" />
-                      {currentRestaurant?.balance}M
-                    </span>
+                    <div className="flex items-center">
+                      <span className="flex items-center gap-1">
+                        <img
+                          className="w-4 h-4"
+                          src="/images/coin.png"
+                          alt=""
+                        />
+                        12M /
+                      </span>
+                      <span className="flex items-center gap-1 ml-1">
+                        <img
+                          className="w-4 h-4"
+                          src="/images/coin.png"
+                          alt=""
+                        />
+                        123M
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
