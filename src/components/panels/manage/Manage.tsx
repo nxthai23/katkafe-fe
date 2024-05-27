@@ -160,6 +160,12 @@ const Manage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    fetchRestaurants();
+    fetchStaffs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">

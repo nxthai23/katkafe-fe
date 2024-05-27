@@ -10,6 +10,8 @@ import LoginAward from "./LoginAward";
 import { UserType } from "@/types/user";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import { getClaim, getClaimable } from "@/requests/user";
+import OfflineEarning from "./OfflineEarning";
 
 export const InGameUI = () => {
   const [
@@ -35,10 +37,20 @@ export const InGameUI = () => {
   ]);
   const power = useRestaurantStore((state) => state.power);
   const bean = useUserStore((state) => state.bean);
+  const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
+    (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
+  );
+  const [claimableData, setClaimableData] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
 
   const numberCats = 4;
+
+  const handleOnClick = () => {
+    setShowOfflineEarning(false);
+  };
 
   const handleClick = async () => {
     setShowLoginDialog(false);
@@ -53,6 +65,7 @@ export const InGameUI = () => {
     }
     setShowLoginAward(true);
   };
+
   const handleClaim = async () => {
     try {
       for (let i = 0; i < numberCats; i++) {
@@ -63,6 +76,30 @@ export const InGameUI = () => {
     }
     setShowLoginAward(false);
   };
+
+  useEffect(() => {
+    const handleClaimable = async () => {
+      try {
+        const response = await getClaimable();
+        if (response) {
+          setClaimableData(response);
+        }
+      } catch (error) {
+        console.log("Error Claimable", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    handleClaimable();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setShowOfflineEarning(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   useEffect(() => {
     const Login = async () => {
@@ -164,6 +201,9 @@ export const InGameUI = () => {
           <div className="bg-[#232322] opacity-80 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
           <LoginAward handleClaim={handleClaim} response={response} />
         </>
+      )}
+      {!loading && !user?.isLoginFirstTime && showOfflineEarning && (
+        <OfflineEarning onClick={handleOnClick} data={claimableData} />
       )}
     </div>
   );

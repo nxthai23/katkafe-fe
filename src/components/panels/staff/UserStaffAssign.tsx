@@ -124,6 +124,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
         .map((staff) => staff._id);
       setIsActive(activeStaffIds);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoActives]);
 
   return (

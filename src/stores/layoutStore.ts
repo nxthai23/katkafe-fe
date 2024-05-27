@@ -15,6 +15,7 @@ type States = {
   showRankPanel: boolean;
   showGuildDetailPanel: boolean;
   showRestaurantPanel: boolean;
+  showOfflineEarning: boolean;
   // showStaffDetailPanel: boolean;
 
   // previousPanel: "staff" | "manage" | "staff-detail" | "Friend" | null;
@@ -35,6 +36,7 @@ type Actions = {
   setShowRankPanel: (show: boolean) => void;
   setShowGuildDetailPanel: (show: boolean) => void;
   setShowRestaurantPanel: (show: boolean) => void;
+  setShowOfflineEarning: (show: boolean) => void;
 
   // setStaffDetailPanel: (show: boolean) => void;
 };
@@ -54,6 +56,7 @@ const defaultStates = {
   showRankPanel: false,
   showGuildDetailPanel: false,
   showRestaurantPanel: false,
+  showOfflineEarning: false,
 
   // showStaffDetailPanel: false,
 };
@@ -128,6 +131,11 @@ export const useLayoutStore = create<States & Actions>((set) => ({
   setShowRestaurantPanel: (show: boolean) => {
     set({
       showRestaurantPanel: show,
+    });
+  },
+  setShowOfflineEarning: (show: boolean) => {
+    set({
+      showOfflineEarning: show,
     });
   },
   // setStaffDetailPanel: (show: boolean) => {
