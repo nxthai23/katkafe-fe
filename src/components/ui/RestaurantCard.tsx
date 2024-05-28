@@ -2,16 +2,18 @@ import React from "react";
 import Image from "next/image";
 import { get } from "lodash";
 import { Restaurant } from "@/types/restaurant";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 type Props = {
   restaurant: Restaurant;
 };
 
 const RestaurantCard = ({ restaurant }: Props) => {
+  const [power] = useRestaurantStore((state) => [state.power]);
   const name = get(restaurant, "name", "");
-  const imageUrl = get(restaurant, "imageUrl", "");
-  const totalSPB = get(restaurant, "totalSPB", "");
-  const staffSlot = get(restaurant, "staffSlot", "");
+  const imageUrl = get(restaurant, "imgUrl", "");
+  const staffSlot = get(restaurant, "slot", "");
+  const cats = get(restaurant, "cats", []);
 
   return (
     <div>
@@ -27,21 +29,28 @@ const RestaurantCard = ({ restaurant }: Props) => {
           <div>{name}</div>
           <div className="flex gap-1 items-center">
             <div>
-              <Image src="/images/coin.png" alt="coin" width={16} height={16} />
+              <Image
+                src="/images/speed.png"
+                alt="coin"
+                width={16}
+                height={16}
+              />
             </div>
-            {totalSPB}/s
+            {power}/s
           </div>
         </div>
         <div className="flex items-center gap-1">
           <div>
             <Image
-              src="/images/cat-img.png"
+              src="/images/slot_cat.png"
               alt="coin"
               width={16}
               height={16}
             />
           </div>
-          <div>{staffSlot}/6</div>
+          <div>
+            {cats.length}/{staffSlot}
+          </div>
         </div>
       </div>
     </div>

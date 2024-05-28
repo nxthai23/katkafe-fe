@@ -55,22 +55,24 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     boxShadow: "0px -2px 0px 0px #BC9D9B inset",
   };
 
-  const filteredStaffs = useMemo(
-    () =>
-      staffNotAssign.filter((staff) => {
-        if (activeStarFilter === "All") {
-          return true;
-        } else if (activeStarFilter === "OneStar") {
-          return staff.numberStar === 1;
-        } else if (activeStarFilter === "TwoStar") {
-          return staff.numberStar === 2;
-        } else if (activeStarFilter === "ThreeStar") {
-          return staff.numberStar === 3;
-        }
-        return false;
-      }),
-    [activeStarFilter, staffNotAssign]
-  );
+  const getFilteredStaffs = () => {
+    let filtered = staffNotAssign;
+
+    if (activeStarFilter !== "All") {
+      filtered = filtered.filter((staff) => {
+        if (activeStarFilter === "OneStar") return staff.numberStar === 1;
+        if (activeStarFilter === "TwoStar") return staff.numberStar === 2;
+        if (activeStarFilter === "ThreeStar") return staff.numberStar === 3;
+        return true;
+      });
+    }
+
+    if (activeSelect === "LevelAsc") {
+      filtered = filtered.slice().sort((a, b) => a.level - b.level);
+    }
+
+    return filtered;
+  };
 
   const handleClose = () => {
     showStaffPanel(false);
@@ -204,7 +206,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                 scrollbarColor: "#666666 #ffe",
               }}
             >
-              {filteredStaffs.map((staff) => (
+              {getFilteredStaffs().map((staff) => (
                 <div key={staff._id} className="w-[100px] h-[130px]">
                   <StaffCardAssign
                     cat={staff}
