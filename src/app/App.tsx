@@ -29,10 +29,11 @@ function App() {
         console.log("Error Claim", error);
       }
     };
-
-    intervalRef.current = window.setInterval(() => {
-      handleClaim();
-    }, 5000);
+    if (user && !user.isLoginFirstTime) {
+      intervalRef.current = window.setInterval(() => {
+        handleClaim();
+      }, 5000);
+    }
 
     return () => {
       clearClaimInterval();

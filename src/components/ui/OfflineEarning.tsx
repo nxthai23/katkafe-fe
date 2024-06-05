@@ -32,7 +32,7 @@ const OfflineEarning = ({ onClick, data }: Props) => {
             <div className="absolute top-1/2 -translate-y-1/2 -left-2">
               <img src="/images/coin.png" className="w-4 h-4" alt="" />
             </div>
-            {data}
+            {data ? data : "0"}
           </div>
         </div>
 

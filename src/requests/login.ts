@@ -18,6 +18,17 @@ export const updateLoginStatus = async () => {
   }
 };
 
+export const updateStatus = async () => {
+  try {
+    const response = await katAxios.post<UserType>(
+      `${BASE_URL}/users/update-status`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error update status", error);
+  }
+};
+
 export const createCat = async () => {
   try {
     const response = await katAxios.post(`${BASE_URL}/cats/create`);

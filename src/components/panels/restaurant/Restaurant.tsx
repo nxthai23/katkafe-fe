@@ -37,7 +37,7 @@ function Restaurant() {
     description: "To unlock this coffee shopo you'll need:",
     catOwned: 4,
     shopLevel: 9,
-    fee: 20000,
+    fee: "20000",
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;

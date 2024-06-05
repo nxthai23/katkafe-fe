@@ -7,7 +7,7 @@ type Props = {
     description: string;
     catOwned: number;
     shopLevel: number;
-    fee: number;
+    fee: string;
   };
   onClose?: () => void;
 };
@@ -66,7 +66,7 @@ const UnlockDialog: React.FC<Props> = ({ data }: Props) => {
           <div>Fee</div>
           <div className="flex gap-1">
             <img src="/images/coin.png" width={24} height={24} alt="" />
-            {data.fee < 150000 ? (
+            {Number(data.fee) < 150000 ? (
               <span className="text-[#F74751]">{data.fee}/150000</span>
             ) : (
               <span className="text-black">{data.fee}/150000</span>

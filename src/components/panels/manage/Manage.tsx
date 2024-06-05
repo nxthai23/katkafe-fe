@@ -10,7 +10,12 @@ import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get, set } from "lodash";
-import { assignCat, removeCat } from "@/requests/restaurant";
+import {
+  assignCat,
+  removeCat,
+  upgradeRestaurant,
+  upgradeRequireRestaurant,
+} from "@/requests/restaurant";
 import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { use } from "matter";
@@ -25,29 +30,35 @@ const Manage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Cafe");
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
+  const { fetchUser } = useUserStore();
 
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [currentRestaurant, power, setRestaurants] = useRestaurantStore(
-    (state) => [state.currentRestaurant, state.power, state.setRestaurants]
-  );
+  const [currentRestaurant, power, setCurrentRestaurant, setRestaurants] =
+    useRestaurantStore((state) => [
+      state.currentRestaurant,
+      state.power,
+      state.setCurrentRestaurant,
+      state.setRestaurants,
+    ]);
   const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
   const [showAlertAssign, setShowAlertAssign] = useState(false);
   const [showAlertAvaliable, setShowAlertAvaliable] = useState(false);
+  const [showNotiCat, setShowNotiCat] = useState(false);
+  const [showNotiBean, setShowNotiBean] = useState(false);
+  const [showNotiLevel, setShowNotiLevel] = useState(false);
   const [staffs, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
     state.setCurrentStaff,
   ]);
-  const [user] = useUserStore((state) => [state.user]);
+  const [fee, setFee] = useState(0);
+  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
   const [setAutoActives] = useStaffStore((state) => [state.setAutoActives]);
-  const staffNotAssign = staffs
-    .filter((staff) => {
-      return !currentRestaurant?.cats.some((cat) => cat === staff._id);
-    })
-    .sort((a, b) => b.level - a.level);
+  const [isUpdated, setIsUpdated] = useState(false);
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
@@ -93,7 +104,7 @@ const Manage: React.FC = () => {
         catId: catIdToRemove,
       };
       const response = await removeCat(body);
-      setRestaurants(response);
+      setCurrentRestaurant(response);
       await fetchRestaurants();
       await fetchStaffs();
       setActiveCard(null);
@@ -160,7 +171,71 @@ const Manage: React.FC = () => {
     }
   };
 
+  const handleUpgrade = async () => {
+    try {
+      setLoading(true);
+      if (!user || !currentRestaurant) return;
+      if (currentRestaurant.level >= 9) {
+        setShowNotiLevel(true);
+        setTimeout(() => {
+          setShowNotiLevel(false);
+        }, 1000);
+        return;
+      }
+      if (Number(user.bean) < fee) {
+        setShowNotiBean(true);
+        setTimeout(() => {
+          setShowNotiBean(false);
+        }, 1000);
+        return;
+      }
+      if (user.cats.length < numberCatsRequire) {
+        setShowNotiCat(true);
+        setTimeout(() => {
+          setShowNotiCat(false);
+        }, 1000);
+        return;
+      }
+      const data = await upgradeRestaurant({
+        locationId: currentRestaurant._id,
+      });
+      setCurrentRestaurant(data.upgradedLocation);
+      await fetchUser();
+      setIsUpdated(true);
+    } catch (error) {
+      console.error("Error upgrade", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchDataUpgrade = async () => {
+    try {
+      if (!user || !currentRestaurant) return;
+      setLoading(true);
+      const body = {
+        level: currentRestaurant.level,
+      };
+      const response = await upgradeRequireRestaurant(body);
+      setFee(response.nextFee);
+      setNumberCatsRequire(response.numberCats);
+      setIsUpdated(false);
+    } catch (error) {
+      console.error("Error upgrade", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
+    if (isUpdated) {
+      fetchDataUpgrade();
+      fetchRestaurants();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdated]);
+
+  useEffect(() => {
+    fetchDataUpgrade();
     fetchRestaurants();
     fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,11 +284,17 @@ const Manage: React.FC = () => {
                   <img src="./images/speed.png" alt="" className="w-6 h-6" />
                 </span>
               </div>
-              <div className="h-[calc(100%-26px-8px)] overflow-y-auto">
+              <div
+                className="h-[calc(100%-26px-8px)] overflow-y-auto"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#666666 #ffe",
+                }}
+              >
                 <>
                   <div
                     key={currentRestaurant?._id}
-                    className="flex flex-wrap gap-x-2 gap-y-4 mt-2 h-full"
+                    className="grid grid-cols-3 gap-y-4 mt-2"
                   >
                     {Array.from(Array(currentRestaurant?.slot)).map(
                       (_, index) =>
@@ -317,7 +398,7 @@ const Manage: React.FC = () => {
                           src="/images/coin.png"
                           alt=""
                         />
-                        12M /
+                        {user?.bean} /
                       </span>
                       <span className="flex items-center gap-1 ml-1">
                         <img
@@ -325,7 +406,7 @@ const Manage: React.FC = () => {
                           src="/images/coin.png"
                           alt=""
                         />
-                        123M
+                        {fee}
                       </span>
                     </div>
                   </div>
@@ -334,11 +415,9 @@ const Manage: React.FC = () => {
               <div>
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {["Upgrade"].map((item, index) => (
-                    <div key={index} className="w-[172px] h-[39px]">
-                      <Button>{item}</Button>
-                    </div>
-                  ))}
+                  <div className="w-[172px] h-[39px]" onClick={handleUpgrade}>
+                    <Button>Upgrade</Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -380,6 +459,21 @@ const Manage: React.FC = () => {
       {showAlertAvaliable && (
         <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
           No slot avaliable!
+        </div>
+      )}
+      {showNotiLevel && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Max level!
+        </div>
+      )}
+      {showNotiBean && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not enough bean!
+        </div>
+      )}
+      {showNotiCat && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not eanough cats!
         </div>
       )}
     </div>

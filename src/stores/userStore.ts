@@ -1,4 +1,5 @@
 import { postLogin } from "@/requests/login";
+import { getUser } from "@/requests/user";
 import { UserType } from "@/types/user";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -14,6 +15,7 @@ type Actions = {
   login: (body: any) => Promise<void>;
   clear: () => void;
   setUser: (user: UserType | null) => void;
+  fetchUser: () => Promise<void>;
 };
 
 // Khởi tạo giá trị mặc định cho state
@@ -43,6 +45,12 @@ export const useUserStore = create<State & Actions>()(
         set(defaultStates);
       },
       setUser: (user) => set({ user }),
+      fetchUser: async () => {
+        const user = await getUser();
+        if (user) {
+          set({ user });
+        }
+      },
     }),
     { name: "userStore" }
   )

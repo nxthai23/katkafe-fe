@@ -23,3 +23,11 @@ export type RemoveBody = {
   locationId: string;
   removeAll?: boolean;
 };
+
+export type UpdateBody = {
+  locationId: string;
+};
+
+export type RequireUpgradeBody = {
+  level: number;
+};

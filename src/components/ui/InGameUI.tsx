@@ -4,7 +4,7 @@ import { MenuButton } from "./MenuButton";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useUserStore } from "@/stores/userStore";
 import LoginDialog from "./LoginDialog";
-import { createCat, updateLoginStatus } from "@/requests/login";
+import { createCat, updateLoginStatus, updateStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
 import { UserType } from "@/types/user";
@@ -68,9 +68,15 @@ export const InGameUI = () => {
 
   const handleClaim = async () => {
     try {
+      const response = await updateStatus();
+      if (response) {
+        setUser(response);
+        setResponse(response);
+      }
       for (let i = 0; i < numberCats; i++) {
         await createCat();
       }
+      throw new Error("Error updating status");
     } catch (error) {
       console.log("Create error", error);
     }
@@ -90,8 +96,10 @@ export const InGameUI = () => {
         setLoading(false);
       }
     };
-
-    handleClaimable();
+    if (user && !user.isLoginFirstTime && parseInt(user.bean) > 12) {
+      handleClaimable();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -116,6 +124,7 @@ export const InGameUI = () => {
 
     Login();
     setShowLoginDialog(true);
+    useRestaurantStore.setState({ power: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
 
@@ -202,7 +211,7 @@ export const InGameUI = () => {
           <LoginAward handleClaim={handleClaim} response={response} />
         </>
       )}
-      {!loading && !user?.isLoginFirstTime && showOfflineEarning && (
+      {!loading && user && !user.isLoginFirstTime && showOfflineEarning && (
         <OfflineEarning onClick={handleOnClick} data={claimableData} />
       )}
     </div>

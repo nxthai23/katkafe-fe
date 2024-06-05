@@ -1,7 +1,12 @@
 import { API_RESTAURANTS, API_RESTAURANT, BASE_URL } from "@/constants/api-url";
 import axios from "axios";
 import katAxios from "./axios.config";
-import { AssignBody, RemoveBody } from "@/types/restaurant";
+import {
+  AssignBody,
+  RemoveBody,
+  RequireUpgradeBody,
+  UpdateBody,
+} from "@/types/restaurant";
 
 export const getRestaurants = async () => {
   const response = await katAxios.get(`${BASE_URL}/locations`);
@@ -31,5 +36,18 @@ export const getPower = async (locationId: string) => {
 
 export const removeCat = async (body: RemoveBody) => {
   const response = await katAxios.post(`${BASE_URL}/locations/remove`, body);
+  return response.data;
+};
+
+export const upgradeRestaurant = async (body: UpdateBody) => {
+  const response = await katAxios.post(`${BASE_URL}/locations/upgrade`, body);
+  return response.data;
+};
+
+export const upgradeRequireRestaurant = async (body: RequireUpgradeBody) => {
+  const response = await katAxios.post(
+    `${BASE_URL}/location-upgrade/next-level`,
+    body
+  );
   return response.data;
 };
