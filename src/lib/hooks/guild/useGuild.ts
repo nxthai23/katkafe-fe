@@ -1,13 +1,14 @@
 import { getGuilds, getOneGuild } from "@/requests/guild";
 import { useGuildStore } from "@/stores/guild/guildStore";
+import guildsData from "@/mock-data/guilds.json";
 
 export const useFetchGuilds = () => {
   const [setGuilds] = useGuildStore((state) => [state.setGuilds]);
 
   const fetchGuilds = async () => {
     try {
-      const response = await getGuilds();
-      setGuilds(response);
+      // const response = await getGuilds();
+      setGuilds(guildsData.guilds as any);
     } catch (error) {
       console.error("Error fetching", error);
     }
