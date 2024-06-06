@@ -3,7 +3,7 @@ export type Bundle = {
   name: string;
   imageUrl: string;
   price: string;
-  item: [
+  items: [
     {
       name: string;
       value: string;

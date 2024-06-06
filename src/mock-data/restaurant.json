@@ -1,0 +1,40 @@
+{
+  "restaurant": [
+    {
+      "id": "1",
+      "name": "Cafe's staff",
+      "level": 1,
+      "imageUrl": "/images/bg-deploy.png",
+      "numberStaff": "9",
+      "totalSPB": "10933",
+      "staffSlot": "4",
+      "balance": "12",
+      "staff": [
+        {
+          "id": "1",
+          "name": "Cat 1",
+          "level": 2,
+          "avatar": "/images/Cat.png",
+          "numberStar": 1,
+          "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+          "id": "2",
+          "name": "Cat 2",
+          "level": 2,
+          "avatar": "/images/Cat.png",
+          "numberStar": 2,
+          "backgroundUrl": "/images/background-cat.png"
+        },
+        {
+          "id": "3",
+          "name": "Cat 3",
+          "level": 2,
+          "avatar": "/images/Cat.png",
+          "numberStar": 3,
+          "backgroundUrl": "/images/background-cat.png"
+        }
+      ]
+    }
+  ]
+}

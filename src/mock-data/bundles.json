@@ -1,0 +1,94 @@
+{
+  "bundles": [
+    {
+      "id": "1",
+      "name": "Tiny Bundle 100",
+      "imageUrl": "/images/bg-deploy.png",
+      "price": "12",
+      "items": [
+        {
+          "name": "gold",
+          "value": "12",
+          "imageUrl": "/images/coin.png"
+        },
+        {
+          "name": "kbuck",
+          "value": "12",
+          "imageUrl": "/images/kbuck.png"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Tiny Bundle 200",
+      "imageUrl": "/images/bg-deploy.png",
+      "price": "12",
+      "items": [
+        {
+          "name": "gold",
+          "value": "12",
+          "imageUrl": "/images/coin.png"
+        },
+        {
+          "name": "kbuck",
+          "value": "12",
+          "imageUrl": "/images/kbuck.png"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Tiny Bundle 300",
+      "imageUrl": "/images/bg-deploy.png",
+      "price": "12",
+      "items": [
+        {
+          "name": "gold",
+          "value": "12",
+          "imageUrl": "/images/coin.png"
+        },
+        {
+          "name": "kbuck",
+          "value": "12",
+          "imageUrl": "/images/kbuck.png"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Tiny Bundle 300",
+      "imageUrl": "/images/bg-deploy.png",
+      "price": "12",
+      "items": [
+        {
+          "name": "gold",
+          "value": "12",
+          "imageUrl": "/images/coin.png"
+        },
+        {
+          "name": "kbuck",
+          "value": "12",
+          "imageUrl": "/images/kbuck.png"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Tiny Bundle 300",
+      "imageUrl": "/images/bg-deploy.png",
+      "price": "12",
+      "items": [
+        {
+          "name": "gold",
+          "value": "12",
+          "imageUrl": "/images/coin.png"
+        },
+        {
+          "name": "kbuck",
+          "value": "12",
+          "imageUrl": "/images/kbuck.png"
+        }
+      ]
+    }
+  ]
+}

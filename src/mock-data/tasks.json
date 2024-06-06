@@ -1,0 +1,34 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "2",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "3",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "4",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    },
+    {
+      "id": "5",
+      "title": "Add Kat Kafé bot user",
+      "imageUrl": "/images/user-task.png",
+      "claim": "100"
+    }
+  ]
+}
