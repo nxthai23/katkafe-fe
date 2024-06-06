@@ -1,0 +1,39 @@
+{
+  "baristas": [
+    {
+      "id": "1",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": 12323,
+      "totalFriend": 1224
+    },
+    {
+      "id": "2",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": 12323,
+      "totalFriend": 1224
+    },
+    {
+      "id": "3",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": 12323,
+      "totalFriend": 1224
+    },
+    {
+      "id": "4",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": 12323,
+      "totalFriend": 1224
+    },
+    {
+      "id": "5",
+      "name": "Mizu Waha",
+      "imageUrl": "/images/cat.png",
+      "totalBonus": 12323,
+      "totalFriend": 1224
+    }
+  ]
+}

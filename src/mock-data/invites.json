@@ -1,0 +1,14 @@
+{
+  "invites": [
+    {
+      "id": "1",
+      "title": "Invite Regular user",
+      "bonus": 3
+    },
+    {
+      "id": "2",
+      "title": "Invite Premium Telegram user",
+      "bonus": 43
+    }
+  ]
+}
