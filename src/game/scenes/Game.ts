@@ -39,7 +39,7 @@ export class Game extends Scene {
     // this.gameManager.createEmptyPointsForSpawn();
     // this.gameManager.createEmptyPoints();
 
-    // this.gameManager.guestGenerator.play();
+    this.gameManager.guestGenerator.play();
 
     this.physics.world.addCollider(
       this.gameManager.cats,
@@ -49,15 +49,15 @@ export class Game extends Scene {
       this.gameManager.cats,
       this.gameManager.cats
     );
-    // this.physics.world.addCollider(
-    //   this.gameManager.guestGenerator.guests,
-    //   this.gameManager.walls
-    // );
+    this.physics.world.addCollider(
+      this.gameManager.guestGenerator.guests,
+      this.gameManager.walls
+    );
 
-    // this.physics.world.addCollider(
-    //   this.gameManager.guestGenerator.guests,
-    //   this.gameManager.guestGenerator.guests
-    // );
+    this.physics.world.addCollider(
+      this.gameManager.guestGenerator.guests,
+      this.gameManager.guestGenerator.guests
+    );
 
     EventBus.emit("current-scene-ready", this);
 

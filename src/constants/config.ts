@@ -49,8 +49,8 @@ export const CAT_CHANGE_DISPLAY_LEVELS = [
 
 export const GUEST_SPEED = 50;
 export const MAX_GUESTS = 6;
-export const GUEST_MAX_GEN_DELAY = 10000;
-export const GUEST_MIN_GEN_DELAY = 3000;
+export const GUEST_MAX_GEN_DELAY = 20000;
+export const GUEST_MIN_GEN_DELAY = 100000;
 export const GUEST_MAX_ORDER_DELAY = 8000;
 export const GUEST_MIN_ORDER_DELAY = 3000;
 
