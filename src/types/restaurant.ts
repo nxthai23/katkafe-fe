@@ -24,7 +24,7 @@ export type RemoveBody = {
   removeAll?: boolean;
 };
 
-export type UpdateBody = {
+export type UpgradeBody = {
   locationId: string;
 };
 

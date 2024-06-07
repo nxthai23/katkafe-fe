@@ -1,27 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Star from "./Star";
 import Button from "./Button";
 import StaffUpgrade from "../panels/staff/UserStaffUpgrade";
 import { useStaffStore } from "@/stores/staffStore";
+import { upgradeRequireStaff } from "@/requests/staff";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import { useUserStore } from "@/stores/userStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import { Loading } from "./Loading";
 
 type Props = {
-  onClose?: () => void;
+  onBack?: () => void;
+  handleUpgrade?: () => void;
 };
 
-const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
+const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
   const [showStaffUpgradePanel, setShowStaffUpgradePanel] = useState(false);
   const [staff] = useStaffStore((state) => [state.currentStaff]);
+  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
+
+  const [numberCatRequire, setNumberCatRequire] = useStaffStore((state) => [
+    state.numberCatRequire,
+    state.setNumberCatRequire,
+  ]);
+  const { fetchStaffs } = useFetchStaffs();
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [numberCatPick] = useStaffStore((state) => [state.numberCatPick]);
+  const [isShowing, show, hide] = useLoadingStore((state) => [
+    state.isShowing,
+    state.show,
+    state.hide,
+  ]);
+
+  const fetchDataUpgrade = async () => {
+    show();
+    if (!staff) return;
+    try {
+      const response = await upgradeRequireStaff({ catId: staff._id });
+      if (response && response.fee !== undefined) {
+        setFee(response.fee);
+        setNumberCatRequire(response.numberCatRequire);
+      }
+    } catch (error) {
+      console.error("Failed to fetch upgrade data", error);
+    } finally {
+      setTimeout(() => {
+        hide();
+      }, 1000);
+    }
+  };
 
   const customClass = "w-4 h-4";
-
-  const handleBack = () => {
-    onClose?.();
-  };
 
   const handleShowStaffUpgrade = () => {
     setShowStaffUpgradePanel(true);
   };
+
+  useEffect(() => {
+    fetchDataUpgrade();
+    fetchStaffs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staff]);
 
   return (
     <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-40 p-4 top-0 left-0">
@@ -32,7 +72,7 @@ const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
               className="w-8 h-8"
               src="/images/back.png"
               alt=""
-              onClick={handleBack}
+              onClick={onBack}
             />
           </div>
           <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-orange-90 bg-orange-10 rounded-t-xl text-orange-90">
@@ -52,7 +92,7 @@ const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
                       <div className="flex justify-center mt-14 relative">
                         <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-30"></div>
                         <Image
-                          src={staff?.imgUrl || ""}
+                          src={staff?.imgUrl || "/images/Cat.png"}
                           alt="cat pic"
                           width={106}
                           height={106}
@@ -99,33 +139,53 @@ const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
                   </span>
-                  <div>12 M / </div>
+                  <div> {user?.bean} /</div>
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
                   </span>
-                  <div> 124.987 M</div>
+                  <div>{fee} </div>
                 </div>
-
                 <div className="items-center">
                   <span className="text-bodyMd text-[#6F6F6F]">
                     Cat require
                   </span>
-                  <span className="flex items-center gap-1">0 / 3</span>
+                  <span className="flex items-center gap-1">
+                    {numberCatPick} / {numberCatRequire}
+                  </span>
                 </div>
               </div>
             </div>
             <div className="w-full text-center">
               <hr className="mt-4 my-2 border-[#e8ddbd]" />
               <div className="flex gap-2 justify-center">
-                <div
-                  className="w-[172px] h-[39px]"
-                  onClick={handleShowStaffUpgrade}
-                >
-                  <Button>Pick Cat</Button>
-                </div>
-                <div className="w-[172px] h-[39px]">
-                  <Button disabled>Upgrade</Button>
-                </div>
+                {staff && staff.level < 100 && (
+                  <div
+                    className="w-[172px] h-[39px]"
+                    onClick={handleShowStaffUpgrade}
+                  >
+                    {numberCatRequire === 0 ||
+                    numberCatPick > numberCatRequire ? (
+                      <Button disabled>Pick Cat</Button>
+                    ) : (
+                      <Button>Pick Cat</Button>
+                    )}
+                  </div>
+                )}
+                {staff && staff.level < 100 ? (
+                  <div className="w-[172px] h-[39px]">
+                    {numberCatPick >= numberCatRequire ? (
+                      <Button onClick={handleUpgrade}>Upgrade</Button>
+                    ) : (
+                      <Button disabled onClick={handleUpgrade}>
+                        Upgrade
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-[172px] h-[39px]">
+                    <Button disabled>Max Level</Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -136,6 +196,7 @@ const CardInfo: React.FC<Props> = ({ onClose }: Props) => {
           <StaffUpgrade showStaffUpgradePanel={setShowStaffUpgradePanel} />
         </div>
       )}
+      {isShowing && <Loading />}
     </div>
   );
 };

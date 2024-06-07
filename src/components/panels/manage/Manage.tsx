@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import StaffCard from "../../ui/StaffCard";
-import Image from "next/image";
 import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
 import { useLayoutStore } from "@/stores/layoutStore";
@@ -9,16 +8,17 @@ import { useStaffStore } from "@/stores/staffStore";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
-import { get, set } from "lodash";
+import { get } from "lodash";
+
 import {
-  assignCat,
   removeCat,
   upgradeRestaurant,
   upgradeRequireRestaurant,
 } from "@/requests/restaurant";
 import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
-import { use } from "matter";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import { Loading } from "@/components/ui/Loading";
 
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
@@ -42,7 +42,6 @@ const Manage: React.FC = () => {
       state.setCurrentRestaurant,
       state.setRestaurants,
     ]);
-  const [loading, setLoading] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
   const [showAlertAssign, setShowAlertAssign] = useState(false);
@@ -57,11 +56,15 @@ const Manage: React.FC = () => {
   const [fee, setFee] = useState(0);
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [setAutoActives] = useStaffStore((state) => [state.setAutoActives]);
   const [isUpdated, setIsUpdated] = useState(false);
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
+  ]);
+  const [isShowing, show, hide] = useLoadingStore((state) => [
+    state.isShowing,
+    state.show,
+    state.hide,
   ]);
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
@@ -112,18 +115,18 @@ const Manage: React.FC = () => {
       console.error("Error removing staff", error);
       alert("Failed to delete staff. Please try again.");
     } finally {
-      setLoading(false);
+      hide();
     }
   };
   const removeAllClick = () => {
     setShowDialog(true);
   };
   const assignSuccess = async () => {
-    setLoading(true);
+    show();
     await fetchRestaurants();
     await fetchStaffs();
-    setLoading(false);
     setActiveCard(null);
+    hide();
     if (!isOneAssign) {
       setShowAlertAssign(true);
       setTimeout(() => {
@@ -135,7 +138,7 @@ const Manage: React.FC = () => {
   const handleRemoveAll = async () => {
     try {
       if (!user || !currentRestaurant || !user.cats) return;
-      setLoading(true);
+      show();
       const body = {
         locationId: currentRestaurant._id,
         removeAll: true,
@@ -148,7 +151,7 @@ const Manage: React.FC = () => {
     } catch (error) {
       console.error("Error remove all", error);
     } finally {
-      setLoading(false);
+      hide();
       setShowDialog(false);
       setShowAlertRemove(true);
       setTimeout(() => {
@@ -173,7 +176,7 @@ const Manage: React.FC = () => {
 
   const handleUpgrade = async () => {
     try {
-      setLoading(true);
+      show();
       if (!user || !currentRestaurant) return;
       if (currentRestaurant.level >= 9) {
         setShowNotiLevel(true);
@@ -200,19 +203,22 @@ const Manage: React.FC = () => {
         locationId: currentRestaurant._id,
       });
       setCurrentRestaurant(data.upgradedLocation);
-      await fetchUser();
+      // await fetchUser();
       setIsUpdated(true);
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {
-      setLoading(false);
+      if (currentRestaurant && currentRestaurant.level < 9)
+        setTimeout(() => {
+          hide();
+        }, 1000);
     }
   };
 
   const fetchDataUpgrade = async () => {
     try {
       if (!user || !currentRestaurant) return;
-      setLoading(true);
+      show();
       const body = {
         level: currentRestaurant.level,
       };
@@ -223,7 +229,7 @@ const Manage: React.FC = () => {
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {
-      setLoading(false);
+      hide();
     }
   };
   useEffect(() => {
@@ -415,9 +421,15 @@ const Manage: React.FC = () => {
               <div>
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
-                  <div className="w-[172px] h-[39px]" onClick={handleUpgrade}>
-                    <Button>Upgrade</Button>
-                  </div>
+                  {currentRestaurant && currentRestaurant.level === 9 ? (
+                    <div className="w-[172px] h-[39px]">
+                      <Button disabled>Max Level</Button>
+                    </div>
+                  ) : (
+                    <div className="w-[172px] h-[39px]" onClick={handleUpgrade}>
+                      <Button>Upgrade</Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -433,7 +445,7 @@ const Manage: React.FC = () => {
         )}
         {showCardInfo && (
           <div className="absolute z-30 w-full h-full top-0 left-0">
-            <CardInfo onClose={() => setShowCardInfo(false)} />
+            <CardInfo onBack={() => setShowCardInfo(false)} />
           </div>
         )}
       </div>
@@ -476,6 +488,7 @@ const Manage: React.FC = () => {
           Not eanough cats!
         </div>
       )}
+      {isShowing && <Loading />}
     </div>
   );
 };

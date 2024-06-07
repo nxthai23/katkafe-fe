@@ -5,7 +5,7 @@ import {
   AssignBody,
   RemoveBody,
   RequireUpgradeBody,
-  UpdateBody,
+  UpgradeBody,
 } from "@/types/restaurant";
 
 export const getRestaurants = async () => {
@@ -39,7 +39,7 @@ export const removeCat = async (body: RemoveBody) => {
   return response.data;
 };
 
-export const upgradeRestaurant = async (body: UpdateBody) => {
+export const upgradeRestaurant = async (body: UpgradeBody) => {
   const response = await katAxios.post(`${BASE_URL}/locations/upgrade`, body);
   return response.data;
 };

@@ -28,13 +28,6 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     state.isOneAssign,
     state.setIsOneAssign,
   ]);
-
-  const staffNotAssign = staffs
-    .filter((staff) => {
-      return !currentRestaurant?.cats.some((cat) => cat === staff._id);
-    })
-    .sort((a, b) => b.level - a.level);
-
   const options = [
     {
       value: 1,
@@ -55,6 +48,12 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     boxShadow: "0px -2px 0px 0px #BC9D9B inset",
   };
 
+  const staffNotAssign = staffs
+    .filter((staff) => {
+      return !currentRestaurant?.cats.some((cat) => cat === staff._id);
+    })
+    .sort((a, b) => b.level - a.level);
+
   const getFilteredStaffs = () => {
     let filtered = staffNotAssign;
 
@@ -67,8 +66,8 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
       });
     }
 
-    if (activeSelect === "LevelAsc") {
-      filtered = filtered.slice().sort((a, b) => a.level - b.level);
+    if (activeSelect === "2") {
+      filtered = filtered.slice().sort((a, b) => b.level - a.level);
     }
 
     return filtered;
@@ -78,9 +77,12 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     showStaffPanel(false);
   };
 
-  const handleSelectClick = (selectName: string) => {
-    setActiveSelect(selectName);
-    setActiveStarFilter(selectName);
+  const handleStarFilterClick = (filterName: string) => {
+    setActiveStarFilter(filterName);
+  };
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setActiveSelect(event.target.value);
   };
 
   const handleAssign = async (isActive: string[]) => {
@@ -152,17 +154,21 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
 
           <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-[3px] overflow-hidden mt-8">
             <div className="flex mt-2 items-center justify-between cursor-pointer">
-              <Select
-                options={options}
-                onChange={(values: any) => console.log(values)}
-                values={[{ value: 1, label: "All" }]}
-                className="z-20 !w-[86px] h-6 !border-[#5d5d5d] !border !rounded-md"
-                placeholder=""
+              <select
+                className="z-20 h-7 !border-[#5d5d5d] !border !rounded-md bg-[#FFFDE9] px-1 uppercase"
                 style={boxShadowStyle}
-              />
+                onChange={handleSelectChange}
+                value={activeSelect}
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
               <div className="flex items-center gap-1">
                 <span
-                  onClick={() => handleSelectClick("All")}
+                  onClick={() => handleStarFilterClick("All")}
                   className={`${customClass} ${
                     activeSelect === "All" ? "!opacity-100" : ""
                   }`}
@@ -171,7 +177,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                   All
                 </span>
                 <span
-                  onClick={() => handleSelectClick("OneStar")}
+                  onClick={() => handleStarFilterClick("OneStar")}
                   className={`${customClass} ${
                     activeSelect === "OneStar" ? "!opacity-100" : ""
                   }`}
@@ -180,7 +186,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                   <img src="/images/OneStar.png" alt="" />
                 </span>
                 <span
-                  onClick={() => handleSelectClick("TwoStar")}
+                  onClick={() => handleStarFilterClick("TwoStar")}
                   className={`${customClass} ${
                     activeSelect === "TwoStar" ? "!opacity-100" : ""
                   }`}
@@ -189,7 +195,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                   <img src="/images/TwoStar.png" alt="" />
                 </span>
                 <span
-                  onClick={() => handleSelectClick("ThreeStar")}
+                  onClick={() => handleStarFilterClick("ThreeStar")}
                   className={`${customClass} ${
                     activeSelect === "ThreeStar" ? "!opacity-100" : ""
                   }`}
@@ -207,7 +213,10 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
               }}
             >
               {getFilteredStaffs().map((staff) => (
-                <div key={staff._id} className="w-[100px] h-[130px]">
+                <div
+                  key={staff._id}
+                  className="w-[100px] h-[130px] cursor-pointer"
+                >
                   <StaffCardAssign
                     cat={staff}
                     active={isActive?.includes(staff._id)}

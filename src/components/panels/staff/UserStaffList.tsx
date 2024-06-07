@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import CatCard from "../../ui/CatCard";
-import Select from "react-dropdown-select";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import CardInfo from "@/components/ui/CardInfo";
 import { useStaffStore } from "@/stores/staffStore";
 import { Staff } from "@/types/common-types";
 import { useLayoutStore } from "@/stores/layoutStore";
+import {
+  removeStaff,
+  upgradeRequireStaff,
+  upgradeStaff,
+} from "@/requests/staff";
+import { useUserStore } from "@/stores/userStore";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -13,24 +18,46 @@ const StaffList: React.FC = () => {
   const [activeSelect, setActiveSelect] = useState("All");
   const [showStaffList, setShowStaffList] = useState(true);
   const [isActive, setIsActive] = useState<number | null>(null);
-
+  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
   const { fetchStaffs } = useFetchStaffs();
-  const [staffs, setCurrentStaff] = useStaffStore((state) => [
+  const [staffs, currentStaff, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
+    state.currentStaff,
     state.setCurrentStaff,
   ]);
+  const [staff] = useStaffStore((state) => [state.currentStaff]);
+  const [isUpdated, setIsUpdated] = useState(false);
+
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
+  ]);
+  const { fetchUser } = useUserStore();
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [loading, setLoading] = useState(false);
+  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
+  const [showNotiCat, setShowNotiCat] = useState(false);
+  const [showNotiBean, setShowNotiBean] = useState(false);
+  const [numberCatPick, setNumberCatPick] = useStaffStore((state) => [
+    state.numberCatPick,
+    state.setNumberCatPick,
+  ]);
+  const [isChooseUpgrade, setIsChooseUpgrade] = useStaffStore((state) => [
+    state.isChooseUpgrade,
+    state.setIsChooseUpgrade,
   ]);
 
   const options = [
     {
-      value: "All",
+      value: 1,
       label: "All",
     },
     {
-      value: "LevelAsc",
-      label: "Level Asc",
+      value: 2,
+      label: "Level",
+    },
+    {
+      value: 3,
+      label: "Star",
     },
   ];
 
@@ -40,8 +67,10 @@ const StaffList: React.FC = () => {
     boxShadow: "0px -2px 0px 0px #BC9D9B inset",
   };
 
+  const staffNotAssign = staffs;
+
   const getFilteredStaffs = () => {
-    let filtered = staffs;
+    let filtered = staffNotAssign;
 
     if (activeStarFilter !== "All") {
       filtered = filtered.filter((staff) => {
@@ -51,9 +80,8 @@ const StaffList: React.FC = () => {
         return true;
       });
     }
-
-    if (activeSelect === "LevelAsc") {
-      filtered = filtered.slice().sort((a, b) => a.level - b.level);
+    if (activeSelect === "2") {
+      filtered = filtered.slice().sort((a, b) => b.level - a.level);
     }
 
     return filtered;
@@ -81,11 +109,77 @@ const StaffList: React.FC = () => {
   const handleClose = () => {
     setShowStaffPanel(false);
   };
-  const handleCloseDetail = () => {
+  const handleCloseDetail = async () => {
+    setLoading(true);
+    setNumberCatPick(0);
+    setIsActive(0);
     setShowCardInfo(false);
+    await fetchDataUpgrade();
+    await fetchUser();
+    await fetchStaffs();
+    setLoading(false);
+  };
+  const fetchDataUpgrade = async () => {
+    if (!staff) return;
+    const response = await upgradeRequireStaff({
+      catId: staff._id,
+    });
+    setFee(response.fee);
+    setNumberCatsRequire(response.numberCatRequire);
+    setIsUpdated(false);
   };
 
+  const handleUpgrade = async () => {
+    setLoading(true);
+    try {
+      if (!staff) return;
+      if (!user) return;
+      if (Number(user.bean) < fee) {
+        setShowNotiBean(true);
+        setTimeout(() => {
+          setShowNotiBean(false);
+        }, 1000);
+        return;
+      }
+      if (Number(user.cats.length) < numberCatsRequire) {
+        setShowNotiCat(true);
+        setTimeout(() => {
+          setShowNotiCat(false);
+        }, 1000);
+        return;
+      }
+      const data = await upgradeStaff({
+        catId: staff._id,
+      });
+      setCurrentStaff(data.upgradedCat);
+      setNumberCatPick(0);
+      if (isChooseUpgrade.length > 0) {
+        const body = {
+          catIds: isChooseUpgrade,
+        };
+        return removeStaff(body);
+      }
+      await fetchUser();
+
+      await fetchDataUpgrade();
+      await fetchStaffs();
+      setIsChooseUpgrade([]);
+      setIsUpdated(true);
+      setLoading(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   useEffect(() => {
+    if (isUpdated) {
+      fetchDataUpgrade();
+      fetchStaffs();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdated]);
+
+  useEffect(() => {
+    fetchDataUpgrade();
     fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -187,7 +281,19 @@ const StaffList: React.FC = () => {
           </div>
         </div>
       </div>
-      {showCardInfo && <CardInfo onClose={handleCloseDetail} />}
+      {showCardInfo && (
+        <CardInfo onBack={handleCloseDetail} handleUpgrade={handleUpgrade} />
+      )}
+      {showNotiBean && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not enough bean!
+        </div>
+      )}
+      {showNotiCat && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not eanough cats!
+        </div>
+      )}
     </div>
   );
 };

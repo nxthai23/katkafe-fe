@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import CatCard from "../../ui/CatCard";
-import Select from "react-dropdown-select";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import Button from "@/components/ui/Button";
 import { useStaffStore } from "@/stores/staffStore";
 import { Staff } from "@/types/common-types";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 type Props = {
   showStaffUpgradePanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,11 +14,22 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
   const [activeSelect, setActiveSelect] = useState("All");
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
   const [selectedCards, setSelectedCards] = useState<Staff[]>([]);
-  const [staffs, setCurrentStaff] = useStaffStore((state) => [
+  const [staffs, currentStaff, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
+    state.currentStaff,
     state.setCurrentStaff,
   ]);
-
+  const [currentRestaurant, setRestaurants] = useRestaurantStore((state) => [
+    state.currentRestaurant,
+    state.setRestaurants,
+  ]);
+  const [isActive, setIsActive] = useState<string[]>([]);
+  const [isChooseUpgrade, setIsChooseUpgrade] = useStaffStore((state) => [
+    state.isChooseUpgrade,
+    state.setIsChooseUpgrade,
+  ]);
+  const [setNumberCatPick] = useStaffStore((state) => [state.setNumberCatPick]);
+  const [numberCatRequire] = useStaffStore((state) => [state.numberCatRequire]);
   const customClass =
     "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
   const boxShadowStyle = {
@@ -47,37 +58,67 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
     setActiveSelect(selectName);
     setActiveStarFilter(selectName);
   };
-  const filteredStaffs = useMemo(
-    () =>
-      staffs.filter((staff) => {
-        if (activeStarFilter === "All") {
-          return true;
-        } else if (activeStarFilter === "OneStar") {
-          return staff.numberStar === 1;
-        } else if (activeStarFilter === "TwoStar") {
-          return staff.numberStar === 2;
-        } else if (activeStarFilter === "ThreeStar") {
-          return staff.numberStar === 3;
-        }
-        return false;
-      }),
-    [staffs, activeStarFilter]
-  );
+  //  @TODO:: staff in all restaurants
+  const staffNotAssign = staffs.filter((staff) => {
+    return (
+      currentStaff &&
+      staff._id !== currentStaff._id &&
+      !currentRestaurant?.cats.some((cat) => cat === staff._id)
+    );
+  });
 
-  const handleChooseClick = (staff: any) => {
-    if (selectedCards.includes(staff)) {
-      setSelectedCards(selectedCards.filter((item) => item !== staff));
+  const getFilteredStaffs = () => {
+    let filtered = staffNotAssign;
+
+    if (activeStarFilter !== "All") {
+      filtered = filtered.filter((staff) => {
+        if (activeStarFilter === "OneStar") return staff.numberStar === 1;
+        if (activeStarFilter === "TwoStar") return staff.numberStar === 2;
+        if (activeStarFilter === "ThreeStar") return staff.numberStar === 3;
+        return true;
+      });
+    }
+    if (activeSelect === "2") {
+      filtered = filtered.slice().sort((a, b) => b.level - a.level);
+    }
+    return filtered;
+  };
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setActiveSelect(event.target.value);
+  };
+
+  const autoActiveIsChooseUpgrade = () => {
+    setIsActive(isChooseUpgrade.slice(0, isChooseUpgrade.length));
+  };
+
+  const handleChooseClick = (staffId: string) => {
+    const selectedStaff = staffs.find((staff) => staff._id === staffId);
+    if (!selectedStaff) return;
+
+    if (isActive.includes(staffId)) {
+      setSelectedCards(selectedCards.filter((item) => item._id !== staffId));
+      setIsActive(isActive.filter((id) => id !== staffId));
+      setIsChooseUpgrade(isChooseUpgrade.filter((id) => id !== staffId));
     } else {
-      setSelectedCards([...selectedCards, staff]);
+      if (isActive.length >= numberCatRequire) return;
+
+      setSelectedCards([...selectedCards, selectedStaff]);
+      setIsActive([...isActive, staffId]);
+      setIsChooseUpgrade([...isChooseUpgrade, staffId]);
     }
   };
+
   const handleClickAssign = () => {
     showStaffUpgradePanel(false);
+    setNumberCatPick(isActive.length);
+    setIsActive([]);
   };
   useEffect(() => {
     fetchStaffs();
+    autoActiveIsChooseUpgrade();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isChooseUpgrade]);
 
   return (
     <div className="grade-panel bg-[#2e2e2e] w-full h-full absolute z-50 p-4">
@@ -102,14 +143,18 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
 
           <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">
             <div className="flex mt-2 items-center justify-between cursor-pointer">
-              <Select
-                options={options}
-                onChange={(values: any) => console.log(values)}
-                values={[{ value: 1, label: "All" }]}
-                className="z-20 !w-[86px] h-6 !border-[#5d5d5d] !border !rounded-md"
-                placeholder=""
+              <select
+                className="z-20 h-7 !border-[#5d5d5d] !border !rounded-md bg-[#FFFDE9] px-1 uppercase"
                 style={boxShadowStyle}
-              />
+                onChange={handleSelectChange}
+                value={activeSelect}
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
               <div className="flex items-center gap-1">
                 <span
                   onClick={() => handleSelectClick("All")}
@@ -156,15 +201,15 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
                 scrollbarColor: "#666666 #ffe",
               }}
             >
-              {filteredStaffs.map((staff) => (
+              {getFilteredStaffs().map((staff) => (
                 <div
                   key={staff._id}
                   className="w-[100px] h-[130px] cursor-pointer"
                 >
                   <CatCard
                     cat={staff}
-                    active={selectedCards.includes(staff)}
-                    onClick={() => handleChooseClick(staff._id)}
+                    active={isActive?.includes(staff._id)}
+                    handleClick={handleChooseClick}
                   />
                 </div>
               ))}
@@ -176,11 +221,11 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
               className="flex flex-wrap gap-2 justify-center"
               onClick={handleClickAssign}
             >
-              {["Assign"].map((item, index) => (
-                <div key={index} className="w-[172px] h-[39px] -mb-[3px]">
-                  <Button>{item}</Button>
-                </div>
-              ))}
+              <div className="w-[172px] h-[39px] -mb-[3px]">
+                <Button>
+                  Confirm {isActive.length} / {numberCatRequire}
+                </Button>
+              </div>
             </div>
           </div>
         </div>

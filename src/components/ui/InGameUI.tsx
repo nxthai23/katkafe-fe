@@ -46,7 +46,7 @@ export const InGameUI = () => {
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
 
-  const numberCats = 4;
+  const numberCats = 8;
 
   const handleOnClick = () => {
     setShowOfflineEarning(false);

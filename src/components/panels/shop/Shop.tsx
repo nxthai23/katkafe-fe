@@ -173,7 +173,7 @@ const Shop = () => {
       )}
       {showCardInfo && (
         <div className="absolute z-30 w-full h-full top-0 left-0">
-          <CardInfo onClose={() => setShowCardInfo(false)} />
+          <CardInfo onBack={() => setShowCardInfo(false)} />
         </div>
       )}
     </div>
