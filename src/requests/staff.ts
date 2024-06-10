@@ -2,7 +2,7 @@ import { API_STAFF, BASE_URL } from "@/constants/api-url";
 import { Staff } from "@/types/common-types";
 import axios from "axios";
 import katAxios from "./axios.config";
-import { RemoveBody, UpgradeBody } from "@/types/staff";
+import { RemoveBody, RequireUpgradeBody, UpgradeBody } from "@/types/staff";
 
 export const getStaffs = async () => {
   const response = await katAxios.get<Staff[]>(`${BASE_URL}/cats`);
@@ -24,8 +24,11 @@ export const upgradeStaff = async (body: UpgradeBody) => {
   return response.data;
 };
 
-export const upgradeRequireStaff = async (body: UpgradeBody) => {
-  const response = await katAxios.post(`${BASE_URL}/cats/next-level`, body);
+export const upgradeRequireStaff = async (body: RequireUpgradeBody) => {
+  const response = await katAxios.post(
+    `${BASE_URL}/cat-upgrade/next-level`,
+    body
+  );
   return response.data;
 };
 

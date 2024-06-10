@@ -1,7 +1,7 @@
 import React from "react";
 
 interface NumberFormatterProps {
-  value: number;
+  value?: number;
 }
 
 const formatNumber = (value: number): string => {
@@ -13,7 +13,7 @@ const formatNumber = (value: number): string => {
   return value.toString();
 };
 
-const NumberFormatter: React.FC<NumberFormatterProps> = ({ value }) => {
+const NumberFormatter: React.FC<NumberFormatterProps> = ({ value = 0 }) => {
   return <span>{formatNumber(value)}</span>;
 };
 

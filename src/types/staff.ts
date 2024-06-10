@@ -5,3 +5,7 @@ export type UpgradeBody = {
 export type RemoveBody = {
   catIds: string[];
 };
+
+export type RequireUpgradeBody = {
+  level: number;
+};

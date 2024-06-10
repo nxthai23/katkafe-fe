@@ -122,7 +122,7 @@ const StaffList: React.FC = () => {
   const fetchDataUpgrade = async () => {
     if (!staff) return;
     const response = await upgradeRequireStaff({
-      catId: staff._id,
+      level: staff.level,
     });
     setFee(response.fee);
     setNumberCatsRequire(response.numberCatRequire);

@@ -36,19 +36,19 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
 
   const fetchDataUpgrade = async () => {
     show();
-    if (!staff) return;
+    if (!user || !staff) return;
     try {
-      const response = await upgradeRequireStaff({ catId: staff._id });
-      if (response && response.fee !== undefined) {
-        setFee(response.fee);
-        setNumberCatRequire(response.numberCatRequire);
+      const response = await upgradeRequireStaff({ level: staff.level });
+      if (response && response.nextFee) {
+        setFee(response.nextFee);
+        setNumberCatRequire(response.numberCats);
       }
     } catch (error) {
       console.error("Failed to fetch upgrade data", error);
     } finally {
       setTimeout(() => {
         hide();
-      }, 1000);
+      }, 2000);
     }
   };
 
@@ -62,7 +62,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
     fetchDataUpgrade();
     fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [staff]);
+  }, [staff, fee]);
 
   return (
     <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-40 p-4 top-0 left-0">
