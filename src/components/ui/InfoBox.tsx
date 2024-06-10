@@ -8,7 +8,7 @@ type Props = {
     url: string;
     size?: number;
   };
-  content: string;
+  content: React.ReactNode;
 };
 
 export const InfoBox = ({ title, icon, content }: Props) => {

@@ -19,6 +19,7 @@ import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
+import NumberFormatter from "@/components/ui/NumberFormat";
 
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
@@ -404,7 +405,10 @@ const Manage: React.FC = () => {
                           src="/images/coin.png"
                           alt=""
                         />
-                        {user?.bean} /
+                        {user && (
+                          <NumberFormatter value={parseInt(user.bean)} />
+                        )}{" "}
+                        /
                       </span>
                       <span className="flex items-center gap-1 ml-1">
                         <img

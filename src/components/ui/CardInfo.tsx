@@ -9,6 +9,7 @@ import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { useUserStore } from "@/stores/userStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "./Loading";
+import NumberFormatter from "./NumberFormat";
 
 type Props = {
   onBack?: () => void;
@@ -139,11 +140,14 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
                   </span>
-                  <div> {user?.bean} /</div>
+                  <div>
+                    {" "}
+                    {user && <NumberFormatter value={parseInt(user.bean)} />} /
+                  </div>
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
                   </span>
-                  <div>{fee} </div>
+                  <div>{<NumberFormatter value={fee} />} </div>
                 </div>
                 <div className="items-center">
                   <span className="text-bodyMd text-[#6F6F6F]">

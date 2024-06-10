@@ -12,6 +12,7 @@ import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { getClaim, getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
+import NumberFormatter from "./NumberFormat";
 
 export const InGameUI = () => {
   const [
@@ -143,12 +144,12 @@ export const InGameUI = () => {
         <InfoBox
           key="branch"
           title="Balance"
-          content={user ? user?.bean : "0"}
+          content={user ? <NumberFormatter value={parseInt(user.bean)} /> : "0"}
         />
         <InfoBox
           key="branchSPD"
           title="Branch SPD"
-          content={power ? power + "/s" : "0/s"}
+          content={user?.bean ? power + "/s" : "0/s"}
           icon={{
             url: "/icons/ic-farm.png",
           }}
