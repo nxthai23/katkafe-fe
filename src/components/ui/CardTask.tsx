@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import Button from "./Button";
 import { DEFAULT_QUEST_ICON } from "@/constants/config";
+import { Check } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   type: "achievement" | "task";
@@ -24,9 +26,20 @@ type Props = {
     current: number | string;
     total: number | string;
   };
+  isDone?: boolean;
+  visitUrl?: string;
 };
 
-const CardTask = ({ type, content, img, reward, button, progress }: Props) => {
+const CardTask = ({
+  type,
+  content,
+  img,
+  reward,
+  button,
+  progress,
+  isDone,
+  visitUrl,
+}: Props) => {
   const isAchievement = useMemo(() => type === "achievement", [type]);
   return (
     <div className="bg-orange-10 border-[#e8ddbd] border rounded-lg w-full h-full p-2">
@@ -69,9 +82,18 @@ const CardTask = ({ type, content, img, reward, button, progress }: Props) => {
       )}
       <div className="w-full flex justify-center mt-2">
         <div className="w-[76px] h-[28px] flex justify-center">
-          <Button onClick={button?.onClick} disabled={button?.disabled}>
-            {button?.text}
-          </Button>
+          {!isDone == true ? (
+            <Button onClick={button?.onClick} disabled={button?.disabled}>
+              <Link href={visitUrl || "#"} target="_blank">
+                {button?.text}
+              </Link>
+            </Button>
+          ) : (
+            <div className="text-orange-50 flex gap-x-1">
+              <Check size={24} />
+              Done
+            </div>
+          )}
         </div>
       </div>
     </div>
