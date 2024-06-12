@@ -7,8 +7,9 @@ import { Rank } from "@/types/rank";
 import CardFriend from "./CardFriend";
 import CardUser from "./CardUser";
 import { useUserStore } from "@/stores/userStore";
-import { useFetchUser } from "@/lib/hooks/useUser";
 import { get } from "lodash";
+import ProgressBar from "./ProgressBar";
+// import { Progress } from "@/components/ui/progress";
 
 type Props = {
   ranks: Rank[];
@@ -56,13 +57,7 @@ const PrevArrow = (props: { className: any; style: any; onClick: any }) => {
 
 const ImageSlider = ({ ranks }: Props) => {
   const user = useUserStore((state) => state.user);
-  const { fetchUser } = useFetchUser();
 
-  const balance = get(user, "balance", 0);
-
-  useEffect(() => {
-    fetchUser();
-  });
   const settings = {
     dots: false,
     arrows: true,
@@ -77,6 +72,8 @@ const ImageSlider = ({ ranks }: Props) => {
       <PrevArrow className="slick-prev" style={{}} onClick={undefined} />
     ),
   };
+  const value = 33;
+  const max = 100;
 
   return (
     <Slider {...settings}>
@@ -87,11 +84,14 @@ const ImageSlider = ({ ranks }: Props) => {
               <Image src={rank.imageUrl} alt="rank" width={164} height={164} />
               <div className="uppercase text-center">{rank.title}</div>
               <div className="text-center text-sm">
-                {user.balance}M/{rank.balance}M
+                {user?.bean}M/{rank.balance}M
               </div>
             </div>
           </div>
-          <div className="overflow-y-auto h-[204px]">
+          <div className="mb-4 h-3">
+            <ProgressBar value={value} max={max} color="#FC9B53" />
+          </div>
+          <div className="overflow-y-auto h-[177px] w-full cursor-pointer bg-[#f7f5dc] border-[#EEEDD8] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg">
             <div className="flex flex-col gap-1">
               {[...Array(Number(rank.totalPeople))].map((_, index) =>
                 rank.people[index] ? (

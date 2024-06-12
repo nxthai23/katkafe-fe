@@ -15,8 +15,8 @@ const CardFriend = ({ friend }: Props) => {
   const balance = get(friend, "balance", 0);
 
   return (
-    <div className="bg-[#fffeec] border-[#e8ddbd] border rounded-lg w-full h-full p-2 flex gap-8 items-center justify-between">
-      <div className="flex gap-4 items-center text-center">
+    <div className="w-full h-full p-2 pl-4 flex gap-8 items-center justify-between">
+      <div className="flex gap-2 items-center text-center">
         <div>{id}</div>
         <div className="rounded-full w-6 h-6">
           <Image src={imageUrl} alt="cat pic" width={24} height={24} />
@@ -25,8 +25,8 @@ const CardFriend = ({ friend }: Props) => {
       </div>
       <div className="flex items-center gap-1">
         <div>{balance}M</div>
-        <div>
-          <img src="/images/coin.png" alt="" />
+        <div className="w-4 h-4">
+          <img src="/images/kbuck.png" alt="" />
         </div>
       </div>
     </div>

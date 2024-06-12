@@ -1,30 +1,57 @@
+import { postLogin } from "@/requests/login";
+import { getUser } from "@/requests/user";
 import { UserType } from "@/types/user";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-type User = {
-  user: UserType;
+// Định nghĩa kiểu State và Actions
+type State = {
+  jwt: string | null;
+  user: UserType | null;
+  bean: any;
 };
 
 type Actions = {
-  setUser: (user: UserType) => void;
+  login: (body: any) => Promise<void>;
+  clear: () => void;
+  setUser: (user: UserType | null) => void;
+  fetchUser: () => Promise<void>;
 };
 
-const defaultUser = {
-  user: {
-    id: "",
-    name: "",
-    imageUrl: "",
-    balance: "",
-    rank: "",
-    guildId: "",
-  },
+// Khởi tạo giá trị mặc định cho state
+const defaultStates: State = {
+  jwt: null,
+  user: null,
+  bean: null,
 };
 
-export const useUserStore = create<User & Actions>((set, get) => ({
-  ...defaultUser,
-  setUser: (user: UserType) => {
-    set({
-      user,
-    });
-  },
-}));
+// Tạo store sử dụng Zustand
+export const useUserStore = create<State & Actions>()(
+  persist(
+    (set, get) => ({
+      ...defaultStates,
+      login: async (body) => {
+        const response = await postLogin(body);
+        if (!response) {
+          return;
+        }
+        set({
+          jwt: response.accessToken,
+          user: response.user,
+        });
+        return response.user;
+      },
+      clear: () => {
+        set(defaultStates);
+      },
+      setUser: (user) => set({ user }),
+      fetchUser: async () => {
+        const user = await getUser();
+        if (user) {
+          set({ user });
+        }
+      },
+    }),
+    { name: "userStore" }
+  )
+);

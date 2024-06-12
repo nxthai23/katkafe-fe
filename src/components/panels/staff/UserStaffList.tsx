@@ -1,11 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CatCard from "../../ui/CatCard";
-import Select from "react-dropdown-select";
-import { useFetchStaffs } from "@/lib/hooks/useStaff";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import CardInfo from "@/components/ui/CardInfo";
 import { useStaffStore } from "@/stores/staffStore";
 import { Staff } from "@/types/common-types";
 import { useLayoutStore } from "@/stores/layoutStore";
+import {
+  removeStaff,
+  upgradeRequireStaff,
+  upgradeStaff,
+} from "@/requests/staff";
+import { useUserStore } from "@/stores/userStore";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -13,14 +18,32 @@ const StaffList: React.FC = () => {
   const [activeSelect, setActiveSelect] = useState("All");
   const [showStaffList, setShowStaffList] = useState(true);
   const [isActive, setIsActive] = useState<number | null>(null);
-
+  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
   const { fetchStaffs } = useFetchStaffs();
-  const [staffs, setCurrentStaff] = useStaffStore((state) => [
+  const [staffs, currentStaff, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
+    state.currentStaff,
     state.setCurrentStaff,
   ]);
+  const [staff] = useStaffStore((state) => [state.currentStaff]);
+  const [isUpdated, setIsUpdated] = useState(false);
+
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
+  ]);
+  const { fetchUser } = useUserStore();
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [loading, setLoading] = useState(false);
+  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
+  const [showNotiCat, setShowNotiCat] = useState(false);
+  const [showNotiBean, setShowNotiBean] = useState(false);
+  const [numberCatPick, setNumberCatPick] = useStaffStore((state) => [
+    state.numberCatPick,
+    state.setNumberCatPick,
+  ]);
+  const [isChooseUpgrade, setIsChooseUpgrade] = useStaffStore((state) => [
+    state.isChooseUpgrade,
+    state.setIsChooseUpgrade,
   ]);
 
   const options = [
@@ -37,61 +60,134 @@ const StaffList: React.FC = () => {
       label: "Star",
     },
   ];
+
   const customClass =
     "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
   const boxShadowStyle = {
     boxShadow: "0px -2px 0px 0px #BC9D9B inset",
   };
 
-  const filteredStaffs = useMemo(
-    () =>
-      staffs.filter((staff) => {
-        if (activeStarFilter === "All") {
-          return true;
-        } else if (activeStarFilter === "OneStar") {
-          return staff.numberStar === 1;
-        } else if (activeStarFilter === "TwoStar") {
-          return staff.numberStar === 2;
-        } else if (activeStarFilter === "ThreeStar") {
-          return staff.numberStar === 3;
-        }
-        return false;
-      }),
-    [staffs, activeStarFilter]
-  );
+  const staffNotAssign = staffs;
+
+  const getFilteredStaffs = () => {
+    let filtered = staffNotAssign;
+
+    if (activeStarFilter !== "All") {
+      filtered = filtered.filter((staff) => {
+        if (activeStarFilter === "OneStar") return staff.numberStar === 1;
+        if (activeStarFilter === "TwoStar") return staff.numberStar === 2;
+        if (activeStarFilter === "ThreeStar") return staff.numberStar === 3;
+        return true;
+      });
+    }
+    if (activeSelect === "2") {
+      filtered = filtered.slice().sort((a, b) => b.level - a.level);
+    }
+
+    return filtered;
+  };
 
   const handleChooseClick = (staff: Staff) => {
     setCurrentStaff(staff);
 
-    if (staff.id === isActive) {
+    if (Number(staff._id) === isActive) {
       setIsActive(null);
     } else {
-      setIsActive(staff.id);
+      setIsActive(Number(staff._id));
     }
-    setShowStaffList(false);
     setShowCardInfo(!showCardInfo);
   };
 
-  const handleSelectClick = (selectName: string) => {
-    setActiveSelect(selectName);
-    setActiveStarFilter(selectName);
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setActiveSelect(event.target.value);
+  };
+
+  const handleStarFilterClick = (filterName: string) => {
+    setActiveStarFilter(filterName);
   };
 
   const handleClose = () => {
     setShowStaffPanel(false);
   };
-  const handleCloseDetail = () => {
+  const handleCloseDetail = async () => {
+    setLoading(true);
+    setNumberCatPick(0);
+    setIsActive(0);
     setShowCardInfo(false);
+    await fetchDataUpgrade();
+    await fetchUser();
+    await fetchStaffs();
+    setLoading(false);
+  };
+  const fetchDataUpgrade = async () => {
+    if (!staff) return;
+    const response = await upgradeRequireStaff({
+      level: staff.level,
+    });
+    setFee(response.fee);
+    setNumberCatsRequire(response.numberCatRequire);
+    setIsUpdated(false);
   };
 
+  const handleUpgrade = async () => {
+    setLoading(true);
+    try {
+      if (!staff) return;
+      if (!user) return;
+      if (Number(user.bean) < fee) {
+        setShowNotiBean(true);
+        setTimeout(() => {
+          setShowNotiBean(false);
+        }, 1000);
+        return;
+      }
+      if (Number(user.cats.length) < numberCatsRequire) {
+        setShowNotiCat(true);
+        setTimeout(() => {
+          setShowNotiCat(false);
+        }, 1000);
+        return;
+      }
+      const data = await upgradeStaff({
+        catId: staff._id,
+      });
+      setCurrentStaff(data.upgradedCat);
+      setNumberCatPick(0);
+      if (isChooseUpgrade.length > 0) {
+        const body = {
+          catIds: isChooseUpgrade,
+        };
+        return removeStaff(body);
+      }
+      await fetchUser();
+
+      await fetchDataUpgrade();
+      await fetchStaffs();
+      setIsChooseUpgrade([]);
+      setIsUpdated(true);
+      setLoading(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   useEffect(() => {
+    if (isUpdated) {
+      fetchDataUpgrade();
+      fetchStaffs();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdated]);
+
+  useEffect(() => {
+    fetchDataUpgrade();
     fetchStaffs();
-  }, [fetchStaffs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
-      <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
-        <div className="rounded-[21px] border-solid border-[#ffedbb] border-4 bg-[#ffedbb] h-full relative">
+      <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
+        <div className="rounded-[21px] border-solid border-orange-30 border-4 bg-orange-30 h-full relative">
           <div className="absolute -right-[15px] -top-[13px] bg-[#fffde9] rounded-full border-[#ededed] cursor-pointer">
             <img
               className="w-6 h-6"
@@ -100,7 +196,7 @@ const StaffList: React.FC = () => {
               onClick={handleClose}
             />
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-[#5e5745] bg-[#fffeec] rounded-t-xl text-[#5e5745]">
+          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-orange-90 bg-orange-10 rounded-t-xl text-orange-90">
             Staff List
           </div>
 
@@ -110,49 +206,53 @@ const StaffList: React.FC = () => {
             <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
           </span>
 
-          <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-[#b5b5b5] absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">
+          <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">
             {showStaffList && (
               <div className="flex mt-2 items-center justify-between cursor-pointer">
-                <Select
-                  options={options}
-                  onChange={(values: any) => console.log(values)}
-                  values={[{ value: 1, label: "All" }]}
-                  className="z-20 !w-[86px] h-6 !border-[#5d5d5d] !border !rounded-md"
-                  placeholder=""
+                <select
+                  className="z-20 h-7 !border-[#5d5d5d] !border !rounded-md bg-[#FFFDE9] px-1 uppercase"
                   style={boxShadowStyle}
-                />
+                  onChange={handleSelectChange}
+                  value={activeSelect}
+                >
+                  {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 <div className="flex items-center gap-1">
                   <span
-                    onClick={() => handleSelectClick("All")}
+                    onClick={() => handleStarFilterClick("All")}
                     className={`${customClass} ${
-                      activeSelect === "All" ? "!opacity-100" : ""
+                      activeStarFilter === "All" ? "!opacity-100" : ""
                     }`}
                     style={boxShadowStyle}
                   >
                     All
                   </span>
                   <span
-                    onClick={() => handleSelectClick("OneStar")}
+                    onClick={() => handleStarFilterClick("OneStar")}
                     className={`${customClass} ${
-                      activeSelect === "OneStar" ? "!opacity-100" : ""
+                      activeStarFilter === "OneStar" ? "!opacity-100" : ""
                     }`}
                     style={boxShadowStyle}
                   >
                     <img src="/images/OneStar.png" alt="" />
                   </span>
                   <span
-                    onClick={() => handleSelectClick("TwoStar")}
+                    onClick={() => handleStarFilterClick("TwoStar")}
                     className={`${customClass} ${
-                      activeSelect === "TwoStar" ? "!opacity-100" : ""
+                      activeStarFilter === "TwoStar" ? "!opacity-100" : ""
                     }`}
                     style={boxShadowStyle}
                   >
                     <img src="/images/TwoStar.png" alt="" />
                   </span>
                   <span
-                    onClick={() => handleSelectClick("ThreeStar")}
+                    onClick={() => handleStarFilterClick("ThreeStar")}
                     className={`${customClass} ${
-                      activeSelect === "ThreeStar" ? "!opacity-100" : ""
+                      activeStarFilter === "ThreeStar" ? "!opacity-100" : ""
                     }`}
                     style={boxShadowStyle}
                   >
@@ -168,9 +268,9 @@ const StaffList: React.FC = () => {
                 scrollbarColor: "#666666 #ffe",
               }}
             >
-              {filteredStaffs.map((staff) => (
+              {getFilteredStaffs().map((staff) => (
                 <div
-                  key={staff.id}
+                  key={staff._id}
                   className="w-[100px] h-[130px] cursor-pointer"
                   onClick={() => handleChooseClick(staff)}
                 >
@@ -181,7 +281,19 @@ const StaffList: React.FC = () => {
           </div>
         </div>
       </div>
-      {showCardInfo && <CardInfo onClose={handleCloseDetail} />}
+      {showCardInfo && (
+        <CardInfo onBack={handleCloseDetail} handleUpgrade={handleUpgrade} />
+      )}
+      {showNotiBean && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not enough bean!
+        </div>
+      )}
+      {showNotiCat && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not eanough cats!
+        </div>
+      )}
     </div>
   );
 };

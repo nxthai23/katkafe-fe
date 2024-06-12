@@ -1,61 +1,103 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Star from "./Star";
 import Button from "./Button";
 import StaffUpgrade from "../panels/staff/UserStaffUpgrade";
 import { useStaffStore } from "@/stores/staffStore";
+import { upgradeRequireStaff } from "@/requests/staff";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import { useUserStore } from "@/stores/userStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import { Loading } from "./Loading";
+import NumberFormatter from "./NumberFormat";
 
 type Props = {
-  onClose?: () => void;
+  onBack?: () => void;
+  handleUpgrade?: () => void;
 };
 
-const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
+const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
   const [showStaffUpgradePanel, setShowStaffUpgradePanel] = useState(false);
   const [staff] = useStaffStore((state) => [state.currentStaff]);
-  const [showUpgradePanel, setShowUpgradePanel] = useState(false);
+  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
+
+  const [numberCatRequire, setNumberCatRequire] = useStaffStore((state) => [
+    state.numberCatRequire,
+    state.setNumberCatRequire,
+  ]);
+  const { fetchStaffs } = useFetchStaffs();
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [numberCatPick] = useStaffStore((state) => [state.numberCatPick]);
+  const [isShowing, show, hide] = useLoadingStore((state) => [
+    state.isShowing,
+    state.show,
+    state.hide,
+  ]);
+
+  const fetchDataUpgrade = async () => {
+    show();
+    if (!user || !staff) return;
+    try {
+      const response = await upgradeRequireStaff({ level: staff.level });
+      if (response && response.nextFee) {
+        setFee(response.nextFee);
+        setNumberCatRequire(response.numberCats);
+      }
+    } catch (error) {
+      console.error("Failed to fetch upgrade data", error);
+    } finally {
+      setTimeout(() => {
+        hide();
+      }, 2000);
+    }
+  };
 
   const customClass = "w-4 h-4";
-
-  const handleBack = () => {
-    onClose?.();
-  };
 
   const handleShowStaffUpgrade = () => {
     setShowStaffUpgradePanel(true);
   };
 
+  useEffect(() => {
+    fetchDataUpgrade();
+    fetchStaffs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staff, fee]);
+
   return (
     <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-40 p-4 top-0 left-0">
-      <div className="rounded-3xl border-solid border-[#5e5745] border-4 h-[calc(100%-16px)] mt-4">
-        <div className="rounded-[21px] border-solid border-[#ffedbb] border-4 bg-[#ffedbb] h-full relative">
+      <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
+        <div className="rounded-[21px] border-solid border-orange-30 border-4 bg-orange-30 h-full relative">
           <div className="absolute -top-4 -left-3 cursor-pointer">
             <img
               className="w-8 h-8"
               src="/images/back.png"
               alt=""
-              onClick={handleBack}
+              onClick={onBack}
             />
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-[#5e5745] bg-[#fffeec] rounded-t-xl text-[#5e5745]">
+          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-[28px] border-2 px-6 py-2 border-orange-90 bg-orange-10 rounded-t-xl text-orange-90">
             Staff Info
           </div>
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[70%]"></p>
-            <p className="bg-[#e3b695] h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
+            <p className="bg-red-10 h-[2px] w-[70%]"></p>
+            <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          <div className="bg-[#fffeec] h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-[#b5b5b5]">
+          <div className="bg-orange-10 h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-gray-20">
             <div className="w-full flex flex-col items-center">
-              <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[260px] w-[200px] mt-6">
-                <div className="rounded-xl border-solid border-[#eeedd8] border-[3px] h-full w-full">
+              <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
+                <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
                     <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
-                      <div className="flex justify-center mt-14">
+                      <div className="flex justify-center mt-14 relative">
+                        <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-30"></div>
                         <Image
-                          src={staff?.avatar || ""}
+                          src={staff?.imgUrl || "/images/Cat.png"}
                           alt="cat pic"
-                          width={160}
+                          width={106}
                           height={106}
+                          className="relative z-40"
                         />
                       </div>
                     </div>
@@ -84,43 +126,70 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
                 </div>
               </div>
               <div className="w-full font-normal mt-4">
-                <div className="flex justify-between items-center">
-                  <span>Level</span>
-                  <span>{staff?.level}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>SPD</span>
-                  <span className="flex items-center gap-1">
-                    <img src="/images/coin.png" alt="" />
-                    100/s
+                <div className="text-bodyMd text-[#6F6F6F]">Earning Speed</div>
+                <div className="flex gap-1 items-center">
+                  <span>
+                    <img className="w-4 h-4" src="/images/speed.png" alt="" />
                   </span>
+                  <span>{staff?.power} / s</span>
                 </div>
-
-                <div className="flex justify-between items-center">
-                  <span>Upgrade Fee</span>
-                  {/* TODO: chưa có API */}
-                  <span className="flex items-center gap-1">
-                    <img src="/images/coin.png" alt="" />
-                    100M
+                <hr className="border-[#B5B5B5] mt-3 mb-2" />
+                <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>
+                {/* TODO: chưa có API */}
+                <div className="flex items-center gap-1">
+                  <span>
+                    <img className="h-4 w-4" src="/images/coin.png" alt="" />
                   </span>
+                  <div>
+                    {" "}
+                    {user && <NumberFormatter value={parseInt(user.bean)} />} /
+                  </div>
+                  <span>
+                    <img className="h-4 w-4" src="/images/coin.png" alt="" />
+                  </span>
+                  <div>{<NumberFormatter value={fee} />} </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span>Cat require</span>
-                  <span className="flex items-center gap-1">0/3</span>
+                <div className="items-center">
+                  <span className="text-bodyMd text-[#6F6F6F]">
+                    Cat require
+                  </span>
+                  <span className="flex items-center gap-1">
+                    {numberCatPick} / {numberCatRequire}
+                  </span>
                 </div>
               </div>
             </div>
             <div className="w-full text-center">
               <hr className="mt-4 my-2 border-[#e8ddbd]" />
-              <div
-                className="flex flex-wrap gap-2 justify-center"
-                onClick={handleShowStaffUpgrade}
-              >
-                {["Upgrade"].map((item, index) => (
-                  <div key={index} className="w-[172px] h-[39px]">
-                    <Button>{item}</Button>
+              <div className="flex gap-2 justify-center">
+                {staff && staff.level < 100 && (
+                  <div
+                    className="w-[172px] h-[39px]"
+                    onClick={handleShowStaffUpgrade}
+                  >
+                    {numberCatRequire === 0 ||
+                    numberCatPick > numberCatRequire ? (
+                      <Button disabled>Pick Cat</Button>
+                    ) : (
+                      <Button>Pick Cat</Button>
+                    )}
                   </div>
-                ))}
+                )}
+                {staff && staff.level < 100 ? (
+                  <div className="w-[172px] h-[39px]">
+                    {numberCatPick >= numberCatRequire ? (
+                      <Button onClick={handleUpgrade}>Upgrade</Button>
+                    ) : (
+                      <Button disabled onClick={handleUpgrade}>
+                        Upgrade
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-[172px] h-[39px]">
+                    <Button disabled>Max Level</Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -131,8 +200,9 @@ const CatInfo: React.FC<Props> = ({ onClose }: Props) => {
           <StaffUpgrade showStaffUpgradePanel={setShowStaffUpgradePanel} />
         </div>
       )}
+      {isShowing && <Loading />}
     </div>
   );
 };
 
-export default CatInfo;
+export default CardInfo;

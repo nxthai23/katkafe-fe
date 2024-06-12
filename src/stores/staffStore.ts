@@ -1,31 +1,80 @@
+import { set } from "lodash";
 import { Staff } from "@/types/common-types";
 import { create } from "zustand";
 
 type States = {
-    staffs: Staff[];
-    currentStaff: Staff | null;
+  staffs: Staff[];
+  currentStaff: Staff | null;
+  autoActives: number;
+  isOneAssign: boolean;
+  numberCatRequire: number;
+  numberCatPick: number;
+  fee: number;
+  isChooseUpgrade: string[];
 };
 
 type Actions = {
-    setStaffs: (staffs: Staff[]) => void;
-    setCurrentStaff: (staff: Staff) => void;
+  setStaffs: (staffs: Staff[]) => void;
+  setCurrentStaff: (staff: Staff) => void;
+  setAutoActives: (number: number) => void;
+  setIsOneAssign: (value: boolean) => void;
+  setNumberCatRequire: (number: number) => void;
+  setNumberCatPick: (number: number) => void;
+  setFee: (number: number) => void;
+  setIsChooseUpgrade: (value: string[]) => void;
 };
 
-const defaultStates = {
-    currentStaff: null,
-    staffs: [],
+const defaultStates: States = {
+  currentStaff: null,
+  staffs: [],
+  autoActives: 0,
+  isOneAssign: true,
+  numberCatRequire: 0,
+  numberCatPick: 0,
+  fee: 0,
+  isChooseUpgrade: [],
 };
 
 export const useStaffStore = create<States & Actions>((set, get) => ({
-    ...defaultStates,
-    setStaffs: (staffs: Staff[]) => {
-        set({
-            staffs,
-        });
-    },
-    setCurrentStaff: (staff: Staff) => {
-        set({
-            currentStaff: staff,
-        });
-    },
+  ...defaultStates,
+  setStaffs: (staffs: Staff[]) => {
+    set({
+      staffs,
+    });
+  },
+  setCurrentStaff: (staff: Staff) => {
+    set({
+      currentStaff: staff,
+    });
+  },
+  setAutoActives: (number: number) => {
+    set({
+      autoActives: number,
+    });
+  },
+  setIsOneAssign: (value: boolean) => {
+    set({
+      isOneAssign: value,
+    });
+  },
+  setNumberCatRequire: (number: number) => {
+    set({
+      numberCatRequire: number,
+    });
+  },
+  setNumberCatPick: (number: number) => {
+    set({
+      numberCatPick: number,
+    });
+  },
+  setFee: (number: number) => {
+    set({
+      fee: number,
+    });
+  },
+  setIsChooseUpgrade: (value: string[]) => {
+    set({
+      isChooseUpgrade: value,
+    });
+  },
 }));

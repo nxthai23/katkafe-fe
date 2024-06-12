@@ -12,12 +12,10 @@ const CardGuild = ({ guild }: Props) => {
   const imageUrl = get(guild, "imageUrl", "");
   const backgroundUrl = get(guild, "backgroundUrl", "");
   const title = get(guild, "title", "");
-  const totalMinted = get(guild, "totalMinted", 0);
-  const totalMember = get(guild, "totalMember", 0);
   const rank = get(guild, "rank", 0);
 
   return (
-    <div className="bg-[#fffeec] mt-1 w-full border-[#e8ddbd] border rounded-lg h-full p-2 flex items-center gap-1 justify-between">
+    <div className="w-full h-full p-2 flex items-center gap-1 justify-between">
       <div className="flex">
         <Image src={backgroundUrl} alt="cat pic" width={48} height={48}></Image>
         <div>

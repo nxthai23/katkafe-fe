@@ -15,14 +15,15 @@ const CardFriend = () => {
 
   useEffect(() => {
     fetchUser();
-  }, [fetchUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!user) {
     return null;
   }
 
   return (
-    <div className="bg-[#fffeec] border-[#e8ddbd] border rounded-lg w-full h-full p-2 flex gap-8 items-center justify-between">
+    <div className="bg-orange-10 border-[#e8ddbd] border rounded-lg w-full h-full p-2 flex gap-8 items-center justify-between">
       {user && (
         <>
           <div className="flex gap-4 items-center text-center">
