@@ -36,7 +36,7 @@ export const useEventBus = () => {
           break;
         case UI_BUTTON.QUEST:
           console.log("Quest button clicked");
-          // setShowQuestPanel(true);
+          setShowQuestPanel(true);
           //Open Quest UI
           break;
         case UI_BUTTON.RANK:

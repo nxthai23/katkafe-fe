@@ -1,8 +1,23 @@
-export type Task = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  claim: string;
+import { QuestCodes } from "@/constants/quest";
+
+export enum RewardType {
+  KBUCK = "kBuck",
+  BEAN = "bean",
+}
+
+export type Quest = {
+  _id: string;
+  name: string;
+  questCode: QuestCodes;
+  description: string;
+  type: string;
+  reward: {
+    type: RewardType;
+    value: string;
+  };
+  task: string;
+  progress: boolean;
+  visitUrl?: string;
 };
 
 export type Achievement = {
