@@ -14,7 +14,7 @@
           "id": "1",
           "name": "Cat 1",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 1,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -22,7 +22,7 @@
           "id": "2",
           "name": "Cat 2",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 2,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -30,7 +30,7 @@
           "id": "3",
           "name": "Cat 3",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 3,
           "backgroundUrl": "/images/background-cat.png"
         }
@@ -50,7 +50,7 @@
           "id": "1",
           "name": "Cat 1",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 1,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -58,7 +58,7 @@
           "id": "2",
           "name": "Cat 2",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 2,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -66,7 +66,7 @@
           "id": "3",
           "name": "Cat 3",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 3,
           "backgroundUrl": "/images/background-cat.png"
         }
@@ -86,7 +86,7 @@
           "id": "1",
           "name": "Cat 1",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 1,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -94,7 +94,7 @@
           "id": "2",
           "name": "Cat 2",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 2,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -102,7 +102,7 @@
           "id": "3",
           "name": "Cat 3",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 3,
           "backgroundUrl": "/images/background-cat.png"
         }
@@ -124,7 +124,7 @@
           "id": "1",
           "name": "Cat 1",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 1,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -132,7 +132,7 @@
           "id": "2",
           "name": "Cat 2",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 2,
           "backgroundUrl": "/images/background-cat.png"
         },
@@ -140,7 +140,7 @@
           "id": "3",
           "name": "Cat 3",
           "level": 2,
-          "avatar": "/images/Cat.png",
+          "imgUrl": "/images/Cat.png",
           "numberStar": 3,
           "backgroundUrl": "/images/background-cat.png"
         }
@@ -244,7 +244,7 @@
       "id": "1",
       "name": "Cat 1",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 1,
       "backgroundUrl": "/images/background-cat.png",
       "price": "12"
@@ -253,7 +253,7 @@
       "id": "2",
       "name": "Cat 2",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 2,
       "backgroundUrl": "/images/background-cat.png",
       "price": "12"
@@ -262,7 +262,7 @@
       "id": "3",
       "name": "Cat 3",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 3,
       "backgroundUrl": "/images/background-cat.png",
       "price": "12"
@@ -271,7 +271,7 @@
       "id": "4",
       "name": "Cat 4",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 1,
       "backgroundUrl": "/images/background-cat.png",
       "price": "12"
@@ -280,7 +280,7 @@
       "id": "5",
       "name": "Cat 5",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 2,
       "backgroundUrl": "/images/background-cat.png",
       "price": "12"
@@ -289,7 +289,7 @@
       "id": "6",
       "name": "Cat 6",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 3,
       "backgroundUrl": "/images/background-cat.png",
       "price": "12"
@@ -554,7 +554,7 @@
       "id": "1",
       "name": "Cat 1",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 1,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -563,7 +563,7 @@
       "id": "2",
       "name": "Cat 2",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 2,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -572,7 +572,7 @@
       "id": "3",
       "name": "Cat 3",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 3,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -581,7 +581,7 @@
       "id": "4",
       "name": "Cat 4",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 1,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -590,7 +590,7 @@
       "id": "5",
       "name": "Cat 5",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 2,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -599,7 +599,7 @@
       "id": "6",
       "name": "Cat 6",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 3,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -608,7 +608,7 @@
       "id": "7",
       "name": "Cat 7",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 2,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -617,7 +617,7 @@
       "id": "8",
       "name": "Cat 8",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 3,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -626,7 +626,7 @@
       "id": "9",
       "name": "Cat 9",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 1,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"
@@ -635,7 +635,7 @@
       "id": "10",
       "name": "Cat 10",
       "level": 2,
-      "avatar": "/images/Cat.png",
+      "imgUrl": "/images/Cat.png",
       "numberStar": 3,
       "backgroundUrl": "/images/background-cat.png",
       "speed": "12.24242"

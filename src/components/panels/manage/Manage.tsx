@@ -217,6 +217,7 @@ const Manage: React.FC = () => {
   };
 
   const fetchDataUpgrade = async () => {
+    if (currentRestaurant?.level === 9) return;
     try {
       if (!user || !currentRestaurant) return;
       show();

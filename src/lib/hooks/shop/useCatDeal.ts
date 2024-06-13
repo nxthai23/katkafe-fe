@@ -1,5 +1,5 @@
 "use client";
-import { getCatDeals } from "@/requests/catDeal";
+import { getCatDeals } from "@/requests/shop/catDeal";
 import { useCatDealStore } from "@/stores/shop/catDealStore";
 
 export const useFetchCatDeals = () => {

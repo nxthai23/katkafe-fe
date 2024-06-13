@@ -179,7 +179,7 @@ const StaffList: React.FC = () => {
   }, [isUpdated]);
 
   useEffect(() => {
-    fetchDataUpgrade();
+    // fetchDataUpgrade();
     fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

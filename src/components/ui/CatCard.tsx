@@ -5,19 +5,31 @@ import { get } from "lodash";
 import { Staff } from "@/types/common-types";
 
 type Props = {
-  cat: Staff | any;
+  cat?: Staff | any;
+  catDeal?: Staff | any;
   active?: boolean;
   handleClick?: (staffId: string) => void;
 };
 
-const CatCard = ({ cat, active, handleClick }: Props) => {
+const CatCard = ({ cat, active, handleClick, catDeal }: Props) => {
   const customClass = "w-4 h-4";
 
-  const imageUrl = get(cat, "imgUrl", "");
-  const name = get(cat, "name", "");
-  const numberStar = get(cat, "numberStar", 0);
-  const level = get(cat, "level", 0);
+  let imageUrl = get(cat, "imgUrl", "");
+  let name = get(cat, "name", "");
+  let numberStar = get(cat, "numberStar", 0);
+  let level = get(cat, "level", 0);
 
+  if (catDeal) {
+    imageUrl = get(catDeal.configId, "imgUrl", "");
+    name = get(catDeal.configId, "name", "");
+    numberStar = get(catDeal.configId, "numberStar", 0);
+    level = get(catDeal, "level", 0);
+  } else {
+    imageUrl = get(cat, "imgUrl", "");
+    name = get(cat, "name", "");
+    numberStar = get(cat, "numberStar", 0);
+    level = get(cat, "level", 0);
+  }
   return (
     <div
       className="rounded-xl border-solid border-[#4e4837] border-[3px] h-full w-full cursor-pointer relative"

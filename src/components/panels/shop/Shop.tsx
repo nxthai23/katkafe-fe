@@ -4,33 +4,48 @@ import { useCatDealStore } from "@/stores/shop/catDealStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useState } from "react";
 import { useFetchBundles } from "@/lib/hooks/shop/useBundle";
-import { useFetchCatDeals } from "@/lib/hooks/shop/useCatDeal";
 import CatCard from "@/components/ui/CatCard";
-import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import RewardDialog from "@/components/ui/RewardDialog";
 import BundleCard from "@/components/ui/BundleCard";
-import { use } from "matter";
 import { Bundle, ShopType } from "@/types/bundle";
 import { CatDeal } from "@/types/catDeal";
 import CardInfo from "@/components/ui/CardInfo";
+import { useStaffStore } from "@/stores/staffStore";
+import { buyItem, getCatDeals } from "@/requests/shop/catDeal";
+import { useUserStore } from "@/stores/userStore";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 const Shop = () => {
   const [setShowShopPanel] = useLayoutStore((state) => [
     state.setShowShopPanel,
   ]);
-  const [showDialog, setShowDialog] = useState(false);
+  const [showRewardDialog, setShowRewardDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [activeTab, setActiveTab] = useState("Bundle");
   const [bundles, setCurrentBundle] = useBundleStore((state) => [
     state.bundles,
     state.setCurrentBundle,
   ]);
-  const [catDeals, setCurrentCatDeal] = useCatDealStore((state) => [
-    state.catDeals,
-    state.setCurrentCatDeal,
-  ]);
+  const [catDeals, currentCatDeal, setCurrentCatDeal, setCatDeals] =
+    useCatDealStore((state) => [
+      state.catDeals,
+      state.currentCatDeal,
+      state.setCurrentCatDeal,
+      state.setCatDeals,
+    ]);
   const [showCardInfo, setShowCardInfo] = useState(false);
+  const [staff, setStaffs, setCurrentStaff] = useStaffStore((state) => [
+    state.currentStaff,
+    state.setStaffs,
+    state.setCurrentStaff,
+  ]);
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
   const handleViewDetail = (catDeal: CatDeal) => {
     setShowCardInfo(true);
   };
+  const { fetchStaffs } = useFetchStaffs();
+  const { fetchBundles } = useFetchBundles();
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleBundleTabClick = () => {
@@ -42,17 +57,51 @@ const Shop = () => {
   };
 
   const handleClose = () => {
+    setCatDeals([]);
     setShowShopPanel(false);
   };
 
   const confirmBundleDialog = (bundle: Bundle) => {
     setCurrentBundle(bundle);
-    setShowDialog(!showDialog);
+    setShowRewardDialog(!showRewardDialog);
   };
 
-  const confirmCatDialog = (catDeal: CatDeal) => {
-    setShowDialog(!showDialog);
-    setCurrentCatDeal(catDeal);
+  const showConfirm = (catConfig: CatDeal) => {
+    setShowConfirmDialog(!showConfirmDialog);
+    setCurrentCatDeal(catConfig);
+  };
+  const handleBuyItem = async (catConfig: CatDeal) => {
+    if (catConfig) {
+      setCurrentCatDeal(catConfig);
+      setCurrentStaff(catConfig);
+    }
+    try {
+      if (!user || !catConfig) return;
+      const body = {
+        itemId: catConfig._id,
+      };
+      const response = await buyItem(body);
+
+      if (response) {
+        setStaffs(response.cats);
+        setUser(response);
+        fetchStaffs();
+      }
+    } catch (error) {
+      console.error("Failed to buy item", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowConfirmDialog(false);
+  };
+
+  const handleAgree = () => {
+    setShowConfirmDialog(false);
+    if (currentCatDeal) {
+      handleBuyItem(currentCatDeal);
+    }
+    setShowRewardDialog(true);
   };
 
   const dataBundle = {
@@ -65,12 +114,19 @@ const Shop = () => {
     description: "You purchased a staff successfully!",
   };
 
-  const { fetchBundles } = useFetchBundles();
-  const { fetchCatDeals } = useFetchCatDeals();
+  const getItems = async () => {
+    try {
+      const response = await getCatDeals();
+      setCatDeals(response);
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch cat deals", error);
+    }
+  };
 
   useEffect(() => {
     fetchBundles();
-    fetchCatDeals();
+    getItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -121,12 +177,12 @@ const Shop = () => {
                     className="flex flex-col items-center gap-4"
                   >
                     <div className="w-[100px] h-[130px]">
-                      <CatCard cat={catDeal} />
+                      <CatCard catDeal={catDeal} />
                     </div>
                     <div
                       className="w-[88px] h-[30px]"
                       onClick={(event: React.MouseEvent<HTMLDivElement>) =>
-                        confirmCatDialog(catDeal)
+                        showConfirm(catDeal)
                       }
                     >
                       <Button>{catDeal.price} $</Button>
@@ -158,21 +214,26 @@ const Shop = () => {
           )}
         </div>
       </div>
-      {showDialog && (
+      {showRewardDialog && (
         <>
-          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
-          <ConfirmDialog
+          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-40"></div>
+          <RewardDialog
             type={activeTab === "Bundle" ? ShopType.Bundle : ShopType.Cat}
-            // data={activeTab === "Bundle" ? dataBundle : dataCat}
-            onClose={() => setShowDialog(false)}
+            onClose={() => setShowRewardDialog(false)}
             closeShopPanel={() => setShowShopPanel(false)}
             button={{ type: "coin" }}
             handleChooseDetail={handleViewDetail}
           />
         </>
       )}
+      {showConfirmDialog && (
+        <>
+          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-40"></div>
+          <ConfirmDialog onCancel={handleCancel} onAgree={handleAgree} />
+        </>
+      )}
       {showCardInfo && (
-        <div className="absolute z-30 w-full h-full top-0 left-0">
+        <div className="absolute z-50 w-full h-full top-0 left-0">
           <CardInfo onBack={() => setShowCardInfo(false)} />
         </div>
       )}
