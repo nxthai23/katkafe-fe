@@ -217,7 +217,7 @@ const Manage: React.FC = () => {
   };
 
   const fetchDataUpgrade = async () => {
-    if (currentRestaurant?.level === 9) return;
+    if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
     try {
       if (!user || !currentRestaurant) return;
       show();
@@ -426,7 +426,8 @@ const Manage: React.FC = () => {
               <div>
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {currentRestaurant && currentRestaurant.level === 9 ? (
+                  {currentRestaurant &&
+                  currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>

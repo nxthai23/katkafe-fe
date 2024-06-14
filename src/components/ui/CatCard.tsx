@@ -13,7 +13,7 @@ type Props = {
 
 const CatCard = ({ cat, active, handleClick }: Props) => {
   const customClass = "w-4 h-4";
-  let level = get(cat, "level", 0);
+  const level = get(cat, "level", 0);
   const imageUrl = get(cat?.configId, "imgUrl", "") || get(cat, "imgUrl", "");
 
   const name = get(cat?.configId, "name", "") || get(cat, "name", "");

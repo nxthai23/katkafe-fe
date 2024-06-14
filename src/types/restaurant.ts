@@ -4,6 +4,7 @@ export type Restaurant = {
   _id: string;
   name: string;
   level: number;
+  maxLevel: number;
   imgUrl: string;
   maxSlot: string;
   slot: number;
