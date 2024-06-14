@@ -1,5 +1,5 @@
 "use client";
-import { getBundles } from "@/requests/bundle";
+import { getBundles } from "@/requests/shop/bundle";
 import { useBundleStore } from "@/stores/shop/bundleStore";
 
 export const useFetchBundles = () => {

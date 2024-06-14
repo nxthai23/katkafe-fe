@@ -3,26 +3,29 @@ import Image from "next/image";
 import Star from "./Star";
 import { get } from "lodash";
 import { Staff } from "@/types/common-types";
+import { Item } from "@/types/item";
 
 type Props = {
-  cat: Staff | any;
+  cat: Staff | Item;
   active?: boolean;
   handleClick?: (staffId: string) => void;
 };
 
 const CatCard = ({ cat, active, handleClick }: Props) => {
   const customClass = "w-4 h-4";
-
-  const imageUrl = get(cat, "imgUrl", "");
-  const name = get(cat, "name", "");
-  const numberStar = get(cat, "numberStar", 0);
   const level = get(cat, "level", 0);
+  const imageUrl = get(cat, "configId.imgUrl", "") || get(cat, "imgUrl", "");
+
+  const name = get(cat, "configId.name", "") || get(cat, "name", "");
+  const _id = get(cat, "configId._id", "") || get(cat, "_id", "");
+  const numberStar =
+    get(cat, "configId.numberStar", 0) || get(cat, "numberStar", "");
 
   return (
     <div
       className="rounded-xl border-solid border-[#4e4837] border-[3px] h-full w-full cursor-pointer relative"
       onClick={() => {
-        handleClick?.(cat._id);
+        handleClick?.(_id);
       }}
     >
       <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
