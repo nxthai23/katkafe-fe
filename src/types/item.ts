@@ -1,6 +1,6 @@
 import { Staff } from "./common-types";
 
-export type CatDeal = Staff & {
+export type Item = Staff & {
   price: number;
   configId: Staff;
 };
@@ -8,5 +8,3 @@ export type CatDeal = Staff & {
 export type BuyBody = {
   itemId: string;
 };
-
-// export type CatConfig = Staff;

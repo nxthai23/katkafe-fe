@@ -93,11 +93,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                       <div className="flex justify-center mt-14 relative">
                         <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-30"></div>
                         <Image
-                          src={
-                            staff?.imgUrl ||
-                            staff?.configId?.imgUrl ||
-                            "/images/Cat.png"
-                          }
+                          src={staff?.imgUrl || "/images/Cat.png"}
                           alt="cat pic"
                           width={106}
                           height={106}
@@ -106,23 +102,18 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                       </div>
                     </div>
                     <div className="absolute top-3 w-full h-4">
-                      {staff?.name ||
-                        (staff?.configId?.name && (
-                          <div className="text-[14px] mx-1 pt-1 rounded-t text-center bg-[url('/images/bg-name.png')] bg-center bg-no-repeat bg-contain h-[38px] relative -my-1">
-                            {staff?.name || staff?.configId?.name}
-                          </div>
-                        ))}
+                      {staff?.name && (
+                        <div className="text-[14px] mx-1 pt-1 rounded-t text-center bg-[url('/images/bg-name.png')] bg-center bg-no-repeat bg-contain h-[38px] relative -my-1">
+                          {staff?.name}
+                        </div>
+                      )}
                     </div>
                     <div className="flex justify-between items-center px-1 py-1">
                       {staff?.level && (
                         <div className="text-sm">Lv.{staff?.level}</div>
                       )}
                       <div className="flex items-center">
-                        {[
-                          ...Array(
-                            staff?.numberStar || staff?.configId?.numberStar
-                          ),
-                        ].map((_, index) => (
+                        {[...Array(staff?.numberStar)].map((_, index) => (
                           <Star
                             key={index}
                             numberStar={index + 1}
@@ -140,7 +131,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                   <span>
                     <img className="w-4 h-4" src="/images/speed.png" alt="" />
                   </span>
-                  <span>{staff?.power || staff?.configId?.power} / s</span>
+                  <span>{staff?.power} / s</span>
                 </div>
                 <hr className="border-[#B5B5B5] mt-3 mb-2" />
                 <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>

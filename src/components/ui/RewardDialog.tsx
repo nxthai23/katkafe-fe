@@ -4,18 +4,18 @@ import { useBundleStore } from "@/stores/shop/bundleStore";
 import { get } from "lodash";
 import Image from "next/image";
 import { ShopType } from "@/types/bundle";
-import { useCatDealStore } from "@/stores/shop/catDealStore";
+import { useItemStore } from "@/stores/shop/itemStore";
 import CatCard from "./CatCard";
 import CardInfo from "./CardInfo";
-import { CatDeal } from "@/types/catDeal";
+import { Item } from "@/types/item";
 
 type Props = {
   type: ShopType;
   onClose?: () => void;
   closeShopPanel?: () => void;
-  handleChooseDetail?: (catDeal: CatDeal) => void;
+  handleChooseDetail?: (item: Item) => void;
   button: {
-    type: "coin" | "catDeal";
+    type: "coin" | "item";
   };
 };
 
@@ -27,7 +27,7 @@ const RewardDialog: React.FC<Props> = ({
   handleChooseDetail,
 }: Props) => {
   const [bundle] = useBundleStore((state) => [state.currentBundle]);
-  const [catDeal] = useCatDealStore((state) => [state.currentCatDeal]);
+  const [item] = useItemStore((state) => [state.currentItem]);
   const handleBack = () => {
     onClose?.();
   };
@@ -71,9 +71,9 @@ const RewardDialog: React.FC<Props> = ({
               </div>
             )
           )}
-        {!isBundle && (
+        {!isBundle && item && (
           <div className="w-[140px] h-[182px] cursor-pointer">
-            <CatCard catDeal={catDeal} />
+            <CatCard cat={item} />
           </div>
         )}
       </div>

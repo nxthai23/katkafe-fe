@@ -1,9 +1,9 @@
 import { BASE_URL } from "@/constants/api-url";
 import katAxios from "../axios.config";
-import { BuyBody, CatDeal } from "@/types/catDeal";
+import { BuyBody, Item } from "@/types/item";
 
-export const getCatDeals = async () => {
-  const response = await katAxios.get<CatDeal[]>(`${BASE_URL}/shops`);
+export const getItems = async () => {
+  const response = await katAxios.get<Item[]>(`${BASE_URL}/shops`);
   return response.data;
 };
 

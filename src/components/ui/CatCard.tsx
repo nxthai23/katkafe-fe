@@ -3,38 +3,29 @@ import Image from "next/image";
 import Star from "./Star";
 import { get } from "lodash";
 import { Staff } from "@/types/common-types";
+import { Item } from "@/types/item";
 
 type Props = {
-  cat?: Staff | any;
-  catDeal?: Staff | any;
+  cat: Staff;
   active?: boolean;
   handleClick?: (staffId: string) => void;
 };
 
-const CatCard = ({ cat, active, handleClick, catDeal }: Props) => {
+const CatCard = ({ cat, active, handleClick }: Props) => {
   const customClass = "w-4 h-4";
-
-  let imageUrl = get(cat, "imgUrl", "");
-  let name = get(cat, "name", "");
-  let numberStar = get(cat, "numberStar", 0);
   let level = get(cat, "level", 0);
+  const imageUrl = get(cat?.configId, "imgUrl", "") || get(cat, "imgUrl", "");
 
-  if (catDeal) {
-    imageUrl = get(catDeal.configId, "imgUrl", "");
-    name = get(catDeal.configId, "name", "");
-    numberStar = get(catDeal.configId, "numberStar", 0);
-    level = get(catDeal, "level", 0);
-  } else {
-    imageUrl = get(cat, "imgUrl", "");
-    name = get(cat, "name", "");
-    numberStar = get(cat, "numberStar", 0);
-    level = get(cat, "level", 0);
-  }
+  const name = get(cat?.configId, "name", "") || get(cat, "name", "");
+  const _id = get(cat?.configId, "_id", "") || get(cat, "_id", "");
+  const numberStar =
+    get(cat?.configId, "numberStar", 0) || get(cat, "numberStar", "");
+
   return (
     <div
       className="rounded-xl border-solid border-[#4e4837] border-[3px] h-full w-full cursor-pointer relative"
       onClick={() => {
-        handleClick?.(cat._id);
+        handleClick?.(_id);
       }}
     >
       <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">

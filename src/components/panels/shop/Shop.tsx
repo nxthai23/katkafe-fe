@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import { useBundleStore } from "@/stores/shop/bundleStore";
-import { useCatDealStore } from "@/stores/shop/catDealStore";
+import { useItemStore } from "@/stores/shop/itemStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useState } from "react";
 import { useFetchBundles } from "@/lib/hooks/shop/useBundle";
@@ -8,10 +8,10 @@ import CatCard from "@/components/ui/CatCard";
 import RewardDialog from "@/components/ui/RewardDialog";
 import BundleCard from "@/components/ui/BundleCard";
 import { Bundle, ShopType } from "@/types/bundle";
-import { CatDeal } from "@/types/catDeal";
+import { Item } from "@/types/item";
 import CardInfo from "@/components/ui/CardInfo";
 import { useStaffStore } from "@/stores/staffStore";
-import { buyItem, getCatDeals } from "@/requests/shop/catDeal";
+import { buyItem, getItems } from "@/requests/shop/item";
 import { useUserStore } from "@/stores/userStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
@@ -27,13 +27,14 @@ const Shop = () => {
     state.bundles,
     state.setCurrentBundle,
   ]);
-  const [catDeals, currentCatDeal, setCurrentCatDeal, setCatDeals] =
-    useCatDealStore((state) => [
-      state.catDeals,
-      state.currentCatDeal,
-      state.setCurrentCatDeal,
-      state.setCatDeals,
-    ]);
+  const [items, currentItem, setCurrentItem, setItems] = useItemStore(
+    (state) => [
+      state.items,
+      state.currentItem,
+      state.setCurrentItem,
+      state.setItems,
+    ]
+  );
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [staff, setStaffs, setCurrentStaff] = useStaffStore((state) => [
     state.currentStaff,
@@ -41,7 +42,7 @@ const Shop = () => {
     state.setCurrentStaff,
   ]);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const handleViewDetail = (catDeal: CatDeal) => {
+  const handleViewDetail = (item: Item) => {
     setShowCardInfo(true);
   };
   const { fetchStaffs } = useFetchStaffs();
@@ -57,7 +58,7 @@ const Shop = () => {
   };
 
   const handleClose = () => {
-    setCatDeals([]);
+    setItems([]);
     setShowShopPanel(false);
   };
 
@@ -66,29 +67,38 @@ const Shop = () => {
     setShowRewardDialog(!showRewardDialog);
   };
 
-  const showConfirm = (catConfig: CatDeal) => {
+  const showConfirm = (item: Item) => {
     setShowConfirmDialog(!showConfirmDialog);
-    setCurrentCatDeal(catConfig);
+    setCurrentItem(item);
   };
-  const handleBuyItem = async (catConfig: CatDeal) => {
-    if (catConfig) {
-      setCurrentCatDeal(catConfig);
-      setCurrentStaff(catConfig);
+  const handleBuyItem = async (item: Item) => {
+    if (item) {
+      setCurrentItem(item);
     }
     try {
-      if (!user || !catConfig) return;
+      if (!user || !item) return;
       const body = {
-        itemId: catConfig._id,
+        itemId: item._id,
       };
       const response = await buyItem(body);
-
       if (response) {
-        setStaffs(response.cats);
-        setUser(response);
+        setStaffs(response.user.cats);
+        setUser(response.user);
         fetchStaffs();
+        setCurrentStaff(response.initCat);
       }
     } catch (error) {
       console.error("Failed to buy item", error);
+    }
+  };
+
+  const fetchItems = async () => {
+    try {
+      const response = await getItems();
+      setItems(response);
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch cat deals", error);
     }
   };
 
@@ -98,35 +108,15 @@ const Shop = () => {
 
   const handleAgree = () => {
     setShowConfirmDialog(false);
-    if (currentCatDeal) {
-      handleBuyItem(currentCatDeal);
+    if (currentItem) {
+      handleBuyItem(currentItem);
     }
     setShowRewardDialog(true);
   };
 
-  const dataBundle = {
-    title: "Congratulation!",
-    description: "You purchased Bundle's Name successfully! You received:",
-  };
-
-  const dataCat = {
-    title: "Congratulation!",
-    description: "You purchased a staff successfully!",
-  };
-
-  const getItems = async () => {
-    try {
-      const response = await getCatDeals();
-      setCatDeals(response);
-      return response;
-    } catch (error) {
-      console.error("Failed to fetch cat deals", error);
-    }
-  };
-
   useEffect(() => {
     fetchBundles();
-    getItems();
+    fetchItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -171,21 +161,21 @@ const Shop = () => {
                 <div className="text-center uppercase">deal of the day</div>
               </div>
               <div className="w-full flex flex-wrap gap-10 justify-center">
-                {catDeals.map((catDeal) => (
+                {items.map((item) => (
                   <div
-                    key={catDeal._id}
+                    key={item._id}
                     className="flex flex-col items-center gap-4"
                   >
                     <div className="w-[100px] h-[130px]">
-                      <CatCard catDeal={catDeal} />
+                      <CatCard cat={item} />
                     </div>
                     <div
                       className="w-[88px] h-[30px]"
                       onClick={(event: React.MouseEvent<HTMLDivElement>) =>
-                        showConfirm(catDeal)
+                        showConfirm(item)
                       }
                     >
-                      <Button>{catDeal.price} $</Button>
+                      <Button>{item.price} $</Button>
                     </div>
                   </div>
                 ))}
