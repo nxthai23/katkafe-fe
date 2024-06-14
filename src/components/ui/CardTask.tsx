@@ -63,9 +63,9 @@ const CardTask = ({
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <div>{reward.quantity}</div>
+          <div className="text-gray-30">{reward.quantity}</div>
           {reward.type === "token" && (
-            <div className="w-[24px] h-[24px]">
+            <div className="w-4 h-4">
               <img src="/images/coin.png" alt="" />
             </div>
           )}
@@ -84,9 +84,12 @@ const CardTask = ({
         <div className="w-[76px] h-[28px] flex justify-center">
           {!isDone == true ? (
             <Button onClick={button?.onClick} disabled={button?.disabled}>
-              <Link href={visitUrl || "#"} target="_blank">
-                {button?.text}
-              </Link>
+              {visitUrl && (
+                <Link href={visitUrl || "#"} target="_blank">
+                  {button?.text}
+                </Link>
+              )}
+              {!visitUrl && button?.text}
             </Button>
           ) : (
             <div className="text-orange-50 flex gap-x-1">
