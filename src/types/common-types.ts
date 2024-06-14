@@ -18,5 +18,4 @@ export type Staff = {
   numberStar: number;
   backgroundUrl: string;
   power: string;
-  configId: Staff;
 };

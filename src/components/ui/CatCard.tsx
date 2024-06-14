@@ -6,7 +6,7 @@ import { Staff } from "@/types/common-types";
 import { Item } from "@/types/item";
 
 type Props = {
-  cat: Staff;
+  cat: Staff | Item;
   active?: boolean;
   handleClick?: (staffId: string) => void;
 };
@@ -14,12 +14,12 @@ type Props = {
 const CatCard = ({ cat, active, handleClick }: Props) => {
   const customClass = "w-4 h-4";
   const level = get(cat, "level", 0);
-  const imageUrl = get(cat?.configId, "imgUrl", "") || get(cat, "imgUrl", "");
+  const imageUrl = get(cat, "configId.imgUrl", "") || get(cat, "imgUrl", "");
 
-  const name = get(cat?.configId, "name", "") || get(cat, "name", "");
-  const _id = get(cat?.configId, "_id", "") || get(cat, "_id", "");
+  const name = get(cat, "configId.name", "") || get(cat, "name", "");
+  const _id = get(cat, "configId._id", "") || get(cat, "_id", "");
   const numberStar =
-    get(cat?.configId, "numberStar", 0) || get(cat, "numberStar", "");
+    get(cat, "configId.numberStar", 0) || get(cat, "numberStar", "");
 
   return (
     <div
