@@ -45,6 +45,8 @@ const Shop = () => {
   const handleViewDetail = (item: Item) => {
     setShowCardInfo(true);
   };
+  const [showNotiBean, setShowNotiBean] = useState(false);
+
   const { fetchStaffs } = useFetchStaffs();
   const { fetchBundles } = useFetchBundles();
 
@@ -74,6 +76,14 @@ const Shop = () => {
   const handleBuyItem = async (item: Item) => {
     if (item) {
       setCurrentItem(item);
+    }
+    if (!user) return;
+    if (Number(user.bean) < item.price) {
+      setShowNotiBean(true);
+      setTimeout(() => {
+        setShowNotiBean(false);
+      }, 1000);
+      return;
     }
     try {
       if (!user || !item) return;
@@ -120,6 +130,7 @@ const Shop = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  console.log("user", user?.bean);
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
@@ -156,7 +167,13 @@ const Shop = () => {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           {activeTab === "Cat" && (
-            <div className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
+            <div
+              className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8"
+              style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "#666666 #ffe",
+              }}
+            >
               <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
                 <div className="text-center uppercase">deal of the day</div>
               </div>
@@ -175,7 +192,14 @@ const Shop = () => {
                         showConfirm(item)
                       }
                     >
-                      <Button>{item.price} $</Button>
+                      <Button>
+                        {item.price}
+                        <img
+                          className="w-4 h-4 ml-1"
+                          src="./images/coin.png"
+                          alt=""
+                        />
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -225,6 +249,11 @@ const Shop = () => {
       {showCardInfo && (
         <div className="absolute z-50 w-full h-full top-0 left-0">
           <CardInfo onBack={() => setShowCardInfo(false)} />
+        </div>
+      )}
+      {showNotiBean && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Not enough bean!
         </div>
       )}
     </div>
