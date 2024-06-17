@@ -179,7 +179,7 @@ const Manage: React.FC = () => {
     try {
       show();
       if (!user || !currentRestaurant) return;
-      if (currentRestaurant.level >= 9) {
+      if (currentRestaurant.level >= currentRestaurant.maxLevel) {
         setShowNotiLevel(true);
         setTimeout(() => {
           setShowNotiLevel(false);
@@ -209,7 +209,10 @@ const Manage: React.FC = () => {
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {
-      if (currentRestaurant && currentRestaurant.level < 9)
+      if (
+        currentRestaurant &&
+        currentRestaurant.level < currentRestaurant.maxLevel
+      )
         setTimeout(() => {
           hide();
         }, 1000);

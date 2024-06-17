@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { QuestCodes } from "@/constants/quest";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
+import RewardQuest from "@/components/ui/RewardQuest";
 
 type Props = {};
 const TAB = {
@@ -17,6 +18,7 @@ const TAB = {
 
 function Task({}: Props) {
   const [activeTab, setActiveTab] = useState(TAB.TASK);
+  const [showReward, setShowReward] = useState(false);
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
   ]);
@@ -48,6 +50,7 @@ function Task({}: Props) {
       console.error("Failed to check in", error);
     } finally {
       hide();
+      setShowReward(true);
     }
   };
 
@@ -59,6 +62,7 @@ function Task({}: Props) {
       console.error("Failed to visit website", error);
     } finally {
       hide();
+      setShowReward(true);
     }
   };
 
@@ -70,11 +74,11 @@ function Task({}: Props) {
       console.error("Failed to youtube", error);
     } finally {
       hide();
+      setShowReward(true);
     }
   };
 
   const handleQuestButtonClick = async (questCode: QuestCodes) => {
-    console.log("handleQuestButtonClick", questCode);
     switch (questCode) {
       case QuestCodes.CHECK_IN:
         await handleCheckInQuest();
@@ -88,6 +92,10 @@ function Task({}: Props) {
       default:
         break;
     }
+  };
+
+  const handleOnClick = () => {
+    setShowReward(false);
   };
 
   const handleClose = (e: any) => {
@@ -210,6 +218,7 @@ function Task({}: Props) {
         </div>
       </div>
       {isShowing && <Loading />}
+      {showReward && <RewardQuest onClick={handleOnClick} />}
     </div>
   );
 }
