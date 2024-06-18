@@ -13,6 +13,7 @@ import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { getClaim, getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
+import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 
 export const InGameUI = () => {
   const [
@@ -43,6 +44,7 @@ export const InGameUI = () => {
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const telegramData = useInitData();
 
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
@@ -115,7 +117,7 @@ export const InGameUI = () => {
       try {
         const loginBody = {
           type: "local",
-          telegramId: "telegramId123",
+          initData: telegramData.initData,
         };
         await login(loginBody);
       } catch (error) {
