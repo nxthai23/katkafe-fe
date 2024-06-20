@@ -21,8 +21,6 @@ const config: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.NONE,
     parent: "game-container",
-    width: GAME_WIDTH,
-    height: GAME_HEIGHT,
   },
   physics: {
     default: "arcade",

@@ -10,7 +10,7 @@ body {
 
 #app {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -18,8 +18,8 @@ body {
 }
 
 .game-ui {
-  width: 384px;
-  height: 608px;
+  width: 100%;
+  height: 100vh;
 }
 
 .info-box {
