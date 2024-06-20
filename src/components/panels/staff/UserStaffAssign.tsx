@@ -205,13 +205,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                 </span>
               </div>
             </div>
-            <div
-              className="mt-2 gap-2 flex flex-wrap max-h-[383px] overflow-y-auto"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
+            <div className="mt-2 gap-2 flex flex-wrap max-h-[383px] overflow-y-auto scroll-style">
               {getFilteredStaffs().map((staff) => (
                 <div
                   key={staff._id}

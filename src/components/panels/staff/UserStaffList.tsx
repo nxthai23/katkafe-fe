@@ -261,13 +261,7 @@ const StaffList: React.FC = () => {
                 </div>
               </div>
             )}
-            <div
-              className="mt-2 gap-[6px] flex flex-wrap max-h-[440px] overflow-y-auto"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
+            <div className="mt-2 gap-[6px] flex flex-wrap max-h-[440px] overflow-y-auto">
               {getFilteredStaffs().map((staff) => (
                 <div
                   key={staff._id}

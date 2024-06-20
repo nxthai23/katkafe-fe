@@ -167,13 +167,7 @@ const Shop = () => {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           {activeTab === "Cat" && (
-            <div
-              className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
+            <div className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
               <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
                 <div className="text-center uppercase">deal of the day</div>
               </div>
@@ -207,13 +201,7 @@ const Shop = () => {
             </div>
           )}
           {activeTab === "Bundle" && (
-            <div
-              className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-y-auto mt-8 w-full flex flex-col justify-between"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
+            <div className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-y-auto mt-8 w-full flex flex-col justify-between">
               <div className="flex flex-col gap-2">
                 {bundles.map((bundle) => (
                   <div key={bundle.id} className="w-full h-full cursor-pointer">

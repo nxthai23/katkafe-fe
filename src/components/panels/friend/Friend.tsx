@@ -93,13 +93,7 @@ const Friend: React.FC = () => {
           </span>
           {activeTab === "Friend" && (
             <>
-              <div
-                className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between"
-                style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "#666666 #ffe",
-                }}
-              >
+              <div className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between">
                 <div className="w-[320px] h-[164px] relative">
                   <div className="flex justify-between mb-4 mt-2">
                     <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">

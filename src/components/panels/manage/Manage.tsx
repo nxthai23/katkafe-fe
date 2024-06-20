@@ -295,13 +295,7 @@ const Manage: React.FC = () => {
                   <img src="./images/speed.png" alt="" className="w-6 h-6" />
                 </span>
               </div>
-              <div
-                className="h-[calc(100%-26px-8px)] overflow-y-auto"
-                style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "#666666 #ffe",
-                }}
-              >
+              <div className="h-[calc(100%-26px-8px)] overflow-y-auto">
                 <>
                   <div
                     key={currentRestaurant?._id}
