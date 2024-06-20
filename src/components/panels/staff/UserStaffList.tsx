@@ -11,6 +11,9 @@ import {
   upgradeStaff,
 } from "@/requests/staff";
 import { useUserStore } from "@/stores/userStore";
+import { Dot } from "lucide-react";
+import { Loading } from "@/components/ui/Loading";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -20,20 +23,21 @@ const StaffList: React.FC = () => {
   const [isActive, setIsActive] = useState<number | null>(null);
   const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
   const { fetchStaffs } = useFetchStaffs();
-  const [staffs, currentStaff, setCurrentStaff] = useStaffStore((state) => [
-    state.staffs,
-    state.currentStaff,
-    state.setCurrentStaff,
-  ]);
+  const [staffs, setStaffs, currentStaff, setCurrentStaff] = useStaffStore(
+    (state) => [
+      state.staffs,
+      state.setStaffs,
+      state.currentStaff,
+      state.setCurrentStaff,
+    ]
+  );
   const [staff] = useStaffStore((state) => [state.currentStaff]);
-  const [isUpdated, setIsUpdated] = useState(false);
-
+  const [isUpgraded, setIsUpgraded] = useState(false);
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
   ]);
   const { fetchUser } = useUserStore();
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [loading, setLoading] = useState(false);
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [showNotiCat, setShowNotiCat] = useState(false);
   const [showNotiBean, setShowNotiBean] = useState(false);
@@ -46,31 +50,41 @@ const StaffList: React.FC = () => {
     state.setIsChooseUpgrade,
   ]);
 
+  const [isShowing, show, hide] = useLoadingStore((state) => [
+    state.isShowing,
+    state.show,
+    state.hide,
+  ]);
+
   const options = [
-    {
-      value: 1,
-      label: "All",
-    },
-    {
-      value: 2,
-      label: "Level",
-    },
-    {
-      value: 3,
-      label: "Star",
-    },
+    { value: 1, label: "All" },
+    { value: 2, label: "Level" },
+    { value: 3, label: "Star" },
   ];
 
   const customClass =
     "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
-  const boxShadowStyle = {
-    boxShadow: "0px -2px 0px 0px #BC9D9B inset",
+  const boxShadowStyle = { boxShadow: "0px -2px 0px 0px #BC9D9B inset" };
+
+  const staffNotAssign = async (staffs: Staff[]) => {
+    return Promise.all(
+      staffs.map(async (staff) => {
+        const response = await upgradeRequireStaff({ level: staff.level });
+        const fee = response.nextFee;
+        if (!user) return { ...staff, isCanUpgrade: false, fee };
+        const isCanUpgrade = staff.level < 100 && fee <= user.bean;
+        console.log("isCanUpgrade", isCanUpgrade);
+        return { ...staff, isCanUpgrade, fee };
+      })
+    );
+  };
+  const fetchStaffData = async () => {
+    const processedStaffs = await staffNotAssign(staffs);
+    setStaffs(processedStaffs);
   };
 
-  const staffNotAssign = staffs;
-
   const getFilteredStaffs = () => {
-    let filtered = staffNotAssign;
+    let filtered = staffs;
 
     if (activeStarFilter !== "All") {
       filtered = filtered.filter((staff) => {
@@ -89,7 +103,6 @@ const StaffList: React.FC = () => {
 
   const handleChooseClick = (staff: Staff) => {
     setCurrentStaff(staff);
-
     if (Number(staff._id) === isActive) {
       setIsActive(null);
     } else {
@@ -109,80 +122,66 @@ const StaffList: React.FC = () => {
   const handleClose = () => {
     setShowStaffPanel(false);
   };
+
   const handleCloseDetail = async () => {
-    setLoading(true);
+    show();
     setNumberCatPick(0);
     setIsActive(0);
     setShowCardInfo(false);
     await fetchDataUpgrade();
     await fetchUser();
-    await fetchStaffs();
-    setLoading(false);
+    await fetchStaffData();
+    hide();
   };
+
   const fetchDataUpgrade = async () => {
     if (!staff) return;
-    const response = await upgradeRequireStaff({
-      level: staff.level,
-    });
+    const response = await upgradeRequireStaff({ level: staff.level });
     setFee(response.fee);
     setNumberCatsRequire(response.numberCatRequire);
-    setIsUpdated(false);
+    setIsUpgraded(false);
   };
 
   const handleUpgrade = async () => {
-    setLoading(true);
     try {
       if (!staff) return;
       if (!user) return;
       if (Number(user.bean) < fee) {
         setShowNotiBean(true);
-        setTimeout(() => {
-          setShowNotiBean(false);
-        }, 1000);
+        setTimeout(() => setShowNotiBean(false), 1000);
         return;
       }
       if (Number(user.cats.length) < numberCatsRequire) {
         setShowNotiCat(true);
-        setTimeout(() => {
-          setShowNotiCat(false);
-        }, 1000);
+        setTimeout(() => setShowNotiCat(false), 1000);
         return;
       }
-      const data = await upgradeStaff({
-        catId: staff._id,
-      });
+      show();
+
+      const data = await upgradeStaff({ catId: staff._id });
       setCurrentStaff(data.upgradedCat);
       setNumberCatPick(0);
       if (isChooseUpgrade.length > 0) {
-        const body = {
-          catIds: isChooseUpgrade,
-        };
-        return removeStaff(body);
+        const body = { catIds: isChooseUpgrade };
+        await removeStaff(body);
       }
       await fetchUser();
-
       await fetchDataUpgrade();
       await fetchStaffs();
       setIsChooseUpgrade([]);
-      setIsUpdated(true);
-      setLoading(false);
+      setIsUpgraded(true);
+      hide();
     } catch (error) {
       console.log("error", error);
     }
   };
-  useEffect(() => {
-    if (isUpdated) {
-      fetchDataUpgrade();
-      fetchStaffs();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpdated]);
 
   useEffect(() => {
-    // fetchDataUpgrade();
-    fetchStaffs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (isUpgraded) {
+      fetchDataUpgrade();
+    }
+    fetchStaffData();
+  }, [isUpgraded, staff?.level]);
 
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -261,14 +260,19 @@ const StaffList: React.FC = () => {
                 </div>
               </div>
             )}
-            <div className="mt-2 gap-[6px] flex flex-wrap max-h-[440px] overflow-y-auto">
+            <div className="mt-2 gap-[6px] flex flex-wrap max-h-[405px] overflow-y-auto overflow-x-hidden">
               {getFilteredStaffs().map((staff) => (
                 <div
                   key={staff._id}
-                  className="w-[100px] h-[130px] cursor-pointer"
+                  className="w-[100px] h-[130px] cursor-pointer relative"
                   onClick={() => handleChooseClick(staff)}
                 >
                   <CatCard cat={staff} />
+                  {staff.isCanUpgrade && (
+                    <div className="absolute -top-6 -right-6 cursor-pointer-none">
+                      <Dot size={56} color="red" />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -285,9 +289,10 @@ const StaffList: React.FC = () => {
       )}
       {showNotiCat && (
         <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not eanough cats!
+          Not enough cats!
         </div>
       )}
+      {isShowing && <Loading />}
     </div>
   );
 };

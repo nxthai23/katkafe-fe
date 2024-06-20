@@ -11,6 +11,7 @@ export type Restaurant = {
 };
 
 export type Staff = {
+  isCanUpgrade: any;
   _id: string;
   name: string;
   level: number;
