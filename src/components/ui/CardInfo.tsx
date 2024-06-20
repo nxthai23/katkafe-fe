@@ -149,32 +149,42 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                   </span>
                   <div>{<NumberFormatter value={fee} />} </div>
                 </div>
-                <div className="items-center">
-                  <span className="text-bodyMd text-[#6F6F6F]">
-                    Cat require
-                  </span>
-                  <span className="flex items-center gap-1">
-                    {numberCatPick} / {numberCatRequire}
-                  </span>
-                </div>
+                {numberCatRequire > 0 && (
+                  <div className="items-center">
+                    <span className="text-bodyMd text-[#6F6F6F]">
+                      Cat require
+                    </span>
+                    <span className="flex items-center gap-1">
+                      {numberCatPick} / {numberCatRequire}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="w-full text-center">
               <hr className="mt-4 my-2 border-[#e8ddbd]" />
               <div className="flex gap-2 justify-center">
                 {staff && staff.level < 100 && (
-                  <div
-                    className="w-[172px] h-[39px]"
-                    onClick={handleShowStaffUpgrade}
-                  >
+                  <>
                     {numberCatRequire === 0 ||
                     numberCatPick > numberCatRequire ? (
-                      <Button disabled>Pick Cat</Button>
+                      <div
+                        className="w-[172px] h-[39px] hidden"
+                        onClick={handleShowStaffUpgrade}
+                      >
+                        <Button>Pick Cat</Button>
+                      </div>
                     ) : (
-                      <Button>Pick Cat</Button>
+                      <div
+                        className="w-[172px] h-[39px]"
+                        onClick={handleShowStaffUpgrade}
+                      >
+                        <Button>Pick Cat</Button>
+                      </div>
                     )}
-                  </div>
+                  </>
                 )}
+
                 {staff && staff.level < 100 ? (
                   <div className="w-[172px] h-[39px]">
                     {numberCatPick >= numberCatRequire ? (
