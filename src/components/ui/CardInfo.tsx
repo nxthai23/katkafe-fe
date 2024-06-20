@@ -10,6 +10,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "./Loading";
 import NumberFormatter from "./NumberFormat";
+import { MoveRight } from "lucide-react";
 
 type Props = {
   onBack?: () => void;
@@ -18,16 +19,27 @@ type Props = {
 
 const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
   const [showStaffUpgradePanel, setShowStaffUpgradePanel] = useState(false);
-  const [staff] = useStaffStore((state) => [state.currentStaff]);
-  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
-
-  const [numberCatRequire, setNumberCatRequire] = useStaffStore((state) => [
+  const [
+    staff,
+    fee,
+    setFee,
+    numberCatRequire,
+    setNumberCatRequire,
+    numberCatPick,
+    speed,
+    setSpeed,
+  ] = useStaffStore((state) => [
+    state.currentStaff,
+    state.fee,
+    state.setFee,
     state.numberCatRequire,
     state.setNumberCatRequire,
+    state.numberCatPick,
+    state.speed,
+    state.setSpeed,
   ]);
   const { fetchStaffs } = useFetchStaffs();
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [numberCatPick] = useStaffStore((state) => [state.numberCatPick]);
   const [isShowing, show, hide] = useLoadingStore((state) => [
     state.isShowing,
     state.show,
@@ -42,6 +54,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
       if (response && response.nextFee) {
         setFee(response.nextFee);
         setNumberCatRequire(response.numberCats);
+        setSpeed(response.speed);
       }
     } catch (error) {
       console.error("Failed to fetch upgrade data", error);
@@ -127,11 +140,22 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
               </div>
               <div className="w-full font-normal mt-4">
                 <div className="text-bodyMd text-[#6F6F6F]">Earning Speed</div>
-                <div className="flex gap-1 items-center">
-                  <span>
-                    <img className="w-4 h-4" src="/images/speed.png" alt="" />
-                  </span>
-                  <span>{staff?.power} / s</span>
+                <div className="flex gap-3 items-center">
+                  <div className="flex gap-1 items-center">
+                    <span>
+                      <img className="w-4 h-4" src="/images/speed.png" alt="" />
+                    </span>
+                    <span>{staff?.power} / s</span>
+                  </div>
+                  <div>
+                    <MoveRight size={16} />
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <span>
+                      <img className="w-4 h-4" src="/images/speed.png" alt="" />
+                    </span>
+                    <span>{speed} / s</span>
+                  </div>
                 </div>
                 <hr className="border-[#B5B5B5] mt-3 mb-2" />
                 <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>

@@ -11,6 +11,7 @@ type States = {
   numberCatPick: number;
   fee: number;
   isChooseUpgrade: string[];
+  speed: number;
 };
 
 type Actions = {
@@ -21,6 +22,7 @@ type Actions = {
   setNumberCatRequire: (number: number) => void;
   setNumberCatPick: (number: number) => void;
   setFee: (number: number) => void;
+  setSpeed: (number: number) => void;
   setIsChooseUpgrade: (value: string[]) => void;
 };
 
@@ -33,6 +35,7 @@ const defaultStates: States = {
   numberCatPick: 0,
   fee: 0,
   isChooseUpgrade: [],
+  speed: 0,
 };
 
 export const useStaffStore = create<States & Actions>((set, get) => ({
@@ -75,6 +78,11 @@ export const useStaffStore = create<States & Actions>((set, get) => ({
   setIsChooseUpgrade: (value: string[]) => {
     set({
       isChooseUpgrade: value,
+    });
+  },
+  setSpeed: (number: number) => {
+    set({
+      speed: number,
     });
   },
 }));
