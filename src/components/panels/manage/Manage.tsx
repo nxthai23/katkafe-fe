@@ -355,7 +355,7 @@ const Manage: React.FC = () => {
           )}
           {activeTab === "Cafe" && (
             <div className="bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8 w-full flex flex-col justify-between">
-              <div className="gap-6">
+              <div className="gap-6 overflow-y-auto px-1">
                 <div>
                   <img
                     src={currentRestaurant?.imgUrl}
@@ -367,56 +367,92 @@ const Manage: React.FC = () => {
                   <span className="text-bodyXl mt-2">
                     {currentRestaurant?.name}
                   </span>
-                  <div className="flex items-center gap-1">
-                    <img
-                      src="/images/slot_cat.png"
-                      className="w-[18px] h-[18px]"
-                      alt=""
-                    />
-                    <span>
-                      {currentRestaurant?.cats.length} /{" "}
-                      {currentRestaurant?.slot}
-                    </span>
-                  </div>
                 </div>
                 <div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-bodyMd text-[#6f6f6f]">
-                      Earning Speed
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <img className="w-4 h-4" src="/images/speed.png" alt="" />
-                      {power} / s
-                    </span>
-                  </div>
-                  <hr className="border-t border-gray-20 my-2" />
-
-                  <div className="flex flex-col">
-                    <span className="text-bodyMd text-[#6f6f6f]">
-                      Upgrade Fee
-                    </span>
-                    {/* TODO: chưa có API */}
-                    <div className="flex items-center">
+                  <div className="flex justify-between">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-bodyMd text-[#6f6f6f]">
+                        Earning Speed
+                      </span>
                       <span className="flex items-center gap-1">
                         <img
                           className="w-4 h-4"
-                          src="/images/coin.png"
+                          src="/images/speed.png"
                           alt=""
                         />
-                        {user && (
-                          <NumberFormatter value={parseInt(user.bean)} />
-                        )}{" "}
-                        /
-                      </span>
-                      <span className="flex items-center gap-1 ml-1">
-                        <img
-                          className="w-4 h-4"
-                          src="/images/coin.png"
-                          alt=""
-                        />
-                        {fee}
+                        {power} / s
                       </span>
                     </div>
+                    <div className="flex flex-col gap-1 items-end">
+                      <span className="text-bodyMd text-[#6f6f6f]">
+                        Cat in Cafe
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <img
+                          src="/images/slot_cat.png"
+                          className="w-[18px] h-[18px]"
+                          alt=""
+                        />
+                        <span>
+                          {currentRestaurant?.cats.length} /{" "}
+                          {currentRestaurant?.slot}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr className="border-t border-gray-20 my-2" />
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="text-bodyMd text-[#6f6f6f]">
+                        Upgrade Fee
+                      </span>
+                      <div className="flex items-center">
+                        <span className="flex items-center gap-1">
+                          <img
+                            className="w-4 h-4"
+                            src="/images/coin.png"
+                            alt=""
+                          />
+                          {user && (
+                            <NumberFormatter value={parseInt(user.bean)} />
+                          )}{" "}
+                          /
+                        </span>
+                        <span className="flex items-center gap-1 ml-1">
+                          <img
+                            className="w-4 h-4"
+                            src="/images/coin.png"
+                            alt=""
+                          />
+                          {fee}
+                        </span>
+                      </div>
+                    </div>
+                    {numberCatsRequire !== 0 &&
+                      currentRestaurant &&
+                      currentRestaurant.level < currentRestaurant.maxLevel && (
+                        <div className="flex flex-col items-end">
+                          <span className="text-bodyMd text-[#6f6f6f]">
+                            Number cat require
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <span>
+                              <img
+                                className="w-[18px] h-[18px]"
+                                src="/images/slot_cat.png"
+                                alt=""
+                              />
+                            </span>
+                            <span className="flex items-center gap-1">
+                              {user && user.cats.length}/
+                            </span>
+                            <span className="flex items-center gap-1">
+                              {numberCatsRequire}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
