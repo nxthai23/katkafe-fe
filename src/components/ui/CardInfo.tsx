@@ -98,7 +98,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           <div className="bg-orange-10 h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-gray-20">
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center overflow-y-auto">
               <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
                 <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">

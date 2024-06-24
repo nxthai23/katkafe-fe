@@ -6,7 +6,6 @@ import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardBarista from "@/components/ui/CardBarista";
 import { useBaristaStore } from "@/stores/friend/baristaStore";
 import { useFetchBaristas } from "@/lib/hooks/friend/useBarista";
-import InviteInfo from "../invite/InviteInfo";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import { useUserStore } from "@/stores/userStore";
 
@@ -30,7 +29,6 @@ const Friend: React.FC = () => {
   const [setShowInviteInfoPanel] = useLayoutStore((state) => [
     state.setShowInviteInfoPanel,
   ]);
-  // const [showInviteInfoPanel, setShowInviteInfoPanel] = useState(false);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleFriendTabClick = () => {
@@ -217,7 +215,6 @@ const Friend: React.FC = () => {
           )}
         </div>
       </div>
-      {/* {showInviteInfoPanel && <InviteInfo />} */}
     </div>
   );
 };

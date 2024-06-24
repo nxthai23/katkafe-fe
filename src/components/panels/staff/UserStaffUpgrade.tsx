@@ -44,10 +44,10 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
       value: 2,
       label: "Level",
     },
-    {
-      value: 3,
-      label: "Star",
-    },
+    // {
+    //   value: 3,
+    //   label: "Star",
+    // },
   ];
   const { fetchStaffs } = useFetchStaffs();
 

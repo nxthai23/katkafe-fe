@@ -16,9 +16,7 @@ type States = {
   showGuildDetailPanel: boolean;
   showRestaurantPanel: boolean;
   showOfflineEarning: boolean;
-  // showStaffDetailPanel: boolean;
-
-  // previousPanel: "staff" | "manage" | "staff-detail" | "Friend" | null;
+  isAnyPanelOpen: boolean;
 };
 
 type Actions = {
@@ -37,8 +35,7 @@ type Actions = {
   setShowGuildDetailPanel: (show: boolean) => void;
   setShowRestaurantPanel: (show: boolean) => void;
   setShowOfflineEarning: (show: boolean) => void;
-
-  // setStaffDetailPanel: (show: boolean) => void;
+  setIsAnyPanelOpen: (show: boolean) => void;
 };
 
 const defaultStates = {
@@ -57,90 +54,68 @@ const defaultStates = {
   showGuildDetailPanel: false,
   showRestaurantPanel: false,
   showOfflineEarning: false,
-
-  // showStaffDetailPanel: false,
+  isAnyPanelOpen: false,
 };
 
 export const useLayoutStore = create<States & Actions>((set) => ({
   ...defaultStates,
   setShowFriendPanel: (show: boolean) => {
-    set({
-      showFriendPanel: show,
-    });
+    set({ showFriendPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowStaffPanel: (show: boolean) => {
-    set({
-      showStaffPanel: show,
-    });
+    set({ showStaffPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowManagePanel: (show: boolean) => {
-    set({
-      showManagePanel: show,
-    });
+    set({ showManagePanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowUpgradePanel: (show: boolean) => {
-    set({
-      showUpgradePanel: show,
-    });
+    set({ showUpgradePanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowAssignPanel: (show: boolean) => {
-    set({
-      showAssignPanel: show,
-    });
+    set({ showAssignPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowShopPanel: (show: boolean) => {
-    set({
-      showShopPanel: show,
-    });
+    set({ showShopPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowInviteInfoPanel: (show: boolean) => {
-    set({
-      showInviteInfoPanel: show,
-    });
+    set({ showInviteInfoPanel: show });
   },
   setShowGuildPanel: (show: boolean) => {
-    set({
-      showGuildPanel: show,
-    });
+    set({ showGuildPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowFindGuildPanel: (show: boolean) => {
-    set({
-      showFindGuildPanel: show,
-    });
+    set({ showFindGuildPanel: show });
   },
   setShowRollPanel: (show: boolean) => {
-    set({
-      showRollPanel: show,
-    });
+    set({ showRollPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowQuestPanel: (show: boolean) => {
-    set({
-      showQuestPanel: show,
-    });
+    set({ showQuestPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowRankPanel: (show: boolean) => {
-    set({
-      showRankPanel: show,
-    });
+    set({ showRankPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowGuildDetailPanel: (show: boolean) => {
-    set({
-      showGuildDetailPanel: show,
-    });
+    set({ showGuildDetailPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowRestaurantPanel: (show: boolean) => {
-    set({
-      showRestaurantPanel: show,
-    });
+    set({ showRestaurantPanel: show });
+    set({ isAnyPanelOpen: show });
   },
   setShowOfflineEarning: (show: boolean) => {
-    set({
-      showOfflineEarning: show,
-    });
+    set({ showOfflineEarning: show });
+    set({ isAnyPanelOpen: show });
   },
-  // setStaffDetailPanel: (show: boolean) => {
-  //     set({
-  //         showStaffDetailPanel: show,
-  //     });
-  // },
+  setIsAnyPanelOpen: (show: boolean) => set({ isAnyPanelOpen: true }),
 }));

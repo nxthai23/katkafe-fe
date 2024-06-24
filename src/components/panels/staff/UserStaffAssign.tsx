@@ -37,10 +37,10 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
       value: 2,
       label: "Level",
     },
-    {
-      value: 3,
-      label: "Star",
-    },
+    // {
+    //   value: 3,
+    //   label: "Star",
+    // },
   ];
   const customClass =
     "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
@@ -205,7 +205,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
                 </span>
               </div>
             </div>
-            <div className="mt-2 gap-2 flex flex-wrap max-h-[383px] overflow-y-auto scroll-style">
+            <div className="mt-2 gap-2 flex flex-wrap max-h-[350px] overflow-y-auto scroll-style">
               {getFilteredStaffs().map((staff) => (
                 <div
                   key={staff._id}

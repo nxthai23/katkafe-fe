@@ -59,7 +59,7 @@ const StaffList: React.FC = () => {
   const options = [
     { value: 1, label: "All" },
     { value: 2, label: "Level" },
-    { value: 3, label: "Star" },
+    // { value: 3, label: "Star" },
   ];
 
   const customClass =
@@ -73,7 +73,6 @@ const StaffList: React.FC = () => {
         const fee = response.nextFee;
         if (!user) return { ...staff, isCanUpgrade: false, fee };
         const isCanUpgrade = staff.level < 100 && fee <= user.bean;
-        console.log("isCanUpgrade", isCanUpgrade);
         return { ...staff, isCanUpgrade, fee };
       })
     );
