@@ -2,8 +2,12 @@ import { BASE_URL } from "@/constants/api-url";
 import katAxios from "../axios.config";
 import { BuyBody, Item } from "@/types/item";
 
-export const getItems = async () => {
-  const response = await katAxios.get<Item[]>(`${BASE_URL}/shops`);
+export const getItems = async (type: string) => {
+  const response = await katAxios.get<Item[]>(`${BASE_URL}/shops`, {
+    params: {
+      type,
+    },
+  });
   return response.data;
 };
 
