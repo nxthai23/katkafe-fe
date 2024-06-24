@@ -225,7 +225,8 @@ const Manage: React.FC = () => {
       if (!user || !currentRestaurant) return;
       show();
       const body = {
-        level: currentRestaurant.level,
+        currentLocationLevel: currentRestaurant.level ,
+        currentLocationOrder: currentRestaurant.order,
       };
       const response = await upgradeRequireRestaurant(body);
       setFee(response.nextFee);
@@ -267,17 +268,15 @@ const Manage: React.FC = () => {
           <div className="flex">
             <div
               onClick={handleCafeTabClick}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Cafe" ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Cafe" ? isActive : ""
+                }`}
             >
               Cafe
             </div>
             <div
               onClick={handleStaffTabClick}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Staff" ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Staff" ? isActive : ""
+                }`}
             >
               Staff
             </div>
@@ -430,7 +429,7 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
                   {currentRestaurant &&
-                  currentRestaurant.level === currentRestaurant.maxLevel ? (
+                    currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>

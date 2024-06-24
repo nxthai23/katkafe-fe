@@ -6,8 +6,11 @@ import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import RestaurantCard from "@/components/ui/RestaurantCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { divide } from "lodash";
-import UnlockRestaurantCard from "@/components/ui/UnlockRestaurantCard";
 import UnlockDialog from "@/components/ui/UnlockDialog";
+import { useUserStore } from "@/stores/userStore";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import { Loading } from "@/components/ui/Loading";
+import { unclockRestaurant } from "@/requests/restaurant";
 
 const itemsPerPage = 2;
 
@@ -15,10 +18,16 @@ function Restaurant() {
   const [setShowRestaurantPanel] = useLayoutStore((state) => [
     state.setShowRestaurantPanel,
   ]);
-  const [restaurants] = useRestaurantStore((state) => [state.restaurants]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showDialog, setShowDialog] = useState(false);
-
+  const [unclockError, setUnclockError] = useState(false)
+  const [user] = useUserStore((state) => [state.user])
+  const [isShowing, show, hide] = useLoadingStore((state) => [
+    state.isShowing,
+    state.show,
+    state.hide,
+  ]);
+  const [restaurants, nextRestaurantUnclock, currentRestaurant] = useRestaurantStore((state) => [state.restaurants, state.nextRestaurantUnclock, state.currentRestaurant])
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -50,12 +59,32 @@ function Restaurant() {
   const handleBack = () => {
     setShowRestaurantPanel(false);
   };
-  const handleClick = () => {
+  const handleClickUnlock = () => {
     setShowDialog(true);
   };
   const handleClickOutside = (e: any) => {
     setShowDialog(false);
   };
+  const handleClickUnlockDialog = async () => {
+    if ((user && user?.cats.length >= Number(nextRestaurantUnclock?.numberCatsRequire)) && (currentRestaurant && currentRestaurant.level >= 9) && (Number(user?.bean) >= Number(nextRestaurantUnclock?.fee))) {
+      try {
+        show()
+        const res = await unclockRestaurant()
+        console.log('res', res);
+      } catch (error) {
+        console.error("Error fetching", error);
+      } finally {
+        setTimeout(() => {
+          hide();
+        }, 1000);
+      }
+    } else {
+      setUnclockError(true);
+      setTimeout(() => {
+        setUnclockError(false);
+      }, 1000);
+    }
+  }
   useEffect(() => {
     fetchRestaurants();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,11 +120,11 @@ function Restaurant() {
                   className="border border-[#cccbbd] bg-orange-10 p-2 rounded-lg"
                   style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
                 >
-                  <RestaurantCard restaurant={restaurant} />
+                  <RestaurantCard restaurant={restaurant} onUnlock={handleClickUnlock} />
                 </div>
               </>
             ))}
-            {currentPage ===
+            {/* {currentPage ===
               Math.ceil((restaurants.length + 1) / itemsPerPage) && (
               <div
                 className="border border-[#cccbbd] bg-[#F7F6E2] p-2 py-8 rounded-lg"
@@ -103,7 +132,7 @@ function Restaurant() {
               >
                 <UnlockRestaurantCard onUnlock={handleClick} />
               </div>
-            )}
+            )} */}
             <Pagination
               onPageClick={handlePageClick}
               customClassName="flex justify-center absolute bottom-2 w-full left-1/2 -translate-x-1/2"
@@ -123,10 +152,17 @@ function Restaurant() {
           ></div>
           <UnlockDialog
             data={dataUnlock}
+            onUnclock={handleClickUnlockDialog}
             onClose={() => setShowDialog(false)}
           />
         </>
       )}
+      {unclockError && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Insufficient resource
+        </div>
+      )}
+      {isShowing && <Loading />}
     </div>
   );
 }
