@@ -14,6 +14,8 @@ import { getClaim, getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
+import { useDialogStore } from "@/stores/DialogStore";
+import Dialog from "./Dialog";
 
 export const InGameUI = () => {
   const [
@@ -29,7 +31,6 @@ export const InGameUI = () => {
     state.setShowShopPanel,
     state.setShowRestaurantPanel,
   ]);
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [showLoginAward, setShowLoginAward] = useState(false);
   const [response, setResponse] = useState<UserType | null>(null);
   const [user, login, setUser] = useUserStore((state) => [
@@ -38,6 +39,19 @@ export const InGameUI = () => {
     state.setUser,
   ]);
   const power = useRestaurantStore((state) => state.power);
+  const [
+    hideDialog,
+    showDialog,
+    setDialogType,
+    setDialogContent,
+    DialogType
+  ] = useDialogStore((state) => [
+    state.hide,
+    state.show,
+    state.setDialogType,
+    state.setDialogContent,
+    state.type
+  ]);
   const bean = useUserStore((state) => state.bean);
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
@@ -56,17 +70,20 @@ export const InGameUI = () => {
   };
 
   const handleClick = async () => {
-    setShowLoginDialog(false);
-    try {
-      const response = await updateLoginStatus();
-      if (response) {
-        setUser(response);
-        setResponse(response);
+    if (DialogType === 'login') {
+
+      try {
+        const response = await updateLoginStatus();
+        if (response) {
+          setUser(response);
+          setResponse(response);
+        }
+      } catch (error) {
+        console.log("Error updating login status", error);
       }
-    } catch (error) {
-      console.log("Error updating login status", error);
+      setShowLoginAward(true);
     }
-    setShowLoginAward(true);
+    hideDialog()
   };
 
   const handleClaim = async () => {
@@ -126,7 +143,16 @@ export const InGameUI = () => {
     };
 
     Login();
-    setShowLoginDialog(true);
+    if (user?.isLoginFirstTime) {
+      setDialogType('login')
+      setDialogContent({
+        title: 'Congratulation!',
+        content: 'You received a new comer gift. Open it to get your first staff.',
+        buttonText: 'Open',
+        imgUrl: '/images/login.png'
+      })
+      showDialog()
+    }
     useRestaurantStore.setState({ power: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
@@ -205,9 +231,13 @@ export const InGameUI = () => {
           onClick={() => setShowFriendPanel(true)}
         />
       </div>
-      {user?.isLoginFirstTime && showLoginDialog && (
+      {/* {user?.isLoginFirstTime && showLoginDialog && ( 
         <LoginDialog onClick={handleClick} />
-      )}
+      )} */}
+
+      {/* refactor dialog using reusable components, using state management in DialogStore */}
+      <Dialog onClick={handleClick} />
+
       {showLoginAward && (
         <>
           <div className="bg-[#232322] opacity-80 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>

@@ -11,6 +11,8 @@ import { useUserStore } from "@/stores/userStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import { unclockRestaurant } from "@/requests/restaurant";
+import RewardDialog from "@/components/ui/RewardDialog";
+import { useDialogStore } from "@/stores/DialogStore";
 
 const itemsPerPage = 2;
 
@@ -21,13 +23,22 @@ function Restaurant() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showDialog, setShowDialog] = useState(false);
   const [unclockError, setUnclockError] = useState(false)
-  const [user] = useUserStore((state) => [state.user])
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser])
   const [isShowing, show, hide] = useLoadingStore((state) => [
     state.isShowing,
     state.show,
     state.hide,
   ]);
-  const [restaurants, nextRestaurantUnclock, currentRestaurant] = useRestaurantStore((state) => [state.restaurants, state.nextRestaurantUnclock, state.currentRestaurant])
+  const [
+    showSuccessDialog,
+    setDialogType,
+    setDialogContent
+  ] = useDialogStore((state) => [
+    state.show,
+    state.setDialogType,
+    state.setDialogContent
+  ]);
+  const [restaurants, nextRestaurantUnclock, currentRestaurant, setCurrentRestaurant] = useRestaurantStore((state) => [state.restaurants, state.nextRestaurantUnclock, state.currentRestaurant, state.setCurrentRestaurant])
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -71,6 +82,21 @@ function Restaurant() {
         show()
         const res = await unclockRestaurant()
         console.log('res', res);
+        if (res) {
+          setCurrentRestaurant(res?.newLocation)
+          setUser(res?.updatedUser)
+          fetchRestaurants();
+          setShowDialog(false);
+          setShowRestaurantPanel(false);
+          setDialogType('restaurant')
+          setDialogContent({
+            title: 'Congratulation!',
+            content: 'You have unlocked a new shop.',
+            buttonText: 'Check it out',
+            imgUrl: res?.newLocation.imgUrl
+          })
+          showSuccessDialog()
+        }
       } catch (error) {
         console.error("Error fetching", error);
       } finally {
