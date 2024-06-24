@@ -1,9 +1,7 @@
 import Button from "@/components/ui/Button";
-import { useBundleStore } from "@/stores/shop/bundleStore";
 import { useItemStore } from "@/stores/shop/itemStore";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useState } from "react";
-import { useFetchBundles } from "@/lib/hooks/shop/useBundle";
 import CatCard from "@/components/ui/CatCard";
 import RewardDialog from "@/components/ui/RewardDialog";
 import BundleCard from "@/components/ui/BundleCard";
@@ -16,17 +14,18 @@ import { useUserStore } from "@/stores/userStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
+const TABS = {
+  CAT: "Cat",
+  ROLL: "Roll",
+};
+
 const Shop = () => {
   const [setShowShopPanel] = useLayoutStore((state) => [
     state.setShowShopPanel,
   ]);
   const [showRewardDialog, setShowRewardDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [activeTab, setActiveTab] = useState("Bundle");
-  const [bundles, setCurrentBundle] = useBundleStore((state) => [
-    state.bundles,
-    state.setCurrentBundle,
-  ]);
+  const [activeTab, setActiveTab] = useState(TABS.ROLL);
   const [items, currentItem, setCurrentItem, setItems] = useItemStore(
     (state) => [
       state.items,
@@ -48,15 +47,11 @@ const Shop = () => {
   const [showNotiBean, setShowNotiBean] = useState(false);
 
   const { fetchStaffs } = useFetchStaffs();
-  const { fetchBundles } = useFetchBundles();
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
-  const handleBundleTabClick = () => {
-    setActiveTab("Bundle");
-  };
 
-  const handleCatTabClick = () => {
-    setActiveTab("Cat");
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
   };
 
   const handleClose = () => {
@@ -65,7 +60,6 @@ const Shop = () => {
   };
 
   const confirmBundleDialog = (bundle: Bundle) => {
-    setCurrentBundle(bundle);
     setShowRewardDialog(!showRewardDialog);
   };
 
@@ -95,7 +89,7 @@ const Shop = () => {
         setStaffs(response.user.cats);
         setUser(response.user);
         fetchStaffs();
-        setCurrentStaff(response.initCat);
+        setCurrentStaff(response.items.cats[0]);
       }
     } catch (error) {
       console.error("Failed to buy item", error);
@@ -104,7 +98,8 @@ const Shop = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await getItems();
+      const type = activeTab.toLowerCase();
+      const response = await getItems(type);
       setItems(response);
       return response;
     } catch (error) {
@@ -125,12 +120,10 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    fetchBundles();
     fetchItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeTab]);
 
-  console.log("user", user?.bean);
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
@@ -145,17 +138,17 @@ const Shop = () => {
           </div>
           <div className="flex">
             <div
-              onClick={handleBundleTabClick}
+              onClick={() => handleTabClick(TABS.ROLL)}
               className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Bundle" ? isActive : ""
+                activeTab === TABS.ROLL ? isActive : ""
               }`}
             >
-              Bundle
+              Roll
             </div>
             <div
-              onClick={handleCatTabClick}
+              onClick={() => handleTabClick(TABS.CAT)}
               className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Cat" ? isActive : ""
+                activeTab === TABS.CAT ? isActive : ""
               }`}
             >
               Cat
@@ -166,7 +159,7 @@ const Shop = () => {
             <p className="bg-red-10 h-[2px] w-[70%]"></p>
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          {activeTab === "Cat" && (
+          {activeTab === TABS.CAT && (
             <div
               className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8"
               style={{
@@ -193,7 +186,7 @@ const Shop = () => {
                       }
                     >
                       <Button>
-                        {item.price}
+                        {item.price || 0}
                         <img
                           className="w-4 h-4 ml-1"
                           src="./images/coin.png"
@@ -206,7 +199,7 @@ const Shop = () => {
               </div>
             </div>
           )}
-          {activeTab === "Bundle" && (
+          {activeTab === TABS.ROLL && (
             <div
               className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-y-auto mt-8 w-full flex flex-col justify-between"
               style={{
@@ -215,14 +208,14 @@ const Shop = () => {
               }}
             >
               <div className="flex flex-col gap-2">
-                {bundles.map((bundle) => (
+                {/* {bundles.map((bundle) => (
                   <div key={bundle.id} className="w-full h-full cursor-pointer">
                     <BundleCard
                       bundle={bundle}
                       handleClick={confirmBundleDialog}
                     />
                   </div>
-                ))}
+                ))} */}
               </div>
             </div>
           )}
@@ -232,7 +225,7 @@ const Shop = () => {
         <>
           <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-40"></div>
           <RewardDialog
-            type={activeTab === "Bundle" ? ShopType.Bundle : ShopType.Cat}
+            type={activeTab === TABS.ROLL ? ShopType.Roll : ShopType.Cat}
             onClose={() => setShowRewardDialog(false)}
             closeShopPanel={() => setShowShopPanel(false)}
             button={{ type: "coin" }}

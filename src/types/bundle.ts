@@ -15,4 +15,5 @@ export type Bundle = {
 export enum ShopType {
   Bundle = "Bundle",
   Cat = "Cat",
+  Roll = "Roll",
 }
