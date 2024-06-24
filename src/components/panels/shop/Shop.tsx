@@ -13,6 +13,7 @@ import { buyItem, getItems } from "@/requests/shop/item";
 import { useUserStore } from "@/stores/userStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import Image from "next/image";
 
 const TABS = {
   CAT: "Cat",
@@ -41,6 +42,8 @@ const Shop = () => {
     state.setCurrentStaff,
   ]);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+
+  const [purchasedItem, setPurchasedItem] = useState(null);
   const handleViewDetail = (item: Item) => {
     setShowCardInfo(true);
   };
@@ -67,6 +70,7 @@ const Shop = () => {
     setShowConfirmDialog(!showConfirmDialog);
     setCurrentItem(item);
   };
+
   const handleBuyItem = async (item: Item) => {
     if (item) {
       setCurrentItem(item);
@@ -86,6 +90,7 @@ const Shop = () => {
       };
       const response = await buyItem(body);
       if (response) {
+        setPurchasedItem(response.items.cats[0]);
         setStaffs(response.user.cats);
         setUser(response.user);
         fetchStaffs();
@@ -98,7 +103,18 @@ const Shop = () => {
 
   const fetchItems = async () => {
     try {
-      const type = activeTab.toLowerCase();
+      let type;
+      switch (activeTab) {
+        case TABS.ROLL:
+          type = "pack";
+          break;
+        case TABS.CAT:
+          type = "cat";
+          break;
+        default:
+          type = "pack";
+          break;
+      }
       const response = await getItems(type);
       setItems(response);
       return response;
@@ -113,9 +129,11 @@ const Shop = () => {
 
   const handleAgree = () => {
     setShowConfirmDialog(false);
+
     if (currentItem) {
       handleBuyItem(currentItem);
     }
+    console.log("purchased item: ", purchasedItem);
     setShowRewardDialog(true);
   };
 
@@ -201,21 +219,46 @@ const Shop = () => {
           )}
           {activeTab === TABS.ROLL && (
             <div
-              className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-y-auto mt-8 w-full flex flex-col justify-between"
+              className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8"
               style={{
                 scrollbarWidth: "thin",
                 scrollbarColor: "#666666 #ffe",
               }}
             >
-              <div className="flex flex-col gap-2">
-                {/* {bundles.map((bundle) => (
-                  <div key={bundle.id} className="w-full h-full cursor-pointer">
-                    <BundleCard
-                      bundle={bundle}
-                      handleClick={confirmBundleDialog}
-                    />
+              <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
+                <div className="text-center uppercase">deal of the day</div>
+              </div>
+              <div className="w-full flex flex-wrap gap-10 justify-center">
+                {items.map((item) => (
+                  <div
+                    key={item._id}
+                    className="flex flex-col items-center gap-4"
+                  >
+                    <div className="w-[114px] h-[186px]">
+                      <Image
+                        alt="pack image"
+                        src={item.imgUrl}
+                        width={114}
+                        height={186}
+                      />
+                    </div>
+                    <div
+                      className="w-[88px] h-[30px]"
+                      onClick={(event: React.MouseEvent<HTMLDivElement>) =>
+                        showConfirm(item)
+                      }
+                    >
+                      <Button>
+                        {item.price || 0}
+                        <img
+                          className="w-4 h-4 ml-1"
+                          src="./images/coin.png"
+                          alt=""
+                        />
+                      </Button>
+                    </div>
                   </div>
-                ))} */}
+                ))}
               </div>
             </div>
           )}
@@ -224,13 +267,16 @@ const Shop = () => {
       {showRewardDialog && (
         <>
           <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-40"></div>
-          <RewardDialog
-            type={activeTab === TABS.ROLL ? ShopType.Roll : ShopType.Cat}
-            onClose={() => setShowRewardDialog(false)}
-            closeShopPanel={() => setShowShopPanel(false)}
-            button={{ type: "coin" }}
-            handleChooseDetail={handleViewDetail}
-          />
+          {purchasedItem && (
+            <RewardDialog
+              type={activeTab === TABS.ROLL ? ShopType.Roll : ShopType.Cat}
+              onClose={() => setShowRewardDialog(false)}
+              closeShopPanel={() => setShowShopPanel(false)}
+              button={{ type: "coin" }}
+              handleChooseDetail={handleViewDetail}
+              item={purchasedItem}
+            />
+          )}
         </>
       )}
       {showConfirmDialog && (
