@@ -33,7 +33,6 @@ export const useFetchRestaurants = () => {
       setNextRestaurantUnclockIndex(restaurants.length + 1)
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
-      setCurrentRestaurant(listRestaurantsMapped[restaurants.length - 1]);
     } catch (error) {
       console.error("Error fetching", error);
     }

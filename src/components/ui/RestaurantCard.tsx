@@ -9,20 +9,36 @@ import usePower from "@/lib/hooks/restaurant/useRestaurant";
 type Props = {
   restaurant: Restaurant;
   onUnlock?: () => void;
+  onCardClick?: (order: number) => void;
 
 };
 
-const RestaurantCard = ({ restaurant, onUnlock }: Props) => {
-  const [nextRestaurantUnclockIndex, myRestaurants] = useRestaurantStore((state) => [state.nextRestaurantUnclockIndex, state.myRestaurants]);
+const RestaurantCard = ({ restaurant, onUnlock, onCardClick }: Props) => {
+  const [
+    nextRestaurantUnclockIndex,
+    myRestaurants,
+    currentRestaurant
+  ] = useRestaurantStore((state) => [
+    state.nextRestaurantUnclockIndex,
+    state.myRestaurants,
+    state.currentRestaurant
+  ]);
   const cats = get(restaurant, "cats", []);
   const power = cats && usePower(restaurant._id);
   const name = get(restaurant, "name", "");
   const imageUrl = get(restaurant, "imgUrl", "");
   const staffSlot = get(restaurant, "slot", "");
   const isUnlock = myRestaurants && myRestaurants.find(item => item.order === get(restaurant, "order"))
+
   const handleClickUnlock = () => {
     onUnlock?.();
   };
+  const handleCardClick = () => {
+    if (isUnlock) {
+      onCardClick?.(restaurant.order);
+    }
+  };
+
   const restaurantLocked = (<>
     <div className="flex flex-col items-center justify-center gap-4 absolute w-full h-full z-20 bg-black/75 backdrop-blur-sm">
       <div>
@@ -39,8 +55,9 @@ const RestaurantCard = ({ restaurant, onUnlock }: Props) => {
       }
     </div>
   </>)
+
   return (
-    <div className="relative flex flex-col justify-center items-center min-h-[198px]">
+    <div className="relative flex flex-col justify-center items-center min-h-[198px]" onClick={handleCardClick}>
       <Image
         src={imageUrl}
         alt="res pic"
