@@ -1,30 +1,46 @@
 import { getPower } from "@/requests/restaurant";
 import { Restaurant } from "@/types/restaurant";
+import { RestaurantUpgrade } from "@/types/restaurantUpgrade";
 import { create } from "zustand";
 
 type States = {
   restaurants: Restaurant[];
+  myRestaurants: Restaurant[];
+  nextRestaurantUnclockIndex: number | null;
   currentRestaurant: Restaurant | null;
+  nextRestaurantUnclock: RestaurantUpgrade | null;
   power: any | null;
 };
 
 type Actions = {
   setRestaurants: (restaurants: Restaurant[]) => void;
+  setMyRestaurants: (myRestaurants: Restaurant[]) => void;
+  setNextRestaurantUnclockIndex: (nextRestaurantUnclockIndex: number | null) => void;
   setCurrentRestaurant: (restaurant: Restaurant | null) => void;
+  setNextRestaurantUnclock: (restaurant: RestaurantUpgrade | null) => void;
   fetchAndSetPower: (locationId: string) => Promise<void>;
 };
 
 const defaultStates = {
   currentRestaurant: null,
   restaurants: [],
+  myRestaurants: [],
   power: null,
+  nextRestaurantUnclockIndex: null,
+  nextRestaurantUnclock: null
+
 };
 
 export const useRestaurantStore = create<States & Actions>((set, get) => ({
   ...defaultStates,
   setRestaurants: (restaurants: Restaurant[]) => {
     set({
-      restaurants,
+      restaurants: restaurants,
+    });
+  },
+  setMyRestaurants: (myRestaurants: Restaurant[]) => {
+    set({
+      myRestaurants: myRestaurants,
     });
   },
   setCurrentRestaurant: (restaurant: Restaurant | null) => {
@@ -37,10 +53,21 @@ export const useRestaurantStore = create<States & Actions>((set, get) => ({
       set({ power: null });
     }
   },
+  setNextRestaurantUnclock: (restaurant: RestaurantUpgrade | null) => {
+    set({
+      nextRestaurantUnclock: restaurant,
+    });
+  },
+  setNextRestaurantUnclockIndex: (nextRestaurantUnclockIndex: number | null) => {
+    set({
+      nextRestaurantUnclockIndex,
+    });
+  },
   fetchAndSetPower: async (locationId: string) => {
     try {
       const power = await getPower(locationId);
       set({ power });
+      return power
     } catch (error) {
       console.error("Error fetching power:", error);
       set({ power: null });

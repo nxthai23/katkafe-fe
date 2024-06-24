@@ -3,20 +3,44 @@ import Image from "next/image";
 import { get } from "lodash";
 import { Restaurant } from "@/types/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
-
+import Button from "./Button";
+import classNames from "classnames";
+import usePower from "@/lib/hooks/restaurant/useRestaurant";
 type Props = {
   restaurant: Restaurant;
+  onUnlock?: () => void;
+
 };
 
-const RestaurantCard = ({ restaurant }: Props) => {
-  const [power] = useRestaurantStore((state) => [state.power]);
+const RestaurantCard = ({ restaurant, onUnlock }: Props) => {
+  const [nextRestaurantUnclockIndex, myRestaurants] = useRestaurantStore((state) => [state.nextRestaurantUnclockIndex, state.myRestaurants]);
+  const cats = get(restaurant, "cats", []);
+  const power = cats && usePower(restaurant._id);
   const name = get(restaurant, "name", "");
   const imageUrl = get(restaurant, "imgUrl", "");
   const staffSlot = get(restaurant, "slot", "");
-  const cats = get(restaurant, "cats", []);
-
+  const isUnlock = myRestaurants && myRestaurants.find(item => item.order === get(restaurant, "order"))
+  const handleClickUnlock = () => {
+    onUnlock?.();
+  };
+  const restaurantLocked = (<>
+    <div className="flex flex-col items-center justify-center gap-4 absolute w-full h-full z-20 bg-black/75 backdrop-blur-sm">
+      <div>
+        <Image src={"/images/unlock.png"} alt={""} width={24} height={32} />
+      </div>
+      {
+        restaurant.order === nextRestaurantUnclockIndex ?
+          <div className="w-[156px] h-[36px] bg-white rounded-xl">
+            <Button onClick={handleClickUnlock}>Unlock</Button>
+          </div> :
+          <div className="max-w-[180px] text-center text-white">
+            Fufill the requirement to unlock this shop
+          </div>
+      }
+    </div>
+  </>)
   return (
-    <div>
+    <div className="relative flex flex-col justify-center items-center min-h-[198px]">
       <Image
         src={imageUrl}
         alt="res pic"
@@ -24,10 +48,13 @@ const RestaurantCard = ({ restaurant }: Props) => {
         height={144}
         className="aspect-[2/1] object-cover rounded"
       />
-      <div className="flex justify-between items-start mt-2">
+      {
+        !isUnlock && restaurantLocked
+      }
+      <div className="flex justify-between items-start mt-2 w-full">
         <div>
           <div>{name}</div>
-          <div className="flex gap-1 items-center">
+          <div className={classNames("flex gap-1 items-center", cats.length === 0 && 'hidden')}>
             <div>
               <Image
                 src="/images/speed.png"
@@ -39,7 +66,7 @@ const RestaurantCard = ({ restaurant }: Props) => {
             {power}/s
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className={classNames("flex items-center gap-1", cats.length === 0 && 'hidden')}>
           <div>
             <Image
               src="/images/slot_cat.png"
