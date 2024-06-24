@@ -133,14 +133,13 @@ const Shop = () => {
     if (currentItem) {
       handleBuyItem(currentItem);
     }
-    console.log("purchased item: ", purchasedItem);
     setShowRewardDialog(true);
   };
 
   useEffect(() => {
     fetchItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
+  }, [activeTab, showRewardDialog]);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
