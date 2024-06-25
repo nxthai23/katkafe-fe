@@ -9,7 +9,7 @@ type Props = {
   type: "achievement" | "task";
   content: string;
   img: {
-    url?: string;
+    imgUrl?: string;
     width: number;
     height: number;
   };
@@ -41,13 +41,14 @@ const CardTask = ({
   visitUrl,
 }: Props) => {
   const isAchievement = useMemo(() => type === "achievement", [type]);
+
   return (
-    <div className="bg-orange-10 border-[#e8ddbd] border rounded-lg w-full h-full p-2">
+    <div className="bg-[#fffffa] border-black border rounded-lg w-full h-full p-2">
       <div className="flex gap-8 items-start justify-between">
         <div className="flex flex-col">
           <div className="rounded-full w-6 h-6">
             <Image
-              src={img.url || DEFAULT_QUEST_ICON}
+              src={img.imgUrl || DEFAULT_QUEST_ICON}
               alt="quest-icon"
               width={img.width}
               height={img.height}
