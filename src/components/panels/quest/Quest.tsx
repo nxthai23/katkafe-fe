@@ -13,7 +13,7 @@ import RewardQuest from "@/components/ui/RewardQuest";
 type Props = {};
 const TAB = {
   DAILY: "Daily",
-  TASK: "Task",
+  SOCIAL: "Social",
 };
 
 function Task({}: Props) {
@@ -38,7 +38,7 @@ function Task({}: Props) {
   };
 
   const handleAchievementTabClick = () => {
-    setActiveTab(TAB.TASK);
+    setActiveTab(TAB.SOCIAL);
   };
 
   const handleCheckInQuest = async () => {
@@ -131,7 +131,7 @@ function Task({}: Props) {
             <div
               onClick={handleAchievementTabClick}
               className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Task" ? isActive : ""
+                activeTab === "Social" ? isActive : ""
               }`}
             >
               Social Task
@@ -178,11 +178,11 @@ function Task({}: Props) {
               </div>
             )}
 
-            {/* Task tab */}
-            {activeTab === TAB.TASK && (
+            {/* Social Task tab */}
+            {activeTab === TAB.SOCIAL && (
               <div className="w-full flex flex-wrap gap-2 justify-start overflow-y-auto">
                 {quests
-                  .filter((quest) => quest.task === "Task")
+                  .filter((quest) => quest.task === "Social")
                   .map((quest) => (
                     <div
                       key={quest._id}
