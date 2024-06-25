@@ -159,7 +159,6 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                 </div>
                 <hr className="border-[#B5B5B5] mt-3 mb-2" />
                 <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>
-                {/* TODO: chưa có API */}
                 <div className="flex items-center gap-1">
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
