@@ -5,15 +5,14 @@ import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import RestaurantCard from "@/components/ui/RestaurantCard";
 import { Pagination } from "@/components/ui/Pagination";
-import { divide } from "lodash";
 import UnlockDialog from "@/components/ui/UnlockDialog";
 import { useUserStore } from "@/stores/userStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import { unclockRestaurant } from "@/requests/restaurant";
-import RewardDialog from "@/components/ui/RewardDialog";
 import { useDialogStore } from "@/stores/DialogStore";
-
+import { Restaurant as RestaurantType } from "@/types/restaurant";
+import classNames from "classnames";
 const itemsPerPage = 2;
 
 function Restaurant() {
@@ -81,7 +80,6 @@ function Restaurant() {
       try {
         show()
         const res = await unclockRestaurant()
-        console.log('res', res);
         if (res) {
           setCurrentRestaurant(res?.newLocation)
           setUser(res?.updatedUser)
@@ -111,8 +109,15 @@ function Restaurant() {
       }, 1000);
     }
   }
+  const handleOnCardClick = (order: number) => {
+    const restaurantSelected = restaurants.find((restaurant) => restaurant.order === order)
+    setCurrentRestaurant(restaurantSelected as RestaurantType | null)
+  }
   useEffect(() => {
     fetchRestaurants();
+    if (!currentRestaurant) {
+      setCurrentRestaurant(restaurants && restaurants[0] as RestaurantType | null)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -143,11 +148,11 @@ function Restaurant() {
               <>
                 <div
                   key={restaurant._id}
-                  className="border border-[#cccbbd] bg-orange-10 p-2 rounded-lg"
+                  className={classNames("bg-orange-10 p-2 rounded-lg", currentRestaurant?.order === restaurant.order ? 'border-2 border-primary !shadow-none' : 'border border-[#cccbbd]')}
                   style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
                 >
-                  <RestaurantCard restaurant={restaurant} onUnlock={handleClickUnlock} />
-                </div>
+                  <RestaurantCard restaurant={restaurant} onUnlock={handleClickUnlock} onCardClick={handleOnCardClick} />
+                </div >
               </>
             ))}
             {/* {currentPage ===
@@ -170,26 +175,30 @@ function Restaurant() {
           </div>
         </div>
       </div>
-      {showDialog && (
-        <>
-          <div
-            className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"
-            onClick={handleClickOutside}
-          ></div>
-          <UnlockDialog
-            data={dataUnlock}
-            onUnclock={handleClickUnlockDialog}
-            onClose={() => setShowDialog(false)}
-          />
-        </>
-      )}
-      {unclockError && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Insufficient resource
-        </div>
-      )}
+      {
+        showDialog && (
+          <>
+            <div
+              className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"
+              onClick={handleClickOutside}
+            ></div>
+            <UnlockDialog
+              data={dataUnlock}
+              onUnclock={handleClickUnlockDialog}
+              onClose={() => setShowDialog(false)}
+            />
+          </>
+        )
+      }
+      {
+        unclockError && (
+          <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+            Insufficient resource
+          </div>
+        )
+      }
       {isShowing && <Loading />}
-    </div>
+    </div >
   );
 }
 

@@ -9,6 +9,7 @@ import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
+import { Restaurant as RestaurantType } from "@/types/restaurant";
 
 import {
   removeCat,
@@ -36,9 +37,10 @@ const Manage: React.FC = () => {
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [currentRestaurant, power, setCurrentRestaurant, setRestaurants] =
+  const [currentRestaurant, restaurants, power, setCurrentRestaurant, setRestaurants] =
     useRestaurantStore((state) => [
       state.currentRestaurant,
+      state.restaurants,
       state.power,
       state.setCurrentRestaurant,
       state.setRestaurants,
@@ -225,7 +227,7 @@ const Manage: React.FC = () => {
       if (!user || !currentRestaurant) return;
       show();
       const body = {
-        currentLocationLevel: currentRestaurant.level ,
+        currentLocationLevel: currentRestaurant.level,
         currentLocationOrder: currentRestaurant.order,
       };
       const response = await upgradeRequireRestaurant(body);
@@ -248,8 +250,11 @@ const Manage: React.FC = () => {
 
   useEffect(() => {
     fetchDataUpgrade();
-    fetchRestaurants();
+    fetchRestaurants()
     fetchStaffs();
+    if (!currentRestaurant) {
+      setCurrentRestaurant(restaurants && restaurants[0] as RestaurantType | null)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
