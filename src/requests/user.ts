@@ -1,10 +1,9 @@
-import { API_USER, BASE_URL } from "@/constants/api-url";
+import { BASE_URL } from "@/constants/api-url";
 import { UserType } from "@/types/user";
-import axios from "axios";
 import katAxios from "./axios.config";
 
 export const getUser = async () => {
-  const response = await axios.get(`${API_USER}`);
+  const response = await katAxios.get(`${BASE_URL}/users/me`);
   return response.data;
 };
 

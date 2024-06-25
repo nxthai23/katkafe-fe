@@ -177,13 +177,7 @@ const Shop = () => {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           {activeTab === TABS.CAT && (
-            <div
-              className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
+            <div className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
               <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
                 <div className="text-center uppercase">deal of the day</div>
               </div>
@@ -217,13 +211,7 @@ const Shop = () => {
             </div>
           )}
           {activeTab === TABS.ROLL && (
-            <div
-              className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8"
-              style={{
-                scrollbarWidth: "thin",
-                scrollbarColor: "#666666 #ffe",
-              }}
-            >
+            <div className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
               <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
                 <div className="text-center uppercase">deal of the day</div>
               </div>

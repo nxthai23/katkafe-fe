@@ -18,6 +18,7 @@ export type Quest = {
   task: string;
   progress: boolean;
   visitUrl?: string;
+  imgUrl: string;
 };
 
 export type Achievement = {

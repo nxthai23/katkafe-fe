@@ -6,7 +6,6 @@ import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardBarista from "@/components/ui/CardBarista";
 import { useBaristaStore } from "@/stores/friend/baristaStore";
 import { useFetchBaristas } from "@/lib/hooks/friend/useBarista";
-import InviteInfo from "../invite/InviteInfo";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import { useUserStore } from "@/stores/userStore";
 
@@ -30,7 +29,6 @@ const Friend: React.FC = () => {
   const [setShowInviteInfoPanel] = useLayoutStore((state) => [
     state.setShowInviteInfoPanel,
   ]);
-  // const [showInviteInfoPanel, setShowInviteInfoPanel] = useState(false);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleFriendTabClick = () => {
@@ -93,13 +91,7 @@ const Friend: React.FC = () => {
           </span>
           {activeTab === "Friend" && (
             <>
-              <div
-                className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between"
-                style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "#666666 #ffe",
-                }}
-              >
+              <div className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between">
                 <div className="w-[320px] h-[164px] relative">
                   <div className="flex justify-between mb-4 mt-2">
                     <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
@@ -223,7 +215,6 @@ const Friend: React.FC = () => {
           )}
         </div>
       </div>
-      {/* {showInviteInfoPanel && <InviteInfo />} */}
     </div>
   );
 };

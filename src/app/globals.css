@@ -10,7 +10,7 @@ body {
 
 #app {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -18,8 +18,8 @@ body {
 }
 
 .game-ui {
-  width: 384px;
-  height: 608px;
+  width: 100%;
+  height: 100vh;
 }
 
 .info-box {
@@ -37,4 +37,22 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 50;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(196, 196, 196);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(102, 102, 102);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(80, 80, 80);
 }

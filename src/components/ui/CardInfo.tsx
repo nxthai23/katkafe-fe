@@ -10,6 +10,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "./Loading";
 import NumberFormatter from "./NumberFormat";
+import { MoveRight } from "lucide-react";
 
 type Props = {
   onBack?: () => void;
@@ -18,16 +19,27 @@ type Props = {
 
 const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
   const [showStaffUpgradePanel, setShowStaffUpgradePanel] = useState(false);
-  const [staff] = useStaffStore((state) => [state.currentStaff]);
-  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
-
-  const [numberCatRequire, setNumberCatRequire] = useStaffStore((state) => [
+  const [
+    staff,
+    fee,
+    setFee,
+    numberCatRequire,
+    setNumberCatRequire,
+    numberCatPick,
+    speed,
+    setSpeed,
+  ] = useStaffStore((state) => [
+    state.currentStaff,
+    state.fee,
+    state.setFee,
     state.numberCatRequire,
     state.setNumberCatRequire,
+    state.numberCatPick,
+    state.speed,
+    state.setSpeed,
   ]);
   const { fetchStaffs } = useFetchStaffs();
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [numberCatPick] = useStaffStore((state) => [state.numberCatPick]);
   const [isShowing, show, hide] = useLoadingStore((state) => [
     state.isShowing,
     state.show,
@@ -42,6 +54,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
       if (response && response.nextFee) {
         setFee(response.nextFee);
         setNumberCatRequire(response.numberCats);
+        setSpeed(response.speed);
       }
     } catch (error) {
       console.error("Failed to fetch upgrade data", error);
@@ -85,7 +98,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           <div className="bg-orange-10 h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-gray-20">
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center overflow-y-auto">
               <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
                 <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
@@ -127,15 +140,25 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
               </div>
               <div className="w-full font-normal mt-4">
                 <div className="text-bodyMd text-[#6F6F6F]">Earning Speed</div>
-                <div className="flex gap-1 items-center">
-                  <span>
-                    <img className="w-4 h-4" src="/images/speed.png" alt="" />
-                  </span>
-                  <span>{staff?.power} / s</span>
+                <div className="flex gap-3 items-center">
+                  <div className="flex gap-1 items-center">
+                    <span>
+                      <img className="w-4 h-4" src="/images/speed.png" alt="" />
+                    </span>
+                    <span>{staff?.power} / s</span>
+                  </div>
+                  <div>
+                    <MoveRight size={16} />
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <span>
+                      <img className="w-4 h-4" src="/images/speed.png" alt="" />
+                    </span>
+                    <span>{speed} / s</span>
+                  </div>
                 </div>
                 <hr className="border-[#B5B5B5] mt-3 mb-2" />
                 <div className="text-bodyMd text-[#6F6F6F]">Upgrade Fee</div>
-                {/* TODO: chưa có API */}
                 <div className="flex items-center gap-1">
                   <span>
                     <img className="h-4 w-4" src="/images/coin.png" alt="" />
@@ -149,32 +172,42 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                   </span>
                   <div>{<NumberFormatter value={fee} />} </div>
                 </div>
-                <div className="items-center">
-                  <span className="text-bodyMd text-[#6F6F6F]">
-                    Cat require
-                  </span>
-                  <span className="flex items-center gap-1">
-                    {numberCatPick} / {numberCatRequire}
-                  </span>
-                </div>
+                {numberCatRequire > 0 && (
+                  <div className="items-center">
+                    <span className="text-bodyMd text-[#6F6F6F]">
+                      Cat require
+                    </span>
+                    <span className="flex items-center gap-1">
+                      {numberCatPick} / {numberCatRequire}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="w-full text-center">
               <hr className="mt-4 my-2 border-[#e8ddbd]" />
               <div className="flex gap-2 justify-center">
                 {staff && staff.level < 100 && (
-                  <div
-                    className="w-[172px] h-[39px]"
-                    onClick={handleShowStaffUpgrade}
-                  >
+                  <>
                     {numberCatRequire === 0 ||
                     numberCatPick > numberCatRequire ? (
-                      <Button disabled>Pick Cat</Button>
+                      <div
+                        className="w-[172px] h-[39px] hidden"
+                        onClick={handleShowStaffUpgrade}
+                      >
+                        <Button>Pick Cat</Button>
+                      </div>
                     ) : (
-                      <Button>Pick Cat</Button>
+                      <div
+                        className="w-[172px] h-[39px]"
+                        onClick={handleShowStaffUpgrade}
+                      >
+                        <Button>Pick Cat</Button>
+                      </div>
                     )}
-                  </div>
+                  </>
                 )}
+
                 {staff && staff.level < 100 ? (
                   <div className="w-[172px] h-[39px]">
                     {numberCatPick >= numberCatRequire ? (

@@ -35,6 +35,11 @@ function App() {
       }, 5000);
     }
 
+    const app = (window as any).Telegram?.WebApp;
+    if (app) {
+      app.ready();
+    }
+
     return () => {
       clearClaimInterval();
     };

@@ -12,12 +12,12 @@ import RewardQuest from "@/components/ui/RewardQuest";
 
 type Props = {};
 const TAB = {
-  TASK: "Task",
-  ACHIEVEMENT: "Achievement",
+  DAILY: "Daily",
+  SOCIAL: "Social",
 };
 
 function Task({}: Props) {
-  const [activeTab, setActiveTab] = useState(TAB.TASK);
+  const [activeTab, setActiveTab] = useState(TAB.DAILY);
   const [showReward, setShowReward] = useState(false);
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
@@ -34,11 +34,11 @@ function Task({}: Props) {
   const { fetchAchievements } = useFetchAchievements();
 
   const handleTaskTabClick = () => {
-    setActiveTab(TAB.TASK);
+    setActiveTab(TAB.DAILY);
   };
 
   const handleAchievementTabClick = () => {
-    setActiveTab(TAB.ACHIEVEMENT);
+    setActiveTab(TAB.SOCIAL);
   };
 
   const handleCheckInQuest = async () => {
@@ -122,19 +122,19 @@ function Task({}: Props) {
           <div className="flex">
             <div
               onClick={handleTaskTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[125px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Task" ? isActive : ""
+              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === "Daily" ? isActive : ""
               }`}
             >
-              Task
+              Daily Task
             </div>
             <div
               onClick={handleAchievementTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[20px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Achievement" ? isActive : ""
+              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === "Social" ? isActive : ""
               }`}
             >
-              Achievement
+              Social Task
             </div>
           </div>
           <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
@@ -143,75 +143,73 @@ function Task({}: Props) {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           <div className="bg-[#fff8de] w-full rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
-            {/* task tab */}
-            {activeTab === TAB.TASK && (
+            {/* Daily tab */}
+            {activeTab === TAB.DAILY && (
               <div className="w-full flex flex-wrap gap-2 justify-start overflow-y-auto">
-                {questTasks.map((task: string) => (
-                  <div key={task} className="w-full flex flex-col gap-y-1">
-                    <div className="flex justify-center">{task} task</div>
-                    {quests
-                      .filter((quest) => quest.task === task)
-                      .map((quest) => (
-                        <div
-                          key={quest._id}
-                          className="w-full flex flex-col items-center"
-                        >
-                          <CardTask
-                            type="task"
-                            content={quest.name}
-                            img={{
-                              url: "/icons/ic-quest.png",
-                              width: 24,
-                              height: 24,
-                            }}
-                            reward={{
-                              type: "token",
-                              quantity: quest.reward.value,
-                            }}
-                            button={{
-                              text: "Go",
-                              onClick: () =>
-                                handleQuestButtonClick(quest.questCode),
-                            }}
-                            isDone={quest.progress}
-                            visitUrl={quest.visitUrl}
-                          />
-                        </div>
-                      ))}
-                  </div>
-                ))}
+                {quests
+                  .filter((quest) => quest.task === "Daily")
+                  .map((quest) => (
+                    <div
+                      key={quest._id}
+                      className="w-full flex flex-col items-center"
+                    >
+                      <CardTask
+                        type="task"
+                        content={quest.name}
+                        img={{
+                          imgUrl: quest.imgUrl,
+                          width: 24,
+                          height: 24,
+                        }}
+                        reward={{
+                          type: "token",
+                          quantity: quest.reward.value,
+                        }}
+                        button={{
+                          text: "Go",
+                          onClick: () =>
+                            handleQuestButtonClick(quest.questCode),
+                        }}
+                        isDone={quest.progress}
+                        visitUrl={quest.visitUrl}
+                      />
+                    </div>
+                  ))}
               </div>
             )}
 
-            {/* archievement tab */}
-            {activeTab === TAB.ACHIEVEMENT && (
-              <div className="w-full flex flex-wrap gap-1 justify-start overflow-y-auto">
-                <div>Cumulative Invitations</div>
-                {achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className="w-full flex flex-col items-center"
-                  >
-                    <CardTask
-                      type="achievement"
-                      content={achievement.title}
-                      img={{
-                        url: achievement.imageUrl,
-                        width: 24,
-                        height: 24,
-                      }}
-                      reward={{
-                        type: "token",
-                        quantity: achievement.claim,
-                      }}
-                      button={{ text: "Claim" }}
-                      progress={{
-                        current: 5,
-                        total: achievement.totalAchievement,
-                      }}
-                    />
-                  </div>
-                ))}
+            {/* Social Task tab */}
+            {activeTab === TAB.SOCIAL && (
+              <div className="w-full flex flex-wrap gap-2 justify-start overflow-y-auto">
+                {quests
+                  .filter((quest) => quest.task === "Social")
+                  .map((quest) => (
+                    <div
+                      key={quest._id}
+                      className="w-full flex flex-col items-center"
+                    >
+                      <CardTask
+                        type="task"
+                        content={quest.name}
+                        img={{
+                          imgUrl: quest.imgUrl,
+                          width: 24,
+                          height: 24,
+                        }}
+                        reward={{
+                          type: "token",
+                          quantity: quest.reward.value,
+                        }}
+                        button={{
+                          text: "Go",
+                          onClick: () =>
+                            handleQuestButtonClick(quest.questCode),
+                        }}
+                        isDone={quest.progress}
+                        visitUrl={quest.visitUrl}
+                      />
+                    </div>
+                  ))}
               </div>
             )}
           </div>

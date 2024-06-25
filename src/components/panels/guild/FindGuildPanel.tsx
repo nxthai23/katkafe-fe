@@ -9,15 +9,17 @@ import { Guild } from "@/types/guild";
 type Props = {};
 
 function FindGuild({}: Props) {
-  const [setShowFindGuildPanel] = useLayoutStore((state) => [
+  const [
+    setShowFindGuildPanel,
+    showGuildDetailPanel,
+    setShowGuildDetailPanel,
+    setShowGuildPanel,
+  ] = useLayoutStore((state) => [
     state.setShowFindGuildPanel,
+    state.showGuildDetailPanel,
+    state.setShowGuildDetailPanel,
+    state.setShowGuildPanel,
   ]);
-  const [showGuildDetailPanel, setShowGuildDetailPanel, setShowGuildPanel] =
-    useLayoutStore((state) => [
-      state.showGuildDetailPanel,
-      state.setShowGuildDetailPanel,
-      state.setShowGuildPanel,
-    ]);
   const [guilds, setCurrentGuild] = useGuildStore((state) => [
     state.guilds,
     state.setCurrentGuild,

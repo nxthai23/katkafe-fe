@@ -9,40 +9,39 @@ export const useEventBus = () => {
     setShowRollPanel,
     setShowGuildPanel,
     setShowFriendPanel,
+    isAnyPanelOpen,
   ] = useLayoutStore((state) => [
     state.setShowQuestPanel,
     state.setShowRankPanel,
     state.setShowRollPanel,
     state.setShowGuildPanel,
     state.setShowFriendPanel,
+    state.isAnyPanelOpen,
   ]);
+
   const registerUIButtonClicked = () => {
     EventBus.on(EVENT_BUS_TYPES.UI_BUTTON_CLICK, (uiButton: string) => {
+      if (isAnyPanelOpen) return;
       switch (uiButton) {
         case UI_BUTTON.FRIEND:
           console.log("Friend button clicked");
           setShowFriendPanel(true);
-          //Open Friend UI
           break;
         case UI_BUTTON.GACHA:
           console.log("Gacha button clicked");
-          // setShowRollPanel(true);
-          //Open Gacha UI
+          setShowRollPanel(true);
           break;
         case UI_BUTTON.GUIDE:
-          // setShowGuildPanel(true);
           console.log("Guide button clicked");
-          //Open Guide UI
+          setShowGuildPanel(true);
           break;
         case UI_BUTTON.QUEST:
           console.log("Quest button clicked");
-          // setShowQuestPanel(true);
-          //Open Quest UI
+          setShowQuestPanel(true);
           break;
         case UI_BUTTON.RANK:
           console.log("Rank button clicked");
-          // setShowRankPanel(true);
-          //Open Rank UI
+          setShowRankPanel(true);
           break;
       }
     });

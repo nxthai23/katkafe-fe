@@ -1,6 +1,5 @@
-import { API_STAFF, BASE_URL } from "@/constants/api-url";
+import { BASE_URL } from "@/constants/api-url";
 import { Staff } from "@/types/common-types";
-import axios from "axios";
 import katAxios from "./axios.config";
 import { RemoveBody, RequireUpgradeBody, UpgradeBody } from "@/types/staff";
 
@@ -11,11 +10,6 @@ export const getStaffs = async () => {
 
 export const getOneStaff = async (id: string) => {
   const response = await katAxios.get<Staff>(`${BASE_URL}/cats/${id}`);
-  return response.data;
-};
-
-export const deleteOneStaff = async (id: number) => {
-  const response = await axios.delete(`${API_STAFF}/${id}`);
   return response.data;
 };
 
