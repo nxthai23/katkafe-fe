@@ -1,12 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import Button from "./Button";
-import { useBundleStore } from "@/stores/shop/bundleStore";
-import { get } from "lodash";
 import Image from "next/image";
 import { ShopType } from "@/types/bundle";
-import { useItemStore } from "@/stores/shop/itemStore";
 import CatCard from "./CatCard";
-import CardInfo from "./CardInfo";
 import { Item } from "@/types/item";
 
 type Props = {
@@ -17,6 +13,7 @@ type Props = {
   button: {
     type: "coin" | "item";
   };
+  item: any;
 };
 
 const RewardDialog: React.FC<Props> = ({
@@ -25,9 +22,8 @@ const RewardDialog: React.FC<Props> = ({
   onClose,
   closeShopPanel,
   handleChooseDetail,
+  item,
 }: Props) => {
-  const [bundle] = useBundleStore((state) => [state.currentBundle]);
-  const [item] = useItemStore((state) => [state.currentItem]);
   const handleBack = () => {
     onClose?.();
   };
@@ -35,27 +31,28 @@ const RewardDialog: React.FC<Props> = ({
     closeShopPanel?.();
   };
 
-  const name = get(bundle, "name", "");
-  let items = get(bundle, "items", []);
-
-  const isBundle = useMemo(() => type === ShopType.Bundle, [type]);
-
   return (
     <div className="bg-orange-10 absolute rounded-2xl w-[95%] text-center pt-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40">
       <div className="text-xl">Congratulation!</div>
-      {isBundle && (
+      {type === ShopType.Roll && (
         <div className="text-lg text-gray-30 mb-2">
-          You purchased {name} successFully! You received:
+          You purchased a pack successfully! You received:
         </div>
       )}
-      {!isBundle && (
+      {type === ShopType.Cat && (
         <div className="text-lg text-gray-30 mb-2">
           You purchased a staff successfully!
         </div>
       )}
+      {type === ShopType.Bundle && (
+        <div className="text-lg text-gray-30 mb-2">
+          You purchased {item?.name} successFully! You received:
+        </div>
+      )}
+
       <div className="flex gap-1 justify-center">
-        {isBundle &&
-          items.map(
+        {type === ShopType.Bundle &&
+          item.map(
             (
               item: { name: string; value: string; imageUrl: string },
               index: number
@@ -71,7 +68,13 @@ const RewardDialog: React.FC<Props> = ({
               </div>
             )
           )}
-        {!isBundle && item && (
+        {type === ShopType.Cat && item && (
+          <div className="w-[140px] h-[182px] cursor-pointer">
+            <CatCard cat={item} />
+          </div>
+        )}
+
+        {type === ShopType.Roll && item && (
           <div className="w-[140px] h-[182px] cursor-pointer">
             <CatCard cat={item} />
           </div>
@@ -79,12 +82,17 @@ const RewardDialog: React.FC<Props> = ({
       </div>
 
       <div className="flex flex-wrap gap-2 justify-center border-[#E8DDBD] border-t py-3 mt-6">
-        {isBundle && (
+        {type === ShopType.Bundle && (
           <div className="w-[164px] h-[39px]" onClick={handleClick}>
             <Button>Back home</Button>
           </div>
         )}
-        {!isBundle && (
+        {type === ShopType.Cat && (
+          <div className="w-[164px] h-[39px]">
+            <Button onClick={handleChooseDetail}>View Detail</Button>
+          </div>
+        )}
+        {type === ShopType.Roll && (
           <div className="w-[164px] h-[39px]">
             <Button onClick={handleChooseDetail}>View Detail</Button>
           </div>

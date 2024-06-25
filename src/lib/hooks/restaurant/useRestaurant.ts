@@ -1,20 +1,38 @@
 "use client";
-import { getPower, getRestaurants } from "@/requests/restaurant";
+import { getNextRestaurantUnclockConfig, getPower, getRestaurantConfigs, getRestaurants } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { serverHooks } from "next/dist/server/app-render/entry-base";
 import { useEffect, useState } from "react";
 
 export const useFetchRestaurants = () => {
-  const [setRestaurants, setCurrentRestaurant] = useRestaurantStore((state) => [
+  const [setRestaurants, setCurrentRestaurant, setNextRestaurantUnclockIndex, setNextRestaurantUnclock, setMyRestaurants] = useRestaurantStore((state) => [
     state.setRestaurants,
     state.setCurrentRestaurant,
+    state.setNextRestaurantUnclockIndex,
+    state.setNextRestaurantUnclock,
+    state.setMyRestaurants,
   ]);
+
+  const fetchNextRestaurants = async (index: number) => {
+    try {
+      const nextRestaurant = await getNextRestaurantUnclockConfig(index)
+      setNextRestaurantUnclock(nextRestaurant);
+    } catch (error) {
+      console.error("Error fetching", error);
+    }
+  };
 
   const fetchRestaurants = async () => {
     try {
-      const response = await getRestaurants();
-      setRestaurants(response);
-      setCurrentRestaurant(response[0]);
+      const [restaurants, restaurantConfig] = await Promise.all([getRestaurants(), getRestaurantConfigs()]);
+      const listRestaurantsConfigMapped = restaurantConfig.filter((resConfig: any, index: any) => resConfig[index]?.name === restaurants[index]?.name)
+      const listRestaurantsMapped = [...restaurants, ...listRestaurantsConfigMapped]
+      if (listRestaurantsConfigMapped.length) {
+        await fetchNextRestaurants(listRestaurantsMapped[restaurants.length - 1].order)
+      }
+      setNextRestaurantUnclockIndex(restaurants.length + 1)
+      setRestaurants(listRestaurantsMapped);
+      setMyRestaurants(restaurants);
     } catch (error) {
       console.error("Error fetching", error);
     }
@@ -24,6 +42,7 @@ export const useFetchRestaurants = () => {
     fetchRestaurants,
   };
 };
+
 
 const usePower = (locationId: string) => {
   const [power, setPower] = useState(null);

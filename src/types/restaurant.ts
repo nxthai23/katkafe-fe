@@ -11,6 +11,7 @@ export type Restaurant = {
   totalSPB: number;
   staffSlot: number;
   balance: number;
+  order: number;
   cats: string[];
 };
 
@@ -30,5 +31,5 @@ export type UpgradeBody = {
 };
 
 export type RequireUpgradeBody = {
-  level: number;
+  currentLocationLevel: number;
 };
