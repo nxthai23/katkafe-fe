@@ -135,6 +135,7 @@ export const InGameUI = () => {
         const loginBody = {
           type: "local",
           initData: telegramData.initData,
+          referralCode: telegramData.initDataUnsafe?.start_param,
         };
         await login(loginBody);
       } catch (error) {
