@@ -8,7 +8,10 @@ import { createCat, updateLoginStatus, updateStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
 import { UserType } from "@/types/user";
-import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import {
+  useFetchStaffs,
+  useFetchStaffUpgradeConfigs,
+} from "@/lib/hooks/cat/useStaff";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { getClaim, getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
@@ -16,6 +19,8 @@ import NumberFormatter from "./NumberFormat";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useDialogStore } from "@/stores/DialogStore";
 import Dialog from "./Dialog";
+import { useStaffStore } from "@/stores/staffStore";
+import { Dot } from "lucide-react";
 
 export const InGameUI = () => {
   const [
@@ -39,29 +44,49 @@ export const InGameUI = () => {
     state.setUser,
   ]);
   const power = useRestaurantStore((state) => state.power);
-  const [
-    hideDialog,
-    showDialog,
-    setDialogType,
-    setDialogContent,
-    DialogType
-  ] = useDialogStore((state) => [
-    state.hide,
-    state.show,
-    state.setDialogType,
-    state.setDialogContent,
-    state.type
-  ]);
+  const [hideDialog, showDialog, setDialogType, setDialogContent, DialogType] =
+    useDialogStore((state) => [
+      state.hide,
+      state.show,
+      state.setDialogType,
+      state.setDialogContent,
+      state.type,
+    ]);
   const bean = useUserStore((state) => state.bean);
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
+    state.staffs,
+    state.staffUpgradeConfigs,
+  ]);
+  const [showNoti, setShowNoti] = useState(false);
   const telegramData = useInitData();
 
-  const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
+
+  const checkStaffsUpgrade = () => {
+    setShowNoti(false);
+    if (!user) {
+      return;
+    }
+
+    const isUpgradePossible = staffs.some((staff) =>
+      staffUpgradeConfigs.some(
+        (config) =>
+          Number(staff.level) + 1 === config.level && config.fee < user.bean
+      )
+    );
+
+    if (isUpgradePossible) {
+      setShowNoti(true);
+    }
+  };
 
   const numberCats = 8;
 
@@ -70,8 +95,7 @@ export const InGameUI = () => {
   };
 
   const handleClick = async () => {
-    if (DialogType === 'login') {
-
+    if (DialogType === "login") {
       try {
         const response = await updateLoginStatus();
         if (response) {
@@ -83,7 +107,7 @@ export const InGameUI = () => {
       }
       setShowLoginAward(true);
     }
-    hideDialog()
+    hideDialog();
   };
 
   const handleClaim = async () => {
@@ -144,14 +168,15 @@ export const InGameUI = () => {
 
     Login();
     if (user?.isLoginFirstTime) {
-      setDialogType('login')
+      setDialogType("login");
       setDialogContent({
-        title: 'Congratulation!',
-        content: 'You received a new comer gift. Open it to get your first staff.',
-        buttonText: 'Open',
-        imgUrl: '/images/login.png'
-      })
-      showDialog()
+        title: "Congratulation!",
+        content:
+          "You received a new comer gift. Open it to get your first staff.",
+        buttonText: "Open",
+        imgUrl: "/images/login.png",
+      });
+      showDialog();
     }
     useRestaurantStore.setState({ power: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,10 +186,15 @@ export const InGameUI = () => {
     const fetchData = async () => {
       await fetchRestaurants();
       await fetchStaffs();
+      await fetchStaffUpgradeConfigs();
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    checkStaffsUpgrade();
+  }, [staffs, user]);
 
   return (
     <div className="absolute game-ui top-0">
@@ -198,14 +228,21 @@ export const InGameUI = () => {
           title="Home"
           onClick={() => setShowRestaurantPanel(true)}
         />
-        <MenuButton
-          key="list"
-          title="List"
-          icon={{
-            url: "/icons/ic-staff.png",
-          }}
-          onClick={() => setShowStaffPanel(true)}
-        />
+        <div className="relative">
+          <MenuButton
+            key="list"
+            title="List"
+            icon={{
+              url: "/icons/ic-staff.png",
+            }}
+            onClick={() => setShowStaffPanel(true)}
+          />
+          {showNoti && (
+            <div className="absolute -top-6 -right-6 pointer-events-none">
+              <Dot size={56} color="red" />
+            </div>
+          )}
+        </div>
         <MenuButton
           key="manage"
           title="Manage"
@@ -231,7 +268,7 @@ export const InGameUI = () => {
           onClick={() => setShowFriendPanel(true)}
         />
       </div>
-      {/* {user?.isLoginFirstTime && showLoginDialog && ( 
+      {/* {user?.isLoginFirstTime && showLoginDialog && (
         <LoginDialog onClick={handleClick} />
       )} */}
 

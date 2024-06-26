@@ -194,7 +194,7 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
                 </span>
               </div>
             </div>
-            <div className="mt-2 gap-[6px] flex flex-wrap max-h-[383px] overflow-y-auto">
+            <div className="mt-2 gap-[6px] flex flex-wrap max-h-[350px] overflow-y-auto">
               {getFilteredStaffs().map((staff) => (
                 <div
                   key={staff._id}
