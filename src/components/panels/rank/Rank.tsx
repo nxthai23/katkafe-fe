@@ -2,8 +2,6 @@ import Slider from "@/components/ui/Slider";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
-import { useFetchRanks } from "@/lib/hooks/rank/useRank";
-import { useRankStore } from "@/stores/rank/rankStore";
 
 type Props = {};
 
@@ -11,15 +9,12 @@ function Rank({}: Props) {
   const [setShowRankPanel] = useLayoutStore((state) => [
     state.setShowRankPanel,
   ]);
-  const [ranks] = useRankStore((state) => [state.ranks]);
-  const { fetchRanks } = useFetchRanks();
 
   const handleClose = () => {
     setShowRankPanel(false);
   };
 
   useEffect(() => {
-    fetchRanks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -46,7 +41,7 @@ function Rank({}: Props) {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">
-            <Slider ranks={ranks} />
+            <Slider ranks={[]} />
           </div>
         </div>
       </div>

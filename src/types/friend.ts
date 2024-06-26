@@ -1,7 +1,20 @@
 export type Friend = {
-  id: string;
+  _id: string;
+  username: string;
+  avatarUrl: string;
+  referralCounter: number;
+};
+
+export type Rank = {
+  _id: string;
   name: string;
-  imageUrl: string;
-  balance: number;
-  totalFriend: number;
+  numberReferral: number;
+  beanReward: string;
+  imgUrl: string;
+  requiredReferral: 10;
+};
+
+export type FriendListResponse = {
+  referralList: Friend[];
+  userRank: Rank;
 };

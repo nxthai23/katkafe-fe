@@ -5,7 +5,7 @@ import { useFriendStore } from "@/stores/friend/friendStore";
 import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardFriend from "@/components/ui/CardFriend";
 
-const Friend: React.FC = () => {
+const InvitePanel: React.FC = () => {
   const [setShowFriendPanel] = useLayoutStore((state) => [
     state.setShowFriendPanel,
   ]);
@@ -77,7 +77,7 @@ const Friend: React.FC = () => {
               <div className="w-full flex flex-wrap gap-10 justify-center">
                 {friends.map((friend) => (
                   <div
-                    key={friend.id}
+                    key={friend._id}
                     className="flex flex-col items-center gap-4"
                   >
                     <div className="w-[100px] h-[130px]">
@@ -111,7 +111,7 @@ const Friend: React.FC = () => {
                   <div className="flex flex-col gap-2">
                     {friends.map((friend) => (
                       <div
-                        key={friend.id}
+                        key={friend._id}
                         className="w-full h-full cursor-pointer"
                       >
                         <CardFriend friend={friend} />
@@ -133,4 +133,4 @@ const Friend: React.FC = () => {
   );
 };
 
-export default Friend;
+export default InvitePanel;

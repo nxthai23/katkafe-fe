@@ -1,39 +1,41 @@
 import React from "react";
 import Image from "next/image";
 import { get } from "lodash";
-
-type BonusData = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  regular: number;
-  premium: number;
-};
+import { Rank } from "@/types/friend";
 
 type Props = {
-  bonus: BonusData;
+  rankConfig: Rank;
 };
 
-const CardBonus = ({ bonus }: Props) => {
-  const id = get(bonus, "id", "");
-  const imageUrl = get(bonus, "imageUrl", "");
-  const title = get(bonus, "title", "");
-  const premium = get(bonus, "premium", 0);
-  const regular = get(bonus, "regular", 0);
+const CardBonus = ({ rankConfig }: Props) => {
+  const imgUrl = get(rankConfig, "imgUrl", "");
+  const name = get(rankConfig, "name", "");
+  const numberReferral = get(rankConfig, "numberReferral", 0);
+  const beanReward = get(rankConfig, "beanReward", "0");
 
   return (
     <div className="w-full h-full p-2 grid gap-8 items-center justify-between grid-cols-10">
       <div className="flex gap-2 items-center text-center col-span-4">
         <div className="rounded-full w-6 h-6">
-          <Image src={imageUrl} alt="cat pic" width={24} height={24} />
+          <Image src={imgUrl} alt="rank pic" width={24} height={24} />
         </div>
-        <div>{title}</div>
+        <div>{name}</div>
       </div>
       <div className="flex items-center gap-1 col-span-3">
-        <div>+{regular}</div>
+        <div className="flex items-center gap-x-1">
+          <div>+{numberReferral}</div>
+          <div className="w-4 h-4">
+            <Image
+              src="/icons/ic-user-ref.png"
+              alt="icon user"
+              width={16}
+              height={16}
+            />
+          </div>
+        </div>
       </div>
       <div className="flex items-center gap-1 col-span-3">
-        <div>{premium}</div>
+        <div>+{beanReward}</div>
       </div>
     </div>
   );
