@@ -12,7 +12,10 @@ import {
   useFetchStaffs,
   useFetchStaffUpgradeConfigs,
 } from "@/lib/hooks/cat/useStaff";
-import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import {
+  useFetchRestaurantUpgradeConfigs,
+  useFetchRestaurants,
+} from "@/lib/hooks/restaurant/useRestaurant";
 import { getClaim, getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
@@ -43,7 +46,12 @@ export const InGameUI = () => {
     state.login,
     state.setUser,
   ]);
-  const power = useRestaurantStore((state) => state.power);
+  const [power, restaurantUpgradeConfigs, currentRestaurant] =
+    useRestaurantStore((state) => [
+      state.power,
+      state.restaurantUpgradeConfigs,
+      state.currentRestaurant,
+    ]);
   const [hideDialog, showDialog, setDialogType, setDialogContent, DialogType] =
     useDialogStore((state) => [
       state.hide,
@@ -63,28 +71,42 @@ export const InGameUI = () => {
     state.staffs,
     state.staffUpgradeConfigs,
   ]);
-  const [showNoti, setShowNoti] = useState(false);
+  const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
+  const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
+    useState(false);
   const telegramData = useInitData();
 
   const { fetchStaffs } = useFetchStaffs();
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
+  const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
 
   const checkStaffsUpgrade = () => {
-    setShowNoti(false);
+    setShowNotiCatUpgrade(false);
     if (!user) {
       return;
     }
-
     const isUpgradePossible = staffs.some((staff) =>
       staffUpgradeConfigs.some(
-        (config) =>
-          Number(staff.level) + 1 === config.level && config.fee < user.bean
+        (config) => staff.level + 1 === config.level && config.fee < user.bean
       )
     );
-
     if (isUpgradePossible) {
-      setShowNoti(true);
+      setShowNotiCatUpgrade(true);
+    }
+  };
+
+  const checkRestaurantUpgrade = () => {
+    setShowNotiRestaurantUpgrade(false);
+    if (!user || !currentRestaurant) {
+      return;
+    }
+    const isUpgradePossible = restaurantUpgradeConfigs.some(
+      (config) =>
+        currentRestaurant.level + 1 === config.level && config.fee < user.bean
+    );
+    if (isUpgradePossible) {
+      setShowNotiRestaurantUpgrade(true);
     }
   };
 
@@ -187,6 +209,7 @@ export const InGameUI = () => {
       await fetchRestaurants();
       await fetchStaffs();
       await fetchStaffUpgradeConfigs();
+      await fetchRestaurantUpgradeConfigs();
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,7 +217,8 @@ export const InGameUI = () => {
 
   useEffect(() => {
     checkStaffsUpgrade();
-  }, [staffs, user]);
+    checkRestaurantUpgrade();
+  }, [user]);
 
   return (
     <div className="absolute game-ui top-0">
@@ -237,20 +261,27 @@ export const InGameUI = () => {
             }}
             onClick={() => setShowStaffPanel(true)}
           />
-          {showNoti && (
+          {showNotiCatUpgrade && (
             <div className="absolute -top-6 -right-6 pointer-events-none">
               <Dot size={56} color="red" />
             </div>
           )}
         </div>
-        <MenuButton
-          key="manage"
-          title="Manage"
-          icon={{
-            url: "/icons/ic-manage.png",
-          }}
-          onClick={() => setShowManagePanel(true)}
-        />
+        <div className="relative">
+          <MenuButton
+            key="manage"
+            title="Manage"
+            icon={{
+              url: "/icons/ic-manage.png",
+            }}
+            onClick={() => setShowManagePanel(true)}
+          />
+          {showNotiRestaurantUpgrade && (
+            <div className="absolute -top-6 -right-6 pointer-events-none">
+              <Dot size={56} color="red" />
+            </div>
+          )}
+        </div>
         <MenuButton
           key="shop"
           title="Shop"

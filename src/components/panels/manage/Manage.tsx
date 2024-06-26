@@ -22,6 +22,11 @@ import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import NumberFormatter from "@/components/ui/NumberFormat";
 
+const TABS = {
+  CAFE: "Cafe",
+  STAFF: "Staff",
+};
+
 const Manage: React.FC = () => {
   const [setShowManagePanel] = useLayoutStore((state) => [
     state.setShowManagePanel,
@@ -29,7 +34,7 @@ const Manage: React.FC = () => {
   const [showStaffPanel, setShowStaffPanel] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [showCardInfo, setShowCardInfo] = useState(false);
-  const [activeTab, setActiveTab] = useState("Cafe");
+  const [activeTab, setActiveTab] = useState(TABS.CAFE);
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
   const { fetchUser } = useUserStore();
@@ -37,14 +42,19 @@ const Manage: React.FC = () => {
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [currentRestaurant, restaurants, power, setCurrentRestaurant, setRestaurants] =
-    useRestaurantStore((state) => [
-      state.currentRestaurant,
-      state.restaurants,
-      state.power,
-      state.setCurrentRestaurant,
-      state.setRestaurants,
-    ]);
+  const [
+    currentRestaurant,
+    restaurants,
+    power,
+    setCurrentRestaurant,
+    setRestaurants,
+  ] = useRestaurantStore((state) => [
+    state.currentRestaurant,
+    state.restaurants,
+    state.power,
+    state.setCurrentRestaurant,
+    state.setRestaurants,
+  ]);
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
   const [showAlertAssign, setShowAlertAssign] = useState(false);
@@ -71,12 +81,8 @@ const Manage: React.FC = () => {
   ]);
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
-  const handleCafeTabClick = () => {
-    setActiveTab("Cafe");
-  };
-
-  const handleStaffTabClick = () => {
-    setActiveTab("Staff");
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
   };
 
   const toggleStaffPanel = () => {
@@ -179,7 +185,6 @@ const Manage: React.FC = () => {
 
   const handleUpgrade = async () => {
     try {
-      show();
       if (!user || !currentRestaurant) return;
       if (currentRestaurant.level >= currentRestaurant.maxLevel) {
         setShowNotiLevel(true);
@@ -202,6 +207,7 @@ const Manage: React.FC = () => {
         }, 1000);
         return;
       }
+      show();
       const data = await upgradeRestaurant({
         locationId: currentRestaurant._id,
       });
@@ -231,7 +237,7 @@ const Manage: React.FC = () => {
         currentLocationOrder: currentRestaurant.order,
       };
       const response = await upgradeRequireRestaurant(body);
-      setFee(response.nextFee);
+      setFee(response.fee);
       setNumberCatsRequire(response.numberCats);
       setIsUpdated(false);
     } catch (error) {
@@ -250,10 +256,12 @@ const Manage: React.FC = () => {
 
   useEffect(() => {
     fetchDataUpgrade();
-    fetchRestaurants()
+    fetchRestaurants();
     fetchStaffs();
     if (!currentRestaurant) {
-      setCurrentRestaurant(restaurants && restaurants[0] as RestaurantType | null)
+      setCurrentRestaurant(
+        restaurants && (restaurants[0] as RestaurantType | null)
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -272,16 +280,18 @@ const Manage: React.FC = () => {
           </div>
           <div className="flex">
             <div
-              onClick={handleCafeTabClick}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Cafe" ? isActive : ""
-                }`}
+              onClick={() => handleTabClick(TABS.CAFE)}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === TABS.CAFE ? isActive : ""
+              }`}
             >
               Cafe
             </div>
             <div
-              onClick={handleStaffTabClick}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Staff" ? isActive : ""
-                }`}
+              onClick={() => handleTabClick(TABS.STAFF)}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === TABS.STAFF ? isActive : ""
+              }`}
             >
               Staff
             </div>
@@ -291,7 +301,7 @@ const Manage: React.FC = () => {
             <p className="bg-red-10 h-[2px] w-[70%]"></p>
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          {activeTab === "Staff" && (
+          {activeTab === TABS.STAFF && (
             <div className="bg-[#fffeec] rounded-b-[20px] flex flex-col justify-between rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8">
               <div className="flex items-center bg-orange-20 border border-[#dddcc9] w-fit px-4 rounded relative mx-auto my-2">
                 {power} / s
@@ -357,7 +367,7 @@ const Manage: React.FC = () => {
               </div>
             </div>
           )}
-          {activeTab === "Cafe" && (
+          {activeTab === TABS.CAFE && (
             <div className="bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 overflow-hidden mt-8 w-full flex flex-col justify-between">
               <div className="gap-6 overflow-y-auto px-1">
                 <div>
@@ -429,11 +439,11 @@ const Manage: React.FC = () => {
                             src="/images/coin.png"
                             alt=""
                           />
-                          {fee}
+                          <NumberFormatter value={fee} />
                         </span>
                       </div>
                     </div>
-                    {numberCatsRequire !== 0 &&
+                    {numberCatsRequire > 0 &&
                       currentRestaurant &&
                       currentRestaurant.level < currentRestaurant.maxLevel && (
                         <div className="flex flex-col items-end">
@@ -464,7 +474,7 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
                   {currentRestaurant &&
-                    currentRestaurant.level === currentRestaurant.maxLevel ? (
+                  currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>
