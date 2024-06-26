@@ -33,6 +33,7 @@ const Friend: React.FC = () => {
   ]);
 
   const [inviteUrl, setInviteUrl] = useState("");
+  const [showNotiCoppyRight, setShowNotiCoppyRight] = useState(false);
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleTabClick = (tab: string) => {
@@ -45,6 +46,10 @@ const Friend: React.FC = () => {
       if (response.inviteUrl) {
         setInviteUrl(response.inviteUrl);
       }
+      setShowNotiCoppyRight(true);
+      setTimeout(() => {
+        setShowNotiCoppyRight(false);
+      }, 2000);
     } catch (error) {
       console.error("Error fetching", error);
     }
@@ -203,18 +208,18 @@ const Friend: React.FC = () => {
                 </div>
               </div> */}
               <div className="w-full">
-                <div className="text-center text-xl mb-2">
+                <div className="text-center text-bodyXl text-gray-50 mb-2">
                   Invite friend to get bonus
                 </div>
                 <div className="flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2 mb-1">
                   <div className="flex justify-between items-center w-full mb-1">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 text-bodyMd text-gray-40">
                       <div>Invite Regular user</div>
                       <div className="flex items-center gap-1">
                         <div className="w-4 h-4">
                           <img src="/images/kbuck.png" alt="" />
                         </div>
-                        <span className="text-[#6F6F6F]">
+                        <span className="text-gray-30">
                           +500 For you and your Friend
                         </span>
                       </div>
@@ -224,13 +229,13 @@ const Friend: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex justify-between items-center w-full">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 text-bodyMd text-gray-40">
                       <div>Invite Regular user</div>
                       <div className="flex items-center gap-1">
                         <div className="w-4 h-4">
                           <img src="/images/kbuck.png" alt="" />
                         </div>
-                        <span className="text-[#6F6F6F]">
+                        <span className="text-gray-30">
                           +1000 For you and your Friend
                         </span>
                       </div>
@@ -242,11 +247,11 @@ const Friend: React.FC = () => {
                 </div>
               </div>
               <div className="w-full flex flex-col">
-                <div className="text-center text-lg mb-4">
+                <div className="text-center text-bodyXl text-gray-40 mb-4">
                   Friend level up bonus
                 </div>
-                <div className="bg-[#f7f6dc] flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2">
-                  <div className="justify-between w-full grid grid-cols-10 mb-1">
+                <div className="bg-[#f7f6dc] flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2 max-h-[190px] overflow-y-auto overflow-x-hidden">
+                  <div className="justify-between w-full grid grid-cols-10 mb-1 text-bodyMd text-gray-40">
                     <span className="text-center col-span-4">Level up</span>
                     <span className="text-center col-span-3">Users</span>
                     <span className="text-center col-span-3">Reward</span>
@@ -267,7 +272,7 @@ const Friend: React.FC = () => {
                 </div>
                 <div className="mt-3 justify-center flex">
                   <div className="w-[172px] h-[39px]">
-                    <Button>Invite Friend</Button>
+                    <Button>Claim Reward</Button>
                   </div>
                 </div>
               </div>
@@ -275,6 +280,11 @@ const Friend: React.FC = () => {
           )}
         </div>
       </div>
+      {showNotiCoppyRight && (
+        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
+          Copied to clipboard!
+        </div>
+      )}
     </div>
   );
 };

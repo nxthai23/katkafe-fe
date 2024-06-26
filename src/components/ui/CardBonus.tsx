@@ -19,11 +19,11 @@ const CardBonus = ({ rankConfig }: Props) => {
         <div className="rounded-full w-6 h-6">
           <Image src={imgUrl} alt="rank pic" width={24} height={24} />
         </div>
-        <div>{name}</div>
+        <div className="text-bodyMd text-gray-40">{name}</div>
       </div>
       <div className="flex items-center gap-1 col-span-3">
         <div className="flex items-center gap-x-1">
-          <div>+{numberReferral}</div>
+          <div className="text-bodyMd text-gray-40">+{numberReferral}</div>
           <div className="w-4 h-4">
             <Image
               src="/icons/ic-user-ref.png"
@@ -35,7 +35,7 @@ const CardBonus = ({ rankConfig }: Props) => {
         </div>
       </div>
       <div className="flex items-center gap-1 col-span-3">
-        <div>+{beanReward}</div>
+        <div className="text-bodyMd text-gray-40">+{beanReward}</div>
       </div>
     </div>
   );

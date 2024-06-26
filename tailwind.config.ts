@@ -23,6 +23,7 @@ const config: Config = {
           20: "#b5b5b5",
           30: "#5a5a5a",
           40: "#2e2d2b",
+          50: "#393939",
         },
         orange: {
           10: "#fffeec",
