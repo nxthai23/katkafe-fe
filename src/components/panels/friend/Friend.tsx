@@ -152,7 +152,7 @@ const Friend: React.FC = () => {
                     {friends?.referralList.map((friend, index) => (
                       <div
                         key={friend._id}
-                        className="w-full h-full cursor-pointer bg-[#f7f5dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
+                        className="w-full h-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
                       >
                         <CardBarista
                           type={TABS.FRIENDLIST}
@@ -160,6 +160,7 @@ const Friend: React.FC = () => {
                           avatarUrl={friend.avatarUrl}
                           username={friend.username}
                           referralCounter={friend.referralCounter}
+                          bean={"0"}
                         />
                       </div>
                     ))}

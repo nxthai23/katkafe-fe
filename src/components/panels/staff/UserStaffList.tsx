@@ -180,6 +180,7 @@ const StaffList: React.FC = () => {
       fetchDataUpgrade();
     }
     fetchStaffData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpgraded, staff?.level]);
 
   return (

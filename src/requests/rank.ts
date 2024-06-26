@@ -6,3 +6,8 @@ export const getRankConfig = async () => {
   const response = await katAxios.get<Rank[]>(`${BASE_URL}/rank-config`);
   return response.data;
 };
+
+export const getRanks = async () => {
+  const response = await katAxios.get(`${BASE_URL}/leaderboard`);
+  return response.data;
+};

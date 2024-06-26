@@ -11,7 +11,7 @@ export type Rank = {
   numberReferral: number;
   beanReward: string;
   imgUrl: string;
-  requiredReferral: 10;
+  requiredReferral: number;
 };
 
 export type FriendListResponse = {

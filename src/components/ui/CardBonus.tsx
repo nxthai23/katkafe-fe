@@ -10,7 +10,7 @@ type Props = {
 const CardBonus = ({ rankConfig }: Props) => {
   const imgUrl = get(rankConfig, "imgUrl", "");
   const name = get(rankConfig, "name", "");
-  const numberReferral = get(rankConfig, "numberReferral", 0);
+  const requiredReferral = get(rankConfig, "requiredReferral", 0);
   const beanReward = get(rankConfig, "beanReward", "0");
 
   return (
@@ -23,7 +23,7 @@ const CardBonus = ({ rankConfig }: Props) => {
       </div>
       <div className="flex items-center gap-1 col-span-3">
         <div className="flex items-center gap-x-1">
-          <div className="text-bodyMd text-gray-40">+{numberReferral}</div>
+          <div className="text-bodyMd text-gray-40">+{requiredReferral}</div>
           <div className="w-4 h-4">
             <Image
               src="/icons/ic-user-ref.png"
