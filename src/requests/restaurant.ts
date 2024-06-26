@@ -6,7 +6,7 @@ import {
   RequireUpgradeBody,
   UpgradeBody,
 } from "@/types/restaurant";
-const BASE_URL = process.env.NEXT_PUBLIC_KATCAFE_BASE_URL
+const BASE_URL = process.env.NEXT_PUBLIC_KATCAFE_BASE_URL;
 export const getRestaurants = async () => {
   const response = await katAxios.get(`${BASE_URL}/locations`);
   return response.data;
@@ -15,8 +15,13 @@ export const getRestaurantConfigs = async () => {
   const response = await katAxios.get(`${BASE_URL}/location-configs`);
   return response.data;
 };
-export const getNextRestaurantUnclockConfig = async (currentLocationOrder: number) => {
-  const response = await katAxios.post(`${BASE_URL}/location-upgrade/next-location`, { currentLocationOrder });
+export const getNextRestaurantUnclockConfig = async (
+  currentLocationOrder: number
+) => {
+  const response = await katAxios.post(
+    `${BASE_URL}/location-upgrade/next-location`,
+    { currentLocationOrder }
+  );
   return response.data;
 };
 
@@ -51,5 +56,10 @@ export const upgradeRequireRestaurant = async (body: RequireUpgradeBody) => {
     `${BASE_URL}/location-upgrade/next-level`,
     body
   );
+  return response.data;
+};
+
+export const getRestaurantUpgradeConfigs = async () => {
+  const response = await katAxios.get(`${BASE_URL}/location-upgrade`);
   return response.data;
 };
