@@ -220,7 +220,7 @@ const Friend: React.FC = () => {
             </>
           )}
           {activeTab === TABS.INVITE && (
-            <div className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between">
+            <div className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col">
               {/* <div className="mt-4 w-[120px] h-[120px]">
                 <img src="/images/barista.png" alt="" />
               </div>
@@ -290,17 +290,17 @@ const Friend: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full flex flex-col">
-                <div className="text-center text-bodyXl text-gray-40 mb-4">
+              <div className="w-full flex flex-col mt-2">
+                <div className="text-center text-bodyXl text-gray-40 mb-2">
                   Friend level up bonus
                 </div>
-                <div className="bg-[#f7f6dc] flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2 max-h-[190px] overflow-y-auto overflow-x-hidden">
+                <div className="bg-[#f7f6dc] flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2 max-h-[230px] overflow-y-auto overflow-x-hidden">
                   <div className="justify-between w-full grid grid-cols-10 mb-1 text-bodyMd text-gray-40">
                     <span className="text-center col-span-4">Level up</span>
                     <span className="text-center col-span-3">Users</span>
                     <span className="text-center col-span-3">Reward</span>
                   </div>
-                  <div className="overflow-y-auto">
+                  <div className="h-full overflow-y-auto">
                     <div className="flex flex-col bg-orange-10 border-[#e8ddbd] border rounded-lg">
                       {rankConfigs.map((rankConfig) => (
                         <div
@@ -315,11 +315,6 @@ const Friend: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                  </div>
-                </div>
-                <div className="mt-3 justify-center flex">
-                  <div className="w-[172px] h-[39px]">
-                    <Button>Claim Reward</Button>
                   </div>
                 </div>
               </div>
