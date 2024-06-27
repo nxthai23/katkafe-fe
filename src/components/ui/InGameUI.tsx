@@ -149,6 +149,28 @@ export const InGameUI = () => {
     setShowLoginAward(false);
   };
 
+  let homeUrl = "/icons/ic-home.png";
+  let staffUrl = "/icons/ic-staff.png";
+  let manageUrl = "/icons/ic-manage.png";
+  let shopUrl = "/icons/ic-shop.png";
+  let friendUrl = "/icons/ic-friend.png";
+  switch (currentRestaurant?.order) {
+    case 2:
+      homeUrl = "/icons/ic-home-2.png";
+      staffUrl = "/icons/ic-staff-2.png";
+      manageUrl = "/icons/ic-manage-2.png";
+      shopUrl = "/icons/ic-shop-2.png";
+      friendUrl = "/icons/ic-friend-2.png";
+      break;
+    case 3:
+      homeUrl = "/icons/ic-home-3.png";
+      staffUrl = "/icons/ic-staff-3.png";
+      manageUrl = "/icons/ic-manage-3.png";
+      shopUrl = "/icons/ic-shop-3.png";
+      friendUrl = "/icons/ic-friend-3.png";
+      break;
+  }
+
   useEffect(() => {
     const handleClaimable = async () => {
       try {
@@ -252,13 +274,16 @@ export const InGameUI = () => {
           key="home"
           title="Home"
           onClick={() => setShowRestaurantPanel(true)}
+          icon={{
+            url: homeUrl,
+          }}
         />
         <div className="relative">
           <MenuButton
             key="list"
             title="List"
             icon={{
-              url: "/icons/ic-staff.png",
+              url: staffUrl,
             }}
             onClick={() => setShowStaffPanel(true)}
           />
@@ -273,7 +298,7 @@ export const InGameUI = () => {
             key="manage"
             title="Manage"
             icon={{
-              url: "/icons/ic-manage.png",
+              url: manageUrl,
             }}
             onClick={() => setShowManagePanel(true)}
           />
@@ -287,7 +312,7 @@ export const InGameUI = () => {
           key="shop"
           title="Shop"
           icon={{
-            url: "/icons/ic-shop.png",
+            url: shopUrl,
           }}
           onClick={() => setShowShopPanel(true)}
         />
@@ -295,7 +320,7 @@ export const InGameUI = () => {
           key="friend"
           title="Friend"
           icon={{
-            url: "/icons/ic-boost.png",
+            url: friendUrl,
           }}
           onClick={() => setShowFriendPanel(true)}
         />
