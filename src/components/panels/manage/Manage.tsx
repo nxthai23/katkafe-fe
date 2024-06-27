@@ -21,6 +21,8 @@ import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import NumberFormatter from "@/components/ui/NumberFormat";
+import { EventBus } from "@/game/EventBus";
+import { EVENT_BUS_TYPES } from "@/constants/events";
 
 const TABS = {
   CAFE: "Cafe",
@@ -258,11 +260,14 @@ const Manage: React.FC = () => {
     fetchDataUpgrade();
     fetchRestaurants();
     fetchStaffs();
+
     if (!currentRestaurant) {
       setCurrentRestaurant(
         restaurants && (restaurants[0] as RestaurantType | null)
       );
     }
+    console.log("currentRestaurant", currentRestaurant);
+    EventBus.emit(EVENT_BUS_TYPES.CHOOSE_RESTAURANT);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

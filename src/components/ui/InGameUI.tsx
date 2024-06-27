@@ -25,6 +25,8 @@ import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import { useStaffStore } from "@/stores/staffStore";
 import { Dot } from "lucide-react";
+import { EventBus } from "@/game/EventBus";
+import { AUDIO_EVENTS, EVENT_BUS_TYPES } from "@/constants/events";
 
 type Click = {
   id: number;

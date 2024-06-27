@@ -1,4 +1,6 @@
 "use client";
+import { EVENT_BUS_TYPES } from "@/constants/events";
+import { EventBus } from "@/game/EventBus";
 import {
   getNextRestaurantUnclockConfig,
   getPower,
@@ -55,6 +57,7 @@ export const useFetchRestaurants = () => {
       setNextRestaurantUnclockIndex(restaurants.length + 1);
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
+      setCurrentRestaurant(restaurants[0]);
     } catch (error) {
       console.error("Error fetching", error);
     }

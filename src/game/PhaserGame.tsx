@@ -38,7 +38,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
   const game = useRef<Phaser.Game | null>(null);
 
   const [isGameScene, setIsGameScene] = useState(false);
-  const { registerEventListeners, removeAllEventListeners } = useEventBus();
+  const { registerEventListeners, removeAllEventListeners, onGameSceneReady } =
+    useEventBus();
 
   const [
     showFriendPanel,
@@ -97,6 +98,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       } else {
         setIsGameScene(false);
       }
+
+      scene_instance.events.emit(EVENT_BUS_TYPES.CHOOSE_RESTAURANT);
     });
 
     registerEventListeners();
@@ -105,7 +108,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       EventBus.removeListener("current-scene-ready");
       removeAllEventListeners();
     };
-  }, [ref, registerEventListeners, removeAllEventListeners]);
+  }, [onGameSceneReady, ref, registerEventListeners, removeAllEventListeners]);
 
   return (
     <div className="mx-auto">

@@ -20,6 +20,7 @@ import { getCatSpriteByLevel } from "../utils/anim";
 import { EventBus } from "../EventBus";
 import { AUDIO_EVENTS } from "@/constants/events";
 import { CAT_AUDIO_COUNT } from "@/constants/audio";
+import { Staff } from "@/types/common-types";
 
 export class CatObject extends Phaser.Physics.Arcade.Sprite {
   id: string;
@@ -27,14 +28,14 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
   state: string; //CAT_STATES
   direction: CAT_DIRECTIONS;
   assetId: number;
-  catData: Cat;
+  catData: Staff;
 
   private dialog: DialogObject;
 
   private animInterval: Phaser.Time.TimerEvent;
   private dialogInterval: Phaser.Time.TimerEvent;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, data: Cat) {
+  constructor(scene: Phaser.Scene, x: number, y: number, data: Staff) {
     super(scene, x, y, getCatSpriteByLevel(data));
 
     scene.add.existing(this);
@@ -52,8 +53,7 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
 
     this.body?.setSize(64, 80);
 
-    this.id = data.id;
-    this.assetId = data.assetId;
+    this.id = data._id;
     this.catData = data;
 
     this.state = CAT_STATES.WALKING;

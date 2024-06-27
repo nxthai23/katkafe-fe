@@ -2,6 +2,9 @@
 export const GAME_WIDTH = 384;
 export const GAME_HEIGHT = 558;
 
+// Config
+export const CAT_CONFIGS = "cat-configs";
+
 //@TODO: Load from server/config
 export const LOCATIONS_COUNT = 1;
 export const LOCATION_ASSETS = {

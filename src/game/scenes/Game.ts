@@ -3,7 +3,11 @@ import { Scene } from "phaser";
 import { GameManager } from "../GameManager";
 import { GameUI } from "../ui/GameUI";
 import { SoundManager } from "../SoundManager";
-import { AUDIO_EVENTS } from "@/constants/events";
+import { AUDIO_EVENTS, EVENT_BUS_TYPES } from "@/constants/events";
+import { LAYERS } from "@/constants/layers";
+import { Restaurant } from "@/types/common-types";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import { getRestaurant } from "@/requests/restaurant";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -11,6 +15,8 @@ export class Game extends Scene {
   gameUI: GameUI;
   gameManager: GameManager;
   soundManager: SoundManager;
+
+  restaurantSubscriber: any;
 
   constructor() {
     super("Game");
@@ -20,7 +26,18 @@ export class Game extends Scene {
 
   init() {
     this.gameUI.loadLocation();
+
+    this.events.on(EVENT_BUS_TYPES.SCENE_READY, () => {
+      console.log("Scene Ready!");
+    });
   }
+
+  async loadCatsByRestaurant(locationId: string) {
+    const response = await getRestaurant(locationId);
+    this.gameManager.createCats(response.cats);
+  }
+
+  destroy() {}
 
   create() {
     this.soundManager = new SoundManager(
@@ -31,10 +48,17 @@ export class Game extends Scene {
       Phaser.Sound.SoundManagerCreator.create(this.game)
     );
 
+    this.restaurantSubscriber = useRestaurantStore.subscribe(
+      (state) => state.currentRestaurant,
+      (restaurant, newRestaurant) => {
+        if (newRestaurant) this.loadCatsByRestaurant(newRestaurant!._id);
+      }
+    );
+
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
 
-    this.gameManager.createTempCats();
+    // this.gameManager.createTempCats();
     this.gameManager.createWalls();
     // this.gameManager.createEmptyPointsForSpawn();
     // this.gameManager.createEmptyPoints();
@@ -59,11 +83,9 @@ export class Game extends Scene {
     //   this.gameManager.guestGenerator.guests
     // );
 
-    EventBus.emit("current-scene-ready", this);
-
-    // Audios
-    this.soundManager.playBGM();
-    this.soundManager.playAmbience();
+    EventBus.on("destroy", () => {
+      this.restaurantSubscriber();
+    });
 
     // Events
     EventBus.on(
@@ -87,5 +109,11 @@ export class Game extends Scene {
       },
       this
     );
+
+    EventBus.emit(EVENT_BUS_TYPES.SCENE_READY, this);
+
+    // Audios
+    this.soundManager.playBGM();
+    this.soundManager.playAmbience();
   }
 }
