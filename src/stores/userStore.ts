@@ -8,7 +8,6 @@ import { persist } from "zustand/middleware";
 type State = {
   jwt: string | null;
   user: UserType | null;
-  bean: any;
 };
 
 type Actions = {
@@ -22,7 +21,6 @@ type Actions = {
 const defaultStates: State = {
   jwt: null,
   user: null,
-  bean: null,
 };
 
 // Tạo store sử dụng Zustand

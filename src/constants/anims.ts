@@ -40,3 +40,9 @@ export const CAT_ANIM_PERCENTAGE = {
     [CAT_STATES.SLEEP]: 10,
 };
 
+export const TAP_TAP_ANIM = {
+    MAX_TAP_PER_SECOND: 100,
+    MAX_POWER: 1000,
+    COIN_PLUS_PER_SECOND: 5,
+    RECOVER_POWER_PER_SECOND: 3,
+}

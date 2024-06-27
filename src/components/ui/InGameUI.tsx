@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { InfoBox } from "./InfoBox";
 import { MenuButton } from "./MenuButton";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useUserStore } from "@/stores/userStore";
-import LoginDialog from "./LoginDialog";
 import { createCat, updateLoginStatus, updateStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
@@ -16,15 +15,25 @@ import {
   useFetchRestaurantUpgradeConfigs,
   useFetchRestaurants,
 } from "@/lib/hooks/restaurant/useRestaurant";
-import { getClaim, getClaimable } from "@/requests/user";
+import { getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useDialogStore } from "@/stores/DialogStore";
 import Dialog from "./Dialog";
+import { useGamePlayStore } from "@/stores/GamePlayStore";
+import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import { useStaffStore } from "@/stores/staffStore";
 import { Dot } from "lucide-react";
 
+type Click = {
+  id: number;
+  x: number;
+  y: number;
+}
+type CoinRef = {
+  handleClick: () => void;
+}
 export const InGameUI = () => {
   const [
     setShowFriendPanel,
@@ -39,6 +48,9 @@ export const InGameUI = () => {
     state.setShowShopPanel,
     state.setShowRestaurantPanel,
   ]);
+  const [clicks, setClicks] = useState<Click[]>([]);
+  // const coinRef = useRef<CoinRef>();
+  const { setStartIntervalRecoverPower, setStartIntervalPostTapping } = useGamePlay()
   const [showLoginAward, setShowLoginAward] = useState(false);
   const [response, setResponse] = useState<UserType | null>(null);
   const [user, login, setUser] = useUserStore((state) => [
@@ -46,21 +58,48 @@ export const InGameUI = () => {
     state.login,
     state.setUser,
   ]);
+  const [
+    currentPower,
+    setCurrentPower,
+    setMaxPower,
+    decreasePower,
+    coinTaping,
+    resetTapping,
+    increaseCoinTaping,
+    increaseTaping,
+    setCoinTapping
+  ] = useGamePlayStore((state) =>
+    [
+      state.currentPower,
+      state.setCurrentPower,
+      state.setMaxPower,
+      state.decreasePower,
+      state.coinTaping,
+      state.resetTapping,
+      state.increaseCoinTapping,
+      state.increaseTapping,
+      state.setCoinTapping,
+    ])
+
+  const [
+    hideDialog,
+    showDialog,
+    setDialogType,
+    setDialogContent,
+    DialogType
+  ] = useDialogStore((state) => [
+    state.hide,
+    state.show,
+    state.setDialogType,
+    state.setDialogContent,
+    state.type
+  ]);
   const [power, restaurantUpgradeConfigs, currentRestaurant] =
     useRestaurantStore((state) => [
       state.power,
       state.restaurantUpgradeConfigs,
       state.currentRestaurant,
     ]);
-  const [hideDialog, showDialog, setDialogType, setDialogContent, DialogType] =
-    useDialogStore((state) => [
-      state.hide,
-      state.show,
-      state.setDialogType,
-      state.setDialogContent,
-      state.type,
-    ]);
-  const bean = useUserStore((state) => state.bean);
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
   );
@@ -78,6 +117,8 @@ export const InGameUI = () => {
 
   const { fetchStaffs } = useFetchStaffs();
   const { fetchRestaurants } = useFetchRestaurants();
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
   const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
 
@@ -114,6 +155,8 @@ export const InGameUI = () => {
 
   const handleOnClick = () => {
     setShowOfflineEarning(false);
+    setStartIntervalRecoverPower(true);
+    setStartIntervalPostTapping(true);
   };
 
   const handleClick = async () => {
@@ -131,7 +174,6 @@ export const InGameUI = () => {
     }
     hideDialog();
   };
-
   const handleClaim = async () => {
     try {
       const response = await updateStatus();
@@ -147,6 +189,8 @@ export const InGameUI = () => {
       console.log("Create error", error);
     }
     setShowLoginAward(false);
+    setStartIntervalRecoverPower(true);
+    setStartIntervalPostTapping(true);
   };
 
   let homeUrl = "/icons/ic-home.png";
@@ -170,8 +214,28 @@ export const InGameUI = () => {
       friendUrl = "/icons/ic-friend-3.png";
       break;
   }
-
+  const handleTaptapLayoutClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    // event.preventDefault()
+    // event.stopPropagation()
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const newClick: Click = {
+        id: clicks.length,
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
+      setClicks([...clicks, newClick]);
+      setTimeout(() => {
+        setClicks((currentClicks) => currentClicks.filter((click) => click.id !== newClick.id));
+      }, 1000);
+    }
+    // triggerCoinAnimation()
+    decreasePower()
+    increaseCoinTaping()
+    increaseTaping()
+  }, [clicks])
   useEffect(() => {
+    resetTapping()
     const handleClaimable = async () => {
       try {
         const response = await getClaimable();
@@ -187,6 +251,16 @@ export const InGameUI = () => {
     if (user && !user.isLoginFirstTime && parseInt(user.bean) > 12) {
       handleClaimable();
     }
+    if (user) {
+      setCurrentPower(user.currentTabs)
+      setMaxPower(user.maxTabs)
+      setCoinTapping(Number(user.bean))
+    }
+    const fetchData = async () => {
+      await fetchRestaurants();
+      await fetchStaffs();
+    };
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -196,6 +270,12 @@ export const InGameUI = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
+  useEffect(() => {
+    if (user?.bean) {
+      setCoinTapping(Number(user?.bean))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.bean]);
 
   useEffect(() => {
     const Login = async () => {
@@ -224,6 +304,7 @@ export const InGameUI = () => {
       showDialog();
     }
     useRestaurantStore.setState({ power: 0 });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
 
@@ -245,30 +326,42 @@ export const InGameUI = () => {
 
   return (
     <div className="absolute game-ui top-0">
-      <div className="absolute flex w-full justify-between px-2 py-4">
+      <div className="absolute flex w-full justify-around py-4">
         <InfoBox
           key="branch"
-          title="Balance"
-          content={user ? <NumberFormatter value={parseInt(user.bean)} /> : "0"}
+          icon={{ url: '/images/coin.png' }}
+          content={user ? <NumberFormatter value={coinTaping!} /> : "0"}
         />
+        {/* <NumberFormatter value={coinTaping!} />  */}
         <InfoBox
           key="branchSPD"
-          title="Branch SPD"
-          content={user?.bean ? power + "/s" : "0/s"}
+          content={currentPower ? currentPower : "0"}
           icon={{
-            url: "/icons/ic-farm.png",
+            url: "/images/kbuck.png",
           }}
         />
         <InfoBox
           key="totalSPD"
-          title="Total SPD"
           content={power ? power + "/s" : "0/s"}
           icon={{
-            url: "/icons/ic-farm.png",
+            url: "/images/speed.png",
           }}
         />
       </div>
-
+      <div ref={containerRef} className="absolute w-full h-[52.5%] top-[36%] bg-transparent z-8" onClick={(e) => handleTaptapLayoutClick(e)}>
+        {clicks.map((click) => (
+          <>
+            <div
+              key={click?.id}
+              className='clickNumber text-white z-10'
+              style={{ left: click?.x, top: click?.y }}
+            >
+              +5
+            </div>
+            {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
+          </>
+        ))}
+      </div>
       <div className="absolute flex w-full justify-between bottom-4 px-8">
         <MenuButton
           key="home"
