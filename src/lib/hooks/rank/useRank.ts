@@ -1,5 +1,6 @@
-import { getRanks } from "@/requests/rank";
+import { claimReferralRankReward, getRanks } from "@/requests/rank";
 import { useRankStore } from "@/stores/rank/rankStore";
+import { ClaimReferralRankRewardRequest } from "@/types/friend";
 
 export const useFetchRanks = () => {
   const [setRanks, setCurrentRank, setTotalUsers] = useRankStore((state) => [
@@ -20,7 +21,17 @@ export const useFetchRanks = () => {
     }
   };
 
+  const claimRankReward = async (body: ClaimReferralRankRewardRequest) => {
+    try {
+      const response = await claimReferralRankReward(body);
+      return response;
+    } catch (error) {
+      console.error("Error claiming", error);
+    }
+  };
+
   return {
     fetchRanks,
+    claimRankReward,
   };
 };

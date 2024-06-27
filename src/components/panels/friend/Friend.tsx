@@ -11,6 +11,9 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { getInviteUrl } from "@/requests/user";
 import { useRankConfigs } from "@/lib/hooks/rank/useRankConfigs";
 import CardBonus from "@/components/ui/CardBonus";
+import { useFetchRanks } from "@/lib/hooks/rank/useRank";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import { Loading } from "@/components/ui/Loading";
 
 export const TABS = {
   FRIENDLIST: "Friendlist",
@@ -34,6 +37,27 @@ const Friend: React.FC = () => {
 
   const [inviteUrl, setInviteUrl] = useState("");
   const [showNotiCoppyRight, setShowNotiCoppyRight] = useState(false);
+  const { claimRankReward } = useFetchRanks();
+  const [isShowing, show, hide] = useLoadingStore((state) => [
+    state.isShowing,
+    state.show,
+    state.hide,
+  ]);
+
+  const handleClaim = async (id: string) => {
+    try {
+      show();
+      const body = {
+        rankConfigId: id,
+      };
+      await claimRankReward(body);
+      await fetchRankConfigs();
+    } catch (error) {
+      console.error("Error claiming", error);
+    } finally {
+      hide();
+    }
+  };
 
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleTabClick = (tab: string) => {
@@ -64,7 +88,12 @@ const Friend: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log("friends", friends);
+  useEffect(() => {
+    fetchRankConfigs();
+    fetchUser();
+    // if using fetchRankConfigs inside dependencies, it will cause infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -265,7 +294,10 @@ const Friend: React.FC = () => {
                           // className="w-full h-full cursor-pointer"
                           className="w-full h-full cursor-pointer bg-[#f7f5dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
                         >
-                          <CardBonus rankConfig={rankConfig} />
+                          <CardBonus
+                            rankConfig={rankConfig}
+                            onClick={() => handleClaim(rankConfig._id)}
+                          />
                         </div>
                       ))}
                     </div>
@@ -286,6 +318,7 @@ const Friend: React.FC = () => {
           Copied to clipboard!
         </div>
       )}
+      {isShowing && <Loading />}
     </div>
   );
 };

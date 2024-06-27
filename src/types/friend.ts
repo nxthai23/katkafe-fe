@@ -18,3 +18,7 @@ export type FriendListResponse = {
   referralList: Friend[];
   userRank: Rank;
 };
+
+export type ClaimReferralRankRewardRequest = {
+  rankConfigId: string;
+};

@@ -1,13 +1,20 @@
 // Button.tsx
 import React, { ReactNode } from "react";
+import classNames from "classnames";
 
 type Props = {
   children: ReactNode;
   onClick?: Function;
   disabled?: boolean;
+  customClassNames?: string;
 };
 
-const Button = ({ children, onClick, disabled = false }: Props) => {
+const Button = ({
+  children,
+  onClick,
+  customClassNames,
+  disabled = false,
+}: Props) => {
   const handleOnClick = () => {
     onClick?.();
   };
@@ -19,7 +26,10 @@ const Button = ({ children, onClick, disabled = false }: Props) => {
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? "0.5" : "1",
       }}
-      className="border-orange-90 border-2 w-full h-full rounded-lg text-orange-90 flex items-center justify-center"
+      className={classNames(
+        "border-orange-90 border-2 w-full h-full rounded-lg text-orange-90 flex items-center justify-center",
+        customClassNames
+      )}
       onClick={handleOnClick}
       disabled={disabled}
     >
