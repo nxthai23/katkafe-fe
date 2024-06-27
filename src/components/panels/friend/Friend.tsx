@@ -133,26 +133,31 @@ const Friend: React.FC = () => {
           {activeTab === TABS.FRIENDLIST && (
             <>
               <div className="bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-2 mt-8 w-full flex flex-col justify-between">
-                <div className="w-[320px] h-[164px] relative">
-                  <div className="flex justify-between mb-4 mt-2">
-                    <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
-                      <img className="w-6 h-6" src="/images/kbuck.png" alt="" />
-                      <div>{user?.referralCounter}</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col justify-between items-center border-orange-20 border rounded-lg p-2 mb-1">
-                    <div className="flex flex-col justify-between items-center w-full mb-1">
-                      <div className="flex justify-center mb-2">
-                        {friends?.userRank.name}
+                <div>
+                  <div className="w-[320px] relative">
+                    <div className="flex justify-between mt-2">
+                      <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
+                        <img
+                          className="w-6 h-6"
+                          src="/images/kbuck.png"
+                          alt=""
+                        />
+                        <div>{user?.referralCounter}</div>
                       </div>
-                      <Image
-                        src={friends?.userRank.imgUrl || ""}
-                        alt="rank icon"
-                        width={80}
-                        height={80}
-                      />
                     </div>
-                    {/* <div className="flex justify-between items-center w-full">
+                    <div className="flex flex-col justify-between items-center border-orange-20 rounded-lg p-2 mb-1">
+                      <div className="flex flex-col justify-between items-center w-full mb-1">
+                        <div className="flex justify-center mb-2">
+                          {friends?.userRank.name}
+                        </div>
+                        <Image
+                          src={friends?.userRank.imgUrl || ""}
+                          alt="rank icon"
+                          width={80}
+                          height={80}
+                        />
+                      </div>
+                      {/* <div className="flex justify-between items-center w-full">
                       <div className="flex flex-col gap-1">
                         <div>Invite Regular user</div>
                         <div className="flex items-center gap-1">
@@ -168,31 +173,40 @@ const Friend: React.FC = () => {
                         <img src="/images/info-2.png" alt="" className="w-10" />
                       </div>
                     </div> */}
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col justify-center">
-                  <div className="text-center mb-2 text-xl">Friend list</div>
-                  <div className="text-center mb-2 text-md">
-                    Invite more friend to get to the top
+                  <div className="flex flex-col justify-center">
+                    <div className="text-center mb-2 text-xl">Friend list</div>
+                    <div className="text-center mb-2 text-md">
+                      Invite more friend to get to the top
+                    </div>
                   </div>
-                </div>
-                <div className="overflow-y-auto">
-                  <div className="flex flex-col bg-orange-10 border-[#e8ddbd] border rounded-lg">
-                    {friends?.referralList.map((friend, index) => (
-                      <div
-                        key={friend._id}
-                        className="w-full h-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
-                      >
-                        <CardBarista
-                          type={TABS.FRIENDLIST}
-                          id={index}
-                          avatarUrl={friend.avatarUrl}
-                          username={friend.username}
-                          referralCounter={friend.referralCounter}
-                          bean={"0"}
-                        />
+                  <div className="overflow-y-auto">
+                    {!friends?.referralList ? (
+                      <div className="flex flex-col bg-orange-10 border-[#e8ddbd] border rounded-lg">
+                        {friends?.referralList.map((friend, index) => (
+                          <div
+                            key={friend._id}
+                            className="w-full h-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:border-b-0 last:rounded-b-lg"
+                          >
+                            <CardBarista
+                              type={TABS.FRIENDLIST}
+                              id={index}
+                              avatarUrl={friend.avatarUrl}
+                              username={friend.username}
+                              referralCounter={friend.referralCounter}
+                              bean={"0"}
+                            />
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : (
+                      <div className="flex justify-center items-center bg-orange-60 border border-orange-20 h-12 rounded-lg">
+                        <div className="text-center text-gray-60 text-bodyMd">
+                          You haven&apos;t invited any friends yet
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="mt-3 justify-center flex">
