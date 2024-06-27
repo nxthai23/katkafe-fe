@@ -180,6 +180,7 @@ const StaffList: React.FC = () => {
       fetchDataUpgrade();
     }
     fetchStaffData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpgraded, staff?.level]);
 
   return (
@@ -268,7 +269,7 @@ const StaffList: React.FC = () => {
                 >
                   <CatCard cat={staff} />
                   {staff.isCanUpgrade && (
-                    <div className="absolute -top-6 -right-6 cursor-pointer-none">
+                    <div className="absolute -top-6 -right-6 pointer-events-none">
                       <Dot size={56} color="red" />
                     </div>
                   )}

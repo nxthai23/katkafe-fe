@@ -1,39 +1,69 @@
 import React from "react";
 import Image from "next/image";
 import { get } from "lodash";
-
-type BonusData = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  regular: number;
-  premium: number;
-};
+import { Rank } from "@/types/friend";
+import Button from "./Button";
+import { Check } from "lucide-react";
+import { useFetchRanks } from "@/lib/hooks/rank/useRank";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 type Props = {
-  bonus: BonusData;
+  rankConfig: Rank;
+  onClick?: () => void;
 };
 
-const CardBonus = ({ bonus }: Props) => {
-  const id = get(bonus, "id", "");
-  const imageUrl = get(bonus, "imageUrl", "");
-  const title = get(bonus, "title", "");
-  const premium = get(bonus, "premium", 0);
-  const regular = get(bonus, "regular", 0);
+const CardBonus = ({ rankConfig, onClick }: Props) => {
+  const imgUrl = get(rankConfig, "imgUrl", "");
+  const name = get(rankConfig, "name", "");
+  const requiredReferral = get(rankConfig, "requiredReferral", 0);
+  const beanReward = get(rankConfig, "beanReward", "0");
+  const id = get(rankConfig, "_id", "");
+  const claimable = get(rankConfig, "claimable", false);
+  const done = get(rankConfig, "done", false);
 
   return (
     <div className="w-full h-full p-2 grid gap-8 items-center justify-between grid-cols-10">
       <div className="flex gap-2 items-center text-center col-span-4">
         <div className="rounded-full w-6 h-6">
-          <Image src={imageUrl} alt="cat pic" width={24} height={24} />
+          <Image src={imgUrl} alt="rank pic" width={24} height={24} />
         </div>
-        <div>{title}</div>
+        <div className="flex flex-col">
+          <div className="text-bodyMd text-gray-40">{name}</div>
+          {!claimable && !done && (
+            <Button customClassNames="!w-12 !h-4 text-sm border-[1px]" disabled>
+              Claim
+            </Button>
+          )}
+          {claimable && !done && (
+            <Button
+              customClassNames="!w-12 !h-4 text-sm border-[1px]"
+              onClick={onClick}
+            >
+              Claim
+            </Button>
+          )}
+          {done && (
+            <div className="w-full flex justify-center">
+              <Check size={16} className="text-green-500" />
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-1 col-span-3">
-        <div>+{regular}</div>
+        <div className="flex items-center gap-x-1">
+          <div className="text-bodyMd text-gray-40">+{requiredReferral}</div>
+          <div className="w-4 h-4">
+            <Image
+              src="/icons/ic-user-ref.png"
+              alt="icon user"
+              width={16}
+              height={16}
+            />
+          </div>
+        </div>
       </div>
       <div className="flex items-center gap-1 col-span-3">
-        <div>{premium}</div>
+        <div className="text-bodyMd text-gray-40">+{beanReward}</div>
       </div>
     </div>
   );

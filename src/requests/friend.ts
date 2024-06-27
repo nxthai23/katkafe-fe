@@ -1,7 +1,10 @@
-import { API_FRIEND } from "@/constants/api-url";
-import axios from "axios";
+import { BASE_URL } from "@/constants/api-url";
+import katAxios from "./axios.config";
+import { FriendListResponse } from "@/types/friend";
 
-export const getFriends = async () => {
-  const response = await axios.get(`${API_FRIEND}`);
+export const getFriendList = async () => {
+  const response = await katAxios.get<FriendListResponse>(
+    `${BASE_URL}/referrals`
+  );
   return response.data;
 };

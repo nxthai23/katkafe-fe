@@ -15,6 +15,7 @@ export type   UserType = {
   beansPerTab: number;
   level: number;
   shopCounter: number;
+  referralCounter: number;
 };
 
 export type LoginBody = {
@@ -25,4 +26,8 @@ export type LoginBody = {
 export type LoginRepsonse = {
   jwt: string;
   user: UserType;
+};
+
+export type InviteUrlResponse = {
+  inviteUrl: string;
 };

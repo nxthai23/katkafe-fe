@@ -10,15 +10,21 @@ type States = {
   currentRestaurant: Restaurant | null;
   nextRestaurantUnclock: RestaurantUpgrade | null;
   power: any | null;
+  restaurantUpgradeConfigs: RestaurantUpgrade[];
 };
 
 type Actions = {
   setRestaurants: (restaurants: Restaurant[]) => void;
   setMyRestaurants: (myRestaurants: Restaurant[]) => void;
-  setNextRestaurantUnclockIndex: (nextRestaurantUnclockIndex: number | null) => void;
+  setNextRestaurantUnclockIndex: (
+    nextRestaurantUnclockIndex: number | null
+  ) => void;
   setCurrentRestaurant: (restaurant: Restaurant | null) => void;
   setNextRestaurantUnclock: (restaurant: RestaurantUpgrade | null) => void;
   fetchAndSetPower: (locationId: string) => Promise<void>;
+  setRestaurantUpgradeConfigs: (
+    restaurantUpgradeConfigs: RestaurantUpgrade[]
+  ) => void;
 };
 
 const defaultStates = {
@@ -27,8 +33,8 @@ const defaultStates = {
   myRestaurants: [],
   power: null,
   nextRestaurantUnclockIndex: null,
-  nextRestaurantUnclock: null
-
+  nextRestaurantUnclock: null,
+  restaurantUpgradeConfigs: [],
 };
 
 export const useRestaurantStore = create<States & Actions>((set, get) => ({
@@ -58,7 +64,9 @@ export const useRestaurantStore = create<States & Actions>((set, get) => ({
       nextRestaurantUnclock: restaurant,
     });
   },
-  setNextRestaurantUnclockIndex: (nextRestaurantUnclockIndex: number | null) => {
+  setNextRestaurantUnclockIndex: (
+    nextRestaurantUnclockIndex: number | null
+  ) => {
     set({
       nextRestaurantUnclockIndex,
     });
@@ -67,10 +75,17 @@ export const useRestaurantStore = create<States & Actions>((set, get) => ({
     try {
       const power = await getPower(locationId);
       set({ power });
-      return power
+      return power;
     } catch (error) {
       console.error("Error fetching power:", error);
       set({ power: null });
     }
+  },
+  setRestaurantUpgradeConfigs: (
+    restaurantUpgradeConfigs: RestaurantUpgrade[]
+  ) => {
+    set({
+      restaurantUpgradeConfigs,
+    });
   },
 }));

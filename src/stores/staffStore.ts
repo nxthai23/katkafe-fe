@@ -1,6 +1,7 @@
 import { set } from "lodash";
 import { Staff } from "@/types/common-types";
 import { create } from "zustand";
+import { StaffUpgradeConfig } from "@/types/staffUpgradeConfig";
 
 type States = {
   staffs: Staff[];
@@ -12,6 +13,7 @@ type States = {
   fee: number;
   isChooseUpgrade: string[];
   speed: number;
+  staffUpgradeConfigs: StaffUpgradeConfig[];
 };
 
 type Actions = {
@@ -24,6 +26,7 @@ type Actions = {
   setFee: (number: number) => void;
   setSpeed: (number: number) => void;
   setIsChooseUpgrade: (value: string[]) => void;
+  setStaffUpgradeConfigs: (staffUpgradeConfigs: StaffUpgradeConfig[]) => void;
 };
 
 const defaultStates: States = {
@@ -36,6 +39,7 @@ const defaultStates: States = {
   fee: 0,
   isChooseUpgrade: [],
   speed: 0,
+  staffUpgradeConfigs: [],
 };
 
 export const useStaffStore = create<States & Actions>((set, get) => ({
@@ -83,6 +87,11 @@ export const useStaffStore = create<States & Actions>((set, get) => ({
   setSpeed: (number: number) => {
     set({
       speed: number,
+    });
+  },
+  setStaffUpgradeConfigs: (staffUpgradeConfigs: StaffUpgradeConfig[]) => {
+    set({
+      staffUpgradeConfigs,
     });
   },
 }));

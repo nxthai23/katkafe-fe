@@ -7,8 +7,14 @@ import { createCat, updateLoginStatus, updateStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
 import { UserType } from "@/types/user";
-import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
-import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import {
+  useFetchStaffs,
+  useFetchStaffUpgradeConfigs,
+} from "@/lib/hooks/cat/useStaff";
+import {
+  useFetchRestaurantUpgradeConfigs,
+  useFetchRestaurants,
+} from "@/lib/hooks/restaurant/useRestaurant";
 import { getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
@@ -16,9 +22,9 @@ import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useDialogStore } from "@/stores/DialogStore";
 import Dialog from "./Dialog";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
-import { postTap } from "@/requests/taptap/taptap";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
-import { Coin } from "./taptap/Coin";
+import { useStaffStore } from "@/stores/staffStore";
+import { Dot } from "lucide-react";
 
 type Click = {
   id: number;
@@ -47,7 +53,6 @@ export const InGameUI = () => {
   const { setStartIntervalRecoverPower, setStartIntervalPostTapping } = useGamePlay()
   const [showLoginAward, setShowLoginAward] = useState(false);
   const [response, setResponse] = useState<UserType | null>(null);
-  const power = useRestaurantStore((state) => state.power);
   const [user, login, setUser] = useUserStore((state) => [
     state.user,
     state.login,
@@ -89,16 +94,63 @@ export const InGameUI = () => {
     state.setDialogContent,
     state.type
   ]);
+  const [power, restaurantUpgradeConfigs, currentRestaurant] =
+    useRestaurantStore((state) => [
+      state.power,
+      state.restaurantUpgradeConfigs,
+      state.currentRestaurant,
+    ]);
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
+    state.staffs,
+    state.staffUpgradeConfigs,
+  ]);
+  const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
+  const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
+    useState(false);
   const telegramData = useInitData();
 
-  const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
+  const { fetchRestaurants } = useFetchRestaurants();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
+  const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
+
+  const checkStaffsUpgrade = () => {
+    setShowNotiCatUpgrade(false);
+    if (!user) {
+      return;
+    }
+    const isUpgradePossible = staffs.some((staff) =>
+      staffUpgradeConfigs.some(
+        (config) => staff.level + 1 === config.level && config.fee < user.bean
+      )
+    );
+    if (isUpgradePossible) {
+      setShowNotiCatUpgrade(true);
+    }
+  };
+
+  const checkRestaurantUpgrade = () => {
+    setShowNotiRestaurantUpgrade(false);
+    if (!user || !currentRestaurant) {
+      return;
+    }
+    const isUpgradePossible = restaurantUpgradeConfigs.some(
+      (config) =>
+        currentRestaurant.level + 1 === config.level && config.fee < user.bean
+    );
+    if (isUpgradePossible) {
+      setShowNotiRestaurantUpgrade(true);
+    }
+  };
+
   const numberCats = 8;
 
   const handleOnClick = () => {
@@ -108,8 +160,7 @@ export const InGameUI = () => {
   };
 
   const handleClick = async () => {
-    if (DialogType === 'login') {
-
+    if (DialogType === "login") {
       try {
         const response = await updateLoginStatus();
         if (response) {
@@ -121,7 +172,7 @@ export const InGameUI = () => {
       }
       setShowLoginAward(true);
     }
-    hideDialog()
+    hideDialog();
   };
   const handleClaim = async () => {
     try {
@@ -142,11 +193,27 @@ export const InGameUI = () => {
     setStartIntervalPostTapping(true);
   };
 
-  // const triggerCoinAnimation = () => {
-  //   if (coinRef.current) {
-  //     coinRef.current.handleClick();
-  //   }
-  // };
+  let homeUrl = "/icons/ic-home.png";
+  let staffUrl = "/icons/ic-staff.png";
+  let manageUrl = "/icons/ic-manage.png";
+  let shopUrl = "/icons/ic-shop.png";
+  let friendUrl = "/icons/ic-friend.png";
+  switch (currentRestaurant?.order) {
+    case 2:
+      homeUrl = "/icons/ic-home-2.png";
+      staffUrl = "/icons/ic-staff-2.png";
+      manageUrl = "/icons/ic-manage-2.png";
+      shopUrl = "/icons/ic-shop-2.png";
+      friendUrl = "/icons/ic-friend-2.png";
+      break;
+    case 3:
+      homeUrl = "/icons/ic-home-3.png";
+      staffUrl = "/icons/ic-staff-3.png";
+      manageUrl = "/icons/ic-manage-3.png";
+      shopUrl = "/icons/ic-shop-3.png";
+      friendUrl = "/icons/ic-friend-3.png";
+      break;
+  }
   const handleTaptapLayoutClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     // event.preventDefault()
     // event.stopPropagation()
@@ -167,7 +234,6 @@ export const InGameUI = () => {
     increaseCoinTaping()
     increaseTaping()
   }, [clicks])
-
   useEffect(() => {
     resetTapping()
     const handleClaimable = async () => {
@@ -217,6 +283,7 @@ export const InGameUI = () => {
         const loginBody = {
           type: "local",
           initData: telegramData.initData,
+          referralCode: telegramData.initDataUnsafe?.start_param,
         };
         await login(loginBody);
       } catch (error) {
@@ -226,19 +293,36 @@ export const InGameUI = () => {
 
     Login();
     if (user?.isLoginFirstTime) {
-      setDialogType('login')
+      setDialogType("login");
       setDialogContent({
-        title: 'Congratulation!',
-        content: 'You received a new comer gift. Open it to get your first staff.',
-        buttonText: 'Open',
-        imgUrl: '/images/login.png'
-      })
-      showDialog()
+        title: "Congratulation!",
+        content:
+          "You received a new comer gift. Open it to get your first staff.",
+        buttonText: "Open",
+        imgUrl: "/images/login.png",
+      });
+      showDialog();
     }
     useRestaurantStore.setState({ power: 0 });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchRestaurants();
+      await fetchStaffs();
+      await fetchStaffUpgradeConfigs();
+      await fetchRestaurantUpgradeConfigs();
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    checkStaffsUpgrade();
+    checkRestaurantUpgrade();
+  }, [user]);
 
   return (
     <div className="absolute game-ui top-0">
@@ -283,28 +367,45 @@ export const InGameUI = () => {
           key="home"
           title="Home"
           onClick={() => setShowRestaurantPanel(true)}
-        />
-        <MenuButton
-          key="list"
-          title="List"
           icon={{
-            url: "/icons/ic-staff.png",
+            url: homeUrl,
           }}
-          onClick={() => setShowStaffPanel(true)}
         />
-        <MenuButton
-          key="manage"
-          title="Manage"
-          icon={{
-            url: "/icons/ic-manage.png",
-          }}
-          onClick={() => setShowManagePanel(true)}
-        />
+        <div className="relative">
+          <MenuButton
+            key="list"
+            title="List"
+            icon={{
+              url: staffUrl,
+            }}
+            onClick={() => setShowStaffPanel(true)}
+          />
+          {showNotiCatUpgrade && (
+            <div className="absolute -top-6 -right-6 pointer-events-none">
+              <Dot size={56} color="red" />
+            </div>
+          )}
+        </div>
+        <div className="relative">
+          <MenuButton
+            key="manage"
+            title="Manage"
+            icon={{
+              url: manageUrl,
+            }}
+            onClick={() => setShowManagePanel(true)}
+          />
+          {showNotiRestaurantUpgrade && (
+            <div className="absolute -top-6 -right-6 pointer-events-none">
+              <Dot size={56} color="red" />
+            </div>
+          )}
+        </div>
         <MenuButton
           key="shop"
           title="Shop"
           icon={{
-            url: "/icons/ic-shop.png",
+            url: shopUrl,
           }}
           onClick={() => setShowShopPanel(true)}
         />
@@ -312,12 +413,12 @@ export const InGameUI = () => {
           key="friend"
           title="Friend"
           icon={{
-            url: "/icons/ic-boost.png",
+            url: friendUrl,
           }}
           onClick={() => setShowFriendPanel(true)}
         />
       </div>
-      {/* {user?.isLoginFirstTime && showLoginDialog && ( 
+      {/* {user?.isLoginFirstTime && showLoginDialog && (
         <LoginDialog onClick={handleClick} />
       )} */}
 
