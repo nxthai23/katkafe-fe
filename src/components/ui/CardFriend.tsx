@@ -4,7 +4,7 @@ import { get } from "lodash";
 import { Friend } from "@/types/friend";
 
 type Props = {
-  friend: Friend;
+  friend: Friend | any;
 };
 
 const CardFriend = ({ friend }: Props) => {

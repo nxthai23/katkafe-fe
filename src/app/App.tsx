@@ -1,39 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
-import { getClaim } from "@/requests/user";
-import { useUserStore } from "@/stores/userStore";
-import { UserType } from "@/types/user";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
+import { useFetchUser } from "@/lib/hooks/useUser";
+import { useFetchGuilds } from "@/lib/hooks/guild/useGuild";
+import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const { clearClaimInterval } = useGamePlay()
-  // const intervalRef = useRef<number | null>(null);
-
-  // const clearClaimInterval = () => {
-  //   if (intervalRef.current !== null) {
-  //     clearInterval(intervalRef.current);
-  //     intervalRef.current = null;
-  //   }
-  // };
+  const { fetchUser } = useFetchUser();
+  const { fetchGuilds } = useFetchGuilds();
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffs } = useFetchStaffs()
 
   useEffect(() => {
-    // const handleClaim = async () => {
-    //   try {
-    //     const response = await getClaim();
-    //     if (response) {
-    //       setUser(response);
-    //     }
-    //   } catch (error) {
-    //     console.log("Error Claim", error);
-    //   }
-    // };
-    // if (user && !user.isLoginFirstTime) {
-    //   intervalRef.current = window.setInterval(() => {
-    //     handleClaim();
-    //   }, 5000);
-    // }
-
+    fetchUser()
+    fetchGuilds()
+    fetchRestaurants()
+    fetchStaffs()
     const app = (window as any).Telegram?.WebApp;
     if (app) {
       app.ready();

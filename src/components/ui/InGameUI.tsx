@@ -256,11 +256,6 @@ export const InGameUI = () => {
       setMaxPower(user.maxTabs)
       setCoinTapping(Number(user.bean))
     }
-    const fetchData = async () => {
-      await fetchRestaurants();
-      await fetchStaffs();
-    };
-    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -7,6 +7,7 @@ import {
   getRestaurants,
 } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import { Restaurant } from "@/types/restaurant";
 import { useEffect, useState } from "react";
 
 export const useFetchRestaurants = () => {
@@ -55,6 +56,7 @@ export const useFetchRestaurants = () => {
       setNextRestaurantUnclockIndex(restaurants.length + 1);
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
+      setCurrentRestaurant(restaurants && restaurants[0] as Restaurant | null)
     } catch (error) {
       console.error("Error fetching", error);
     }
