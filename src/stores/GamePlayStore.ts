@@ -1,6 +1,6 @@
 import { TAP_TAP_ANIM } from "@/constants/anims";
 import { create } from "zustand";
-import { useUserStore } from "../userStore";
+import { useUserStore } from "./userStore";
 type States = {
   coinTaping: number | null,
   tapping: number | null,
@@ -25,7 +25,7 @@ const defaultStates = {
   currentPower: null,
   tapping: 0
 };
-export const useTaptapStore = create<States & Actions>((set) => ({
+export const useGamePlayStore = create<States & Actions>((set) => ({
   ...defaultStates,
   increaseCoinTapping: () => {
     set((state) => ({

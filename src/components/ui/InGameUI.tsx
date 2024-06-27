@@ -15,11 +15,10 @@ import NumberFormatter from "./NumberFormat";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useDialogStore } from "@/stores/DialogStore";
 import Dialog from "./Dialog";
-import { useTaptapStore } from "@/stores/taptap/TaptapStore";
-import Image from "next/image";
-import { Coin } from "./taptap/Coin";
+import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { postTap } from "@/requests/taptap/taptap";
-import { set } from "lodash";
+import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
+import { Coin } from "./taptap/Coin";
 
 type Click = {
   id: number;
@@ -44,44 +43,34 @@ export const InGameUI = () => {
     state.setShowRestaurantPanel,
   ]);
   const [clicks, setClicks] = useState<Click[]>([]);
-  const coinRef = useRef<CoinRef>();
-
-
+  // const coinRef = useRef<CoinRef>();
+  const { setStartIntervalRecoverPower, setStartIntervalPostTapping } = useGamePlay()
   const [showLoginAward, setShowLoginAward] = useState(false);
-  const [startIntervalRecoverPower, setStartIntervalRecoverPower] = useState(false);
-  const [startIntervalPostTapping, setStartIntervalPostTapping] = useState(false);
   const [response, setResponse] = useState<UserType | null>(null);
+  const power = useRestaurantStore((state) => state.power);
   const [user, login, setUser] = useUserStore((state) => [
     state.user,
     state.login,
     state.setUser,
   ]);
-  const power = useRestaurantStore((state) => state.power);
   const [
-    maxPower,
     currentPower,
     setCurrentPower,
     setMaxPower,
-    increasePower,
     decreasePower,
     coinTaping,
-    tapping,
     resetTapping,
-    resetCoinTapping,
     increaseCoinTaping,
-    increaseTaping, setCoinTapping
-  ] = useTaptapStore((state) =>
+    increaseTaping,
+    setCoinTapping
+  ] = useGamePlayStore((state) =>
     [
-      state.maxPower,
       state.currentPower,
       state.setCurrentPower,
       state.setMaxPower,
-      state.increasePower,
       state.decreasePower,
       state.coinTaping,
-      state.tapping,
       state.resetTapping,
-      state.resetCoinTapping,
       state.increaseCoinTapping,
       state.increaseTapping,
       state.setCoinTapping,
@@ -100,7 +89,6 @@ export const InGameUI = () => {
     state.setDialogContent,
     state.type
   ]);
-  const bean = useUserStore((state) => state.bean);
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
   );
@@ -154,11 +142,11 @@ export const InGameUI = () => {
     setStartIntervalPostTapping(true);
   };
 
-  const triggerCoinAnimation = () => {
-    if (coinRef.current) {
-      coinRef.current.handleClick();
-    }
-  };
+  // const triggerCoinAnimation = () => {
+  //   if (coinRef.current) {
+  //     coinRef.current.handleClick();
+  //   }
+  // };
   const handleTaptapLayoutClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     // event.preventDefault()
     // event.stopPropagation()
@@ -170,27 +158,15 @@ export const InGameUI = () => {
         y: event.clientY - rect.top,
       };
       setClicks([...clicks, newClick]);
-      triggerCoinAnimation()
       setTimeout(() => {
         setClicks((currentClicks) => currentClicks.filter((click) => click.id !== newClick.id));
       }, 1000);
     }
+    // triggerCoinAnimation()
     decreasePower()
     increaseCoinTaping()
     increaseTaping()
   }, [clicks])
-
-  const handlePostTapping = async (tappingNum: number) => {
-    try {
-      const res = await postTap(tappingNum!)
-      if (res) {
-        resetTapping()
-        setUser(response)
-      }
-    } catch (error) {
-      console.log('error', error);
-    }
-  }
 
   useEffect(() => {
     resetTapping()
@@ -264,33 +240,15 @@ export const InGameUI = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
 
-  useEffect(() => {
-    if (startIntervalRecoverPower) {
-      const interval = setInterval(() => {
-        increasePower()
-      }, 1000); // Update every second
-      // Cleanup the interval on component unmount
-      return () => clearInterval(interval);
-    }
-  }, [startIntervalRecoverPower]);
-  useEffect(() => {
-    if (startIntervalPostTapping) {
-      const interval = setInterval(() => {
-        handlePostTapping(tapping!)
-      }, 5000); // Update every second
-      // Cleanup the interval on component unmount
-      return () => clearInterval(interval);
-    }
-  }, [startIntervalPostTapping, tapping]);
   return (
     <div className="absolute game-ui top-0">
       <div className="absolute flex w-full justify-around py-4">
         <InfoBox
           key="branch"
           icon={{ url: '/images/coin.png' }}
-          content={user ? coinTaping: "0"}
+          content={user ? <NumberFormatter value={coinTaping!} /> : "0"}
         />
-         {/* <NumberFormatter value={coinTaping!} />  */}
+        {/* <NumberFormatter value={coinTaping!} />  */}
         <InfoBox
           key="branchSPD"
           content={currentPower ? currentPower : "0"}
@@ -306,20 +264,12 @@ export const InGameUI = () => {
           }}
         />
       </div>
-      {/* <div className="absolute top-[36%] z-40">
-        <Coin />
-      </div> */}
-      {/* <div ref={containerRef} className="absolute top-[36%] w-full flex justify-center items-center text-white z-30 gap-x-3">
-        <img src="/images/coin.png" className="w-10 h-10" alt="" />
-        <div className="text-xl">{coinTaping}</div>
-
-      </div> */}
-      <div ref={containerRef} className="absolute w-full h-[52.5%] top-[36%] bg-transparent z-20" onClick={(e) => handleTaptapLayoutClick(e)}>
+      <div ref={containerRef} className="absolute w-full h-[52.5%] top-[36%] bg-transparent z-8" onClick={(e) => handleTaptapLayoutClick(e)}>
         {clicks.map((click) => (
           <>
             <div
               key={click?.id}
-              className='clickNumber text-white z-30'
+              className='clickNumber text-white z-10'
               style={{ left: click?.x, top: click?.y }}
             >
               +5
@@ -327,11 +277,6 @@ export const InGameUI = () => {
             {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
           </>
         ))}
-        {/* <div className="absolute bottom-2 left-2 flex items-center gap-x-2 text-white">
-          <div>{currentPower}</div>
-          <div>/</div>
-          <div>{maxPower}</div>
-        </div> */}
       </div>
       <div className="absolute flex w-full justify-between bottom-4 px-8">
         <MenuButton
