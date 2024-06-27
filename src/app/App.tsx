@@ -3,15 +3,12 @@ import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
 import { getClaim } from "@/requests/user";
 import { useUserStore } from "@/stores/userStore";
 import { UserType } from "@/types/user";
-<<<<<<< Updated upstream
+
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
-=======
-import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
->>>>>>> Stashed changes
 
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
-  const { clearClaimInterval } = useGamePlay()
+  const { clearClaimInterval } = useGamePlay();
   // const intervalRef = useRef<number | null>(null);
 
   // const clearClaimInterval = () => {
