@@ -33,6 +33,7 @@ const config: Config = {
           30: "#ffedbb",
           40: "#fda043",
           50: "#fd742d",
+          60: "#F7F6DC",
           90: "#5e5745",
         },
         blue: {
