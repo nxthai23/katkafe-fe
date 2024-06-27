@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/constants/api-url";
-import { UserType } from "@/types/user";
+import { InviteUrlResponse, UserType } from "@/types/user";
 import katAxios from "./axios.config";
 
 export const getUser = async () => {
@@ -14,5 +14,12 @@ export const getClaim = async () => {
 
 export const getClaimable = async () => {
   const response = await katAxios.get(`${BASE_URL}/users/claimable`);
+  return response.data;
+};
+
+export const getInviteUrl = async () => {
+  const response = await katAxios.get<InviteUrlResponse>(
+    `${BASE_URL}/users/invite-url`
+  );
   return response.data;
 };
