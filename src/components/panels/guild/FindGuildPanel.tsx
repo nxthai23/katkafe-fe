@@ -1,8 +1,7 @@
 import CardGuild from "@/components/ui/CardGuild";
-import { useFetchGuilds } from "@/lib/hooks/guild/useGuild";
 import { useGuildStore } from "@/stores/guild/guildStore";
 import { useLayoutStore } from "@/stores/layoutStore";
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { Guild } from "@/types/guild";
 
@@ -24,7 +23,6 @@ function FindGuild({}: Props) {
     state.guilds,
     state.setCurrentGuild,
   ]);
-  const { fetchGuilds } = useFetchGuilds();
 
   const handleClose = () => {
     setShowGuildPanel(false);
@@ -38,10 +36,6 @@ function FindGuild({}: Props) {
     setShowFindGuildPanel(false);
   };
 
-  useEffect(() => {
-    fetchGuilds();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">

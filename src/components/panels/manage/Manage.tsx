@@ -5,7 +5,9 @@ import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useStaffStore } from "@/stores/staffStore";
-import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import usePower, {
+  useFetchRestaurants,
+} from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
@@ -39,24 +41,18 @@ const Manage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(TABS.CAFE);
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
-  const { fetchUser } = useUserStore();
 
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [
-    currentRestaurant,
-    restaurants,
-    power,
-    setCurrentRestaurant,
-    setRestaurants,
-  ] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-    state.restaurants,
-    state.power,
-    state.setCurrentRestaurant,
-    state.setRestaurants,
-  ]);
+  const [currentRestaurant, setCurrentRestaurant, setRestaurants] =
+    useRestaurantStore((state) => [
+      state.currentRestaurant,
+      state.setCurrentRestaurant,
+      state.setRestaurants,
+    ]);
+  const power = usePower(currentRestaurant?._id);
+
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
   const [showAlertAssign, setShowAlertAssign] = useState(false);
@@ -83,6 +79,24 @@ const Manage: React.FC = () => {
   ]);
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
+  const fetchDataUpgrade = async () => {
+    if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
+    try {
+      if (!user || !currentRestaurant) return;
+      show();
+      const body = {
+        currentLocationLevel: currentRestaurant.level,
+        currentLocationOrder: currentRestaurant.order,
+      };
+      const response = await upgradeRequireRestaurant(body);
+      setFee(response.fee);
+      setNumberCatsRequire(response.numberCats);
+    } catch (error) {
+      console.error("Error upgrade", error);
+    } finally {
+      hide();
+    }
+  };
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
@@ -214,8 +228,8 @@ const Manage: React.FC = () => {
         locationId: currentRestaurant._id,
       });
       setCurrentRestaurant(data.upgradedLocation);
-      // await fetchUser();
-      setIsUpdated(true);
+      fetchDataUpgrade();
+      fetchRestaurants();
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {
@@ -229,43 +243,8 @@ const Manage: React.FC = () => {
     }
   };
 
-  const fetchDataUpgrade = async () => {
-    if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
-    try {
-      if (!user || !currentRestaurant) return;
-      show();
-      const body = {
-        currentLocationLevel: currentRestaurant.level,
-        currentLocationOrder: currentRestaurant.order,
-      };
-      const response = await upgradeRequireRestaurant(body);
-      setFee(response.fee);
-      setNumberCatsRequire(response.numberCats);
-      setIsUpdated(false);
-    } catch (error) {
-      console.error("Error upgrade", error);
-    } finally {
-      hide();
-    }
-  };
-  useEffect(() => {
-    if (isUpdated) {
-      fetchDataUpgrade();
-      fetchRestaurants();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpdated]);
-
   useEffect(() => {
     fetchDataUpgrade();
-    fetchRestaurants();
-    fetchStaffs();
-
-    if (!currentRestaurant) {
-      setCurrentRestaurant(
-        restaurants && (restaurants[0] as RestaurantType | null)
-      );
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

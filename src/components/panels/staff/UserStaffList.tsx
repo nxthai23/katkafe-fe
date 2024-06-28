@@ -138,7 +138,6 @@ const StaffList: React.FC = () => {
     const response = await upgradeRequireStaff({ level: staff.level });
     setFee(response.fee);
     setNumberCatsRequire(response.numberCatRequire);
-    setIsUpgraded(false);
   };
 
   const handleUpgrade = async () => {
@@ -165,10 +164,9 @@ const StaffList: React.FC = () => {
         await removeStaff(body);
       }
       await fetchUser();
-      await fetchDataUpgrade();
       await fetchStaffs();
       setIsChooseUpgrade([]);
-      setIsUpgraded(true);
+      await fetchDataUpgrade();
       hide();
     } catch (error) {
       console.log("error", error);
@@ -176,12 +174,9 @@ const StaffList: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isUpgraded) {
-      fetchDataUpgrade();
-    }
     fetchStaffData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpgraded, staff?.level]);
+  }, [staff?.level]);
 
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -223,36 +218,32 @@ const StaffList: React.FC = () => {
                 <div className="flex items-center gap-1">
                   <span
                     onClick={() => handleStarFilterClick("All")}
-                    className={`${customClass} ${
-                      activeStarFilter === "All" ? "!opacity-100" : ""
-                    }`}
+                    className={`${customClass} ${activeStarFilter === "All" ? "!opacity-100" : ""
+                      }`}
                     style={boxShadowStyle}
                   >
                     All
                   </span>
                   <span
                     onClick={() => handleStarFilterClick("OneStar")}
-                    className={`${customClass} ${
-                      activeStarFilter === "OneStar" ? "!opacity-100" : ""
-                    }`}
+                    className={`${customClass} ${activeStarFilter === "OneStar" ? "!opacity-100" : ""
+                      }`}
                     style={boxShadowStyle}
                   >
                     <img src="/images/OneStar.png" alt="" />
                   </span>
                   <span
                     onClick={() => handleStarFilterClick("TwoStar")}
-                    className={`${customClass} ${
-                      activeStarFilter === "TwoStar" ? "!opacity-100" : ""
-                    }`}
+                    className={`${customClass} ${activeStarFilter === "TwoStar" ? "!opacity-100" : ""
+                      }`}
                     style={boxShadowStyle}
                   >
                     <img src="/images/TwoStar.png" alt="" />
                   </span>
                   <span
                     onClick={() => handleStarFilterClick("ThreeStar")}
-                    className={`${customClass} ${
-                      activeStarFilter === "ThreeStar" ? "!opacity-100" : ""
-                    }`}
+                    className={`${customClass} ${activeStarFilter === "ThreeStar" ? "!opacity-100" : ""
+                      }`}
                     style={boxShadowStyle}
                   >
                     <img src="/images/ThreeStar.png" alt="" />
