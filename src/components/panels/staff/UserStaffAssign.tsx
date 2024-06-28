@@ -20,10 +20,9 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   const [setAutoActives] = useStaffStore((state) => [state.setAutoActives]);
 
   const [staffs] = useStaffStore((state) => [state.staffs]);
-  const [currentRestaurant, setRestaurants] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-    state.setRestaurants,
-  ]);
+  const [currentRestaurant, setCurrentRestaurant] = useRestaurantStore(
+    (state) => [state.currentRestaurant, state.setCurrentRestaurant]
+  );
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
@@ -94,7 +93,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
         catIds: [...isActive],
       };
       const response = await assignCat(body);
-      setRestaurants(response);
+      setCurrentRestaurant(response);
       onAssignSuccess();
     } catch (error) {
       console.error("Error assign cat", error);

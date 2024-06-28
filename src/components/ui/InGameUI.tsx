@@ -3,14 +3,12 @@ import { InfoBox } from "./InfoBox";
 import { MenuButton } from "./MenuButton";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useUserStore } from "@/stores/userStore";
-import { createCat, updateLoginStatus, updateStatus } from "@/requests/login";
+import { updateLoginStatus, updateStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
-import { UserType } from "@/types/user";
 import { getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
-import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useDialogStore } from "@/stores/DialogStore";
 import Dialog from "./common/Dialog";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
@@ -20,6 +18,7 @@ import { Dot } from "lucide-react";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import Image from "next/image";
 import usePower from "@/lib/hooks/restaurant/useRestaurant";
+import { Staff } from "@/types/common-types";
 
 type Click = {
   id: number;
@@ -48,12 +47,8 @@ export const InGameUI = () => {
   const { setStartIntervalRecoverPower, setStartIntervalPostTapping } =
     useGamePlay();
   const [showLoginAward, setShowLoginAward] = useState(false);
-  const [response, setResponse] = useState<UserType | null>(null);
-  const [user, login, setUser] = useUserStore((state) => [
-    state.user,
-    state.login,
-    state.setUser,
-  ]);
+  const [initStaff, setInitStaff] = useState<Staff | null>(null);
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
   const [
     currentPower,
     setCurrentPower,
@@ -97,12 +92,12 @@ export const InGameUI = () => {
     state.staffs,
     state.staffUpgradeConfigs,
   ]);
-  const telegramData = useInitData()
+  // const telegramData = useInitData()
   const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
   const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
     useState(false);
-  const { fetchUser } = useFetchUser()
-  const { handleClaim } = useGamePlay()
+  const { fetchUser } = useFetchUser();
+  const { handleClaim } = useGamePlay();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const checkStaffsUpgrade = () => {
@@ -134,8 +129,6 @@ export const InGameUI = () => {
     }
   };
 
-  const numberCats = 8;
-
   const handleOnClick = () => {
     setShowOfflineEarning(false);
     setStartIntervalRecoverPower(true);
@@ -147,8 +140,7 @@ export const InGameUI = () => {
       try {
         const response = await updateLoginStatus();
         if (response) {
-          setUser(response);
-          setResponse(response);
+          setInitStaff(response);
         }
       } catch (error) {
         console.log("Error updating login status", error);
@@ -162,10 +154,6 @@ export const InGameUI = () => {
       const response = await updateStatus();
       if (response) {
         setUser(response);
-        setResponse(response);
-      }
-      for (let i = 0; i < numberCats; i++) {
-        await createCat();
       }
       throw new Error("Error updating status");
     } catch (error) {
@@ -197,27 +185,32 @@ export const InGameUI = () => {
       friendUrl = "/icons/ic-friend-3.png";
       break;
   }
-  const handleTaptapLayoutClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    // event.preventDefault()
-    // event.stopPropagation()
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const newClick: Click = {
-        id: clicks.length,
-        name: 'postion',
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      };
-      setClicks([...clicks, newClick]);
-      setTimeout(() => {
-        setClicks((currentClicks) => currentClicks.filter((click) => click.id !== newClick.id));
-      }, 1000);
-    }
-    // triggerCoinAnimation()
-    decreasePower()
-    increaseCoinTaping()
-    increaseTaping()
-  }, [clicks])
+  const handleTaptapLayoutClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      // event.preventDefault()
+      // event.stopPropagation()
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const newClick: Click = {
+          id: clicks.length,
+          name: "postion",
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+        };
+        setClicks([...clicks, newClick]);
+        setTimeout(() => {
+          setClicks((currentClicks) =>
+            currentClicks.filter((click) => click.id !== newClick.id)
+          );
+        }, 1000);
+      }
+      // triggerCoinAnimation()
+      decreasePower();
+      increaseCoinTaping();
+      increaseTaping();
+    },
+    [clicks]
+  );
   useEffect(() => {
     resetTapping();
     const handleClaimable = async () => {
@@ -257,21 +250,8 @@ export const InGameUI = () => {
   }, [user?.bean]);
 
   useEffect(() => {
-    const Login = async () => {
-      try {
-        const loginBody = {
-          type: "local",
-          initData: telegramData.initData,
-          referralCode: telegramData.initDataUnsafe?.start_param,
-        };
-        const res = await login(loginBody);
-      } catch (error) {
-        console.error("Error during login:", error);
-      }
-    };
-    Login()
-    handleClaim()
-    fetchUser()
+    handleClaim();
+    fetchUser();
     if (user?.isLoginFirstTime) {
       setDialogType("login");
       setDialogContent({
@@ -326,18 +306,11 @@ export const InGameUI = () => {
           <>
             <div
               key={`${click.name}-${click.id}-${click.x}`}
-              className='clickNumber text-white z-10 flex justify-center gap-x-1 items-center text-3xl'
+              className="clickNumber text-white z-10 flex justify-center gap-x-1 items-center text-3xl"
               style={{ left: click?.x, top: click?.y }}
             >
-              <div className="">
-                +5
-              </div>
-              <Image
-                src='/images/coin.png'
-                width={24}
-                height={24}
-                alt="icon"
-              />
+              <div className="">+5</div>
+              <Image src="/images/coin.png" width={24} height={24} alt="icon" />
             </div>
             {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
           </>
@@ -409,7 +382,10 @@ export const InGameUI = () => {
       {showLoginAward && (
         <>
           <div className="bg-[#232322] opacity-80 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
-          <LoginAward handleClaim={handleClaimFirstTimeLogin} response={response} />
+          <LoginAward
+            handleClaim={handleClaimFirstTimeLogin}
+            response={initStaff}
+          />
         </>
       )}
       {!loading && user && !user.isLoginFirstTime && showOfflineEarning && (

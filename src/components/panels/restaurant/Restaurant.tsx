@@ -13,7 +13,6 @@ import { unclockRestaurant } from "@/requests/restaurant";
 import { useDialogStore } from "@/stores/DialogStore";
 import { Restaurant as RestaurantType } from "@/types/restaurant";
 import classNames from "classnames";
-import { EventBus } from "@/game/EventBus";
 const itemsPerPage = 2;
 
 function Restaurant() {
