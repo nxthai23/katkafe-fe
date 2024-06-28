@@ -4,7 +4,6 @@ import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect, useState } from "react";
 import CatCard from "@/components/ui/CatCard";
 import RewardDialog from "@/components/ui/RewardDialog";
-import BundleCard from "@/components/ui/BundleCard";
 import { Bundle, ShopType } from "@/types/bundle";
 import { Item } from "@/types/item";
 import CardInfo from "@/components/ui/CardInfo";
@@ -14,6 +13,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Image from "next/image";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 const TABS = {
   CAT: "Cat",
@@ -21,12 +21,17 @@ const TABS = {
 };
 
 const Shop = () => {
-  const [setShowShopPanel] = useLayoutStore((state) => [
-    state.setShowShopPanel,
-  ]);
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [showRewardDialog, setShowRewardDialog] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [activeTab, setActiveTab] = useState(TABS.ROLL);
+  const [showCardInfo, setShowCardInfo] = useState(false);
+  const [purchasedItem, setPurchasedItem] = useState(null);
+  const [showNotiBean, setShowNotiBean] = useState(false);
+
+  const [setShowShopPanel] = useLayoutStore((state) => [
+    state.setShowShopPanel,
+  ]);
   const [items, currentItem, setCurrentItem, setItems] = useItemStore(
     (state) => [
       state.items,
@@ -35,23 +40,21 @@ const Shop = () => {
       state.setItems,
     ]
   );
-  const [showCardInfo, setShowCardInfo] = useState(false);
-  const [staff, setStaffs, setCurrentStaff] = useStaffStore((state) => [
-    state.currentStaff,
+  const [setStaffs, setCurrentStaff] = useStaffStore((state) => [
     state.setStaffs,
     state.setCurrentStaff,
   ]);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-
-  const [purchasedItem, setPurchasedItem] = useState(null);
-  const handleViewDetail = (item: Item) => {
-    setShowCardInfo(true);
-  };
-  const [showNotiBean, setShowNotiBean] = useState(false);
+  const [show, hide] = useLoadingStore((state) => [
+    state.show,
+    state.hide,
+  ]);
 
   const { fetchStaffs } = useFetchStaffs();
 
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
+  const handleViewDetail = (item: Item) => {
+    setShowCardInfo(true);
+  };
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
@@ -85,6 +88,7 @@ const Shop = () => {
     }
     try {
       if (!user || !item) return;
+      show()
       const body = {
         itemId: item._id,
       };
@@ -98,11 +102,14 @@ const Shop = () => {
       }
     } catch (error) {
       console.error("Failed to buy item", error);
+    } finally {
+      hide()
     }
   };
 
   const fetchItems = async () => {
     try {
+      show()
       let type;
       switch (activeTab) {
         case TABS.ROLL:
@@ -120,6 +127,8 @@ const Shop = () => {
       return response;
     } catch (error) {
       console.error("Failed to fetch cat deals", error);
+    } finally {
+      hide()
     }
   };
 
@@ -156,17 +165,15 @@ const Shop = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.ROLL)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.ROLL ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.ROLL ? isActive : ""
+                }`}
             >
               Roll
             </div>
             <div
               onClick={() => handleTabClick(TABS.CAT)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.CAT ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.CAT ? isActive : ""
+                }`}
             >
               Cat
             </div>

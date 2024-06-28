@@ -11,25 +11,6 @@ type Props = {
 };
 
 const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
-  const [activeSelect, setActiveSelect] = useState("All");
-  const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
-  const [selectedCards, setSelectedCards] = useState<Staff[]>([]);
-  const [staffs, currentStaff, setCurrentStaff] = useStaffStore((state) => [
-    state.staffs,
-    state.currentStaff,
-    state.setCurrentStaff,
-  ]);
-  const [currentRestaurant, setRestaurants] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-    state.setRestaurants,
-  ]);
-  const [isActive, setIsActive] = useState<string[]>([]);
-  const [isChooseUpgrade, setIsChooseUpgrade] = useStaffStore((state) => [
-    state.isChooseUpgrade,
-    state.setIsChooseUpgrade,
-  ]);
-  const [setNumberCatPick] = useStaffStore((state) => [state.setNumberCatPick]);
-  const [numberCatRequire] = useStaffStore((state) => [state.numberCatRequire]);
   const customClass =
     "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
   const boxShadowStyle = {
@@ -49,6 +30,30 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
     //   label: "Star",
     // },
   ];
+  const [activeSelect, setActiveSelect] = useState("All");
+  const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
+  const [selectedCards, setSelectedCards] = useState<Staff[]>([]);
+  const [isActive, setIsActive] = useState<string[]>([]);
+
+  const [
+    staffs,
+    currentStaff,
+    isChooseUpgrade,
+    setIsChooseUpgrade,
+    setNumberCatPick,
+    numberCatRequire
+  ] = useStaffStore((state) => [
+    state.staffs,
+    state.currentStaff,
+    state.isChooseUpgrade,
+    state.setIsChooseUpgrade,
+    state.setNumberCatPick,
+    state.numberCatRequire
+  ]);
+  const [currentRestaurant] = useRestaurantStore((state) => [
+    state.currentRestaurant,
+  ]);
+
   const { fetchStaffs } = useFetchStaffs();
 
   const handleBack = () => {
@@ -158,36 +163,32 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
               <div className="flex items-center gap-1">
                 <span
                   onClick={() => handleSelectClick("All")}
-                  className={`${customClass} ${
-                    activeSelect === "All" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "All" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   All
                 </span>
                 <span
                   onClick={() => handleSelectClick("OneStar")}
-                  className={`${customClass} ${
-                    activeSelect === "OneStar" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "OneStar" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/OneStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleSelectClick("TwoStar")}
-                  className={`${customClass} ${
-                    activeSelect === "TwoStar" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "TwoStar" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/TwoStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleSelectClick("ThreeStar")}
-                  className={`${customClass} ${
-                    activeSelect === "ThreeStar" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "ThreeStar" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/ThreeStar.png" alt="" />

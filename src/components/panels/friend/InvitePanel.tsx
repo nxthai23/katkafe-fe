@@ -6,19 +6,21 @@ import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardFriend from "@/components/ui/CardFriend";
 
 const InvitePanel: React.FC = () => {
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
+  const [activeTab, setActiveTab] = useState("Friend");
   const [setShowFriendPanel] = useLayoutStore((state) => [
     state.setShowFriendPanel,
   ]);
+  const [friends] = useFriendStore((state) => [
+    state.friends,
+  ]);
+  
+  const { fetchFriends } = useFetchFriends();
+  
   const handleClose = () => {
     setShowFriendPanel(false);
   };
-  const [activeTab, setActiveTab] = useState("Friend");
-  const [friends, setCurrentFriend] = useFriendStore((state) => [
-    state.friends,
-    state.setCurrentFriend,
-  ]);
 
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleFriendTabClick = () => {
     setActiveTab("Friend");
   };
@@ -27,7 +29,6 @@ const InvitePanel: React.FC = () => {
     setActiveTab("Leader");
   };
 
-  const { fetchFriends } = useFetchFriends();
 
   useEffect(() => {
     fetchFriends();

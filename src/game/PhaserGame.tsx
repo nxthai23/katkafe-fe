@@ -25,6 +25,8 @@ import GuildDetail from "@/components/panels/guild/GuildDetailPanel";
 import Roll from "@/components/panels/roll/Roll";
 import Task from "@/components/panels/quest/Quest";
 import Restaurant from "@/components/panels/restaurant/Restaurant";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import { Loading } from "@/components/ui/Loading";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -69,6 +71,10 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     state.showRestaurantPanel,
   ]);
 
+  const [isShowing] = useLoadingStore((state) => [
+    state.isShowing,
+  ]);
+  
   useLayoutEffect(() => {
     if (game.current === null) {
       game.current = StartGame("game-container");
@@ -124,6 +130,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showFindGuildPanel && <FindGuild />}
         {showGuildDetailPanel && <GuildDetail />}
         {showRestaurantPanel && <Restaurant />}
+        {isShowing && <Loading />}
       </div>
     </div>
   );

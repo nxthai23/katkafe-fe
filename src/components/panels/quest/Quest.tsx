@@ -16,21 +16,20 @@ const TAB = {
   SOCIAL: "Social",
 };
 
-function Task({}: Props) {
+function Task({ }: Props) {
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [activeTab, setActiveTab] = useState(TAB.DAILY);
   const [showReward, setShowReward] = useState(false);
+
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
   ]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
-  const [achievements] = useAchievementStore((state) => [state.achievements]);
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
-  const { quests, questTasks, refetchQuests } = useFetchQuests();
+  const { quests, refetchQuests } = useFetchQuests();
   const { fetchAchievements } = useFetchAchievements();
 
   const handleTaskTabClick = () => {
@@ -56,6 +55,7 @@ function Task({}: Props) {
 
   const handleVisitWebsiteQuest = async () => {
     try {
+      show();
       await visitWebsite();
       refetchQuests();
     } catch (error) {
@@ -68,6 +68,7 @@ function Task({}: Props) {
 
   const handleYoutubeQuest = async () => {
     try {
+      show();
       await youtube();
       refetchQuests();
     } catch (error) {
@@ -102,6 +103,7 @@ function Task({}: Props) {
     e.stopPropagation();
     setShowQuestPanel(false);
   };
+
   useEffect(() => {
     fetchAchievements();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,17 +124,15 @@ function Task({}: Props) {
           <div className="flex">
             <div
               onClick={handleTaskTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Daily" ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Daily" ? isActive : ""
+                }`}
             >
               Daily Task
             </div>
             <div
               onClick={handleAchievementTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Social" ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Social" ? isActive : ""
+                }`}
             >
               Social Task
             </div>
@@ -215,7 +215,6 @@ function Task({}: Props) {
           </div>
         </div>
       </div>
-      {isShowing && <Loading />}
       {showReward && <RewardQuest onClick={handleOnClick} />}
     </div>
   );

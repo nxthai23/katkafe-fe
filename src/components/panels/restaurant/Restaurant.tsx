@@ -16,15 +16,15 @@ import classNames from "classnames";
 const itemsPerPage = 2;
 
 function Restaurant() {
-  const [setShowRestaurantPanel] = useLayoutStore((state) => [
-    state.setShowRestaurantPanel,
-  ]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showDialog, setShowDialog] = useState(false);
   const [unclockError, setUnclockError] = useState(false);
+
+  const [setShowRestaurantPanel] = useLayoutStore((state) => [
+    state.setShowRestaurantPanel,
+  ]);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
@@ -42,6 +42,15 @@ function Restaurant() {
     state.currentRestaurant,
     state.setCurrentRestaurant,
   ]);
+
+  const { fetchRestaurants } = useFetchRestaurants();
+  
+  const dataUnlock = {
+    title: "Unlock the coffee shop!",
+    description: "To unlock this coffee shopo you'll need:",
+    catOwned: 4,
+    shopLevel: 9,
+  };
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -51,16 +60,6 @@ function Restaurant() {
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
-  };
-
-  const { fetchRestaurants } = useFetchRestaurants();
-
-  const dataUnlock = {
-    title: "Unlock the coffee shop!",
-    description: "To unlock this coffee shopo you'll need:",
-    catOwned: 4,
-    shopLevel: 9,
-    fee: "20000",
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -124,6 +123,7 @@ function Restaurant() {
       (restaurant) => restaurant.order === order
     );
     setCurrentRestaurant(restaurantSelected as RestaurantType | null);
+    setShowRestaurantPanel(false)
   };
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -174,7 +174,7 @@ function Restaurant() {
             )} */}
             <Pagination
               onPageClick={handlePageClick}
-              customClassName="flex justify-center absolute bottom-2 w-full left-1/2 -translate-x-1/2"
+              customClassName="flex justify-center absolute bottom-2 w-full left-1/2 -translate-x-1/2 z-20"
               currentPage={currentPage}
               totalPages={Math.ceil((restaurants.length + 1) / itemsPerPage)}
               onClickNextPage={handleNextPage}
@@ -201,7 +201,6 @@ function Restaurant() {
           Insufficient resource
         </div>
       )}
-      {isShowing && <Loading />}
     </div>
   );
 }

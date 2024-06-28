@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
-import Select from "react-dropdown-select";
+import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import StaffCardAssign from "@/components/ui/StaffCardAssign";
 import { useStaffStore } from "@/stores/staffStore";
 import { assignCat } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
-import { set } from "lodash";
+import { useLoadingStore } from "@/stores/LoadingStore";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,20 +12,6 @@ type Props = {
 };
 
 const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
-  const [isActive, setIsActive] = useState<string[]>([]);
-  const [activeSelect, setActiveSelect] = useState("All");
-  const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
-  const [autoActives] = useStaffStore((state) => [state.autoActives]);
-  const [setAutoActives] = useStaffStore((state) => [state.setAutoActives]);
-
-  const [staffs] = useStaffStore((state) => [state.staffs]);
-  const [currentRestaurant, setCurrentRestaurant] = useRestaurantStore(
-    (state) => [state.currentRestaurant, state.setCurrentRestaurant]
-  );
-  const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
-    state.isOneAssign,
-    state.setIsOneAssign,
-  ]);
   const options = [
     {
       value: 1,
@@ -46,6 +31,19 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   const boxShadowStyle = {
     boxShadow: "0px -2px 0px 0px #BC9D9B inset",
   };
+
+  const [isActive, setIsActive] = useState<string[]>([]);
+  const [activeSelect, setActiveSelect] = useState("All");
+  const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
+
+  const [autoActives, setAutoActives, staffs, isOneAssign] = useStaffStore((state) => [state.autoActives, state.setAutoActives, state.staffs, state.isOneAssign]);
+  const [currentRestaurant, setCurrentRestaurant] = useRestaurantStore(
+    (state) => [state.currentRestaurant, state.setCurrentRestaurant]
+  );
+  const [show, hide] = useLoadingStore((state) => [
+    state.show,
+    state.hide,
+  ]);
 
   const staffNotAssign = staffs
     .filter((staff) => {
@@ -88,6 +86,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     try {
       if (!currentRestaurant) return;
       if (!isActive) return;
+      show()
       const body = {
         locationId: currentRestaurant._id,
         catIds: [...isActive],
@@ -97,6 +96,8 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
       onAssignSuccess();
     } catch (error) {
       console.error("Error assign cat", error);
+    } finally {
+      hide()
     }
     if (isActive !== null) {
       showStaffPanel(false);
@@ -168,36 +169,32 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
               <div className="flex items-center gap-1">
                 <span
                   onClick={() => handleStarFilterClick("All")}
-                  className={`${customClass} ${
-                    activeSelect === "All" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "All" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   All
                 </span>
                 <span
                   onClick={() => handleStarFilterClick("OneStar")}
-                  className={`${customClass} ${
-                    activeSelect === "OneStar" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "OneStar" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/OneStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleStarFilterClick("TwoStar")}
-                  className={`${customClass} ${
-                    activeSelect === "TwoStar" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "TwoStar" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/TwoStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleStarFilterClick("ThreeStar")}
-                  className={`${customClass} ${
-                    activeSelect === "ThreeStar" ? "!opacity-100" : ""
-                  }`}
+                  className={`${customClass} ${activeSelect === "ThreeStar" ? "!opacity-100" : ""
+                    }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/ThreeStar.png" alt="" />

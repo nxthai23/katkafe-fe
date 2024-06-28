@@ -20,7 +20,6 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
-import { Loading } from "@/components/ui/Loading";
 import NumberFormatter from "@/components/ui/NumberFormat";
 
 const TABS = {
@@ -29,19 +28,21 @@ const TABS = {
 };
 
 const Manage: React.FC = () => {
-  const [setShowManagePanel] = useLayoutStore((state) => [
-    state.setShowManagePanel,
-  ]);
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [showStaffPanel, setShowStaffPanel] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [activeTab, setActiveTab] = useState(TABS.CAFE);
-  const { fetchRestaurants } = useFetchRestaurants();
-  const { fetchStaffs } = useFetchStaffs();
+  const [showDialog, setShowDialog] = useState(false);
+  const [showAlertRemove, setShowAlertRemove] = useState(false);
+  const [showAlertAssign, setShowAlertAssign] = useState(false);
+  const [showAlertAvaliable, setShowAlertAvaliable] = useState(false);
+  const [showNotiCat, setShowNotiCat] = useState(false);
+  const [showNotiBean, setShowNotiBean] = useState(false);
+  const [showNotiLevel, setShowNotiLevel] = useState(false);
+  const [fee, setFee] = useState(0);
 
-  const handleClose = () => {
-    setShowManagePanel(false);
-  };
+  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [
     currentRestaurant,
     setCurrentRestaurant,
@@ -51,32 +52,30 @@ const Manage: React.FC = () => {
     state.setCurrentRestaurant,
     state.setRestaurants,
   ]);
-  const power = currentRestaurant && usePower(currentRestaurant._id, currentRestaurant);
-
-  const [showDialog, setShowDialog] = useState(false);
-  const [showAlertRemove, setShowAlertRemove] = useState(false);
-  const [showAlertAssign, setShowAlertAssign] = useState(false);
-  const [showAlertAvaliable, setShowAlertAvaliable] = useState(false);
-  const [showNotiCat, setShowNotiCat] = useState(false);
-  const [showNotiBean, setShowNotiBean] = useState(false);
-  const [showNotiLevel, setShowNotiLevel] = useState(false);
+  const [setShowManagePanel] = useLayoutStore((state) => [
+    state.setShowManagePanel,
+  ]);
   const [staffs, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
     state.setCurrentStaff,
   ]);
-  const [fee, setFee] = useState(0);
-  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [user] = useUserStore((state) => [state.user]);
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
   ]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
+
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffs } = useFetchStaffs();
+  const power = usePower(currentRestaurant!._id, currentRestaurant!);
+
+  const handleClose = () => {
+    setShowManagePanel(false);
+  };
 
   const fetchDataUpgrade = async () => {
     if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
@@ -96,6 +95,7 @@ const Manage: React.FC = () => {
       hide();
     }
   };
+
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
@@ -108,6 +108,7 @@ const Manage: React.FC = () => {
   const handleCardClick = (index: number) => {
     setActiveCard(index === activeCard ? null : index);
   };
+
   const handleViewClick = (catId: string) => {
     const staff = staffs.find((staff) => get(staff, "_id") === catId);
     if (staff) {
@@ -116,6 +117,7 @@ const Manage: React.FC = () => {
     setShowCardInfo(!showCardInfo);
     setActiveCard(null);
   };
+
   const handleRemoveClick = async () => {
     try {
       if (
@@ -126,6 +128,7 @@ const Manage: React.FC = () => {
       )
         return;
       const catIdToRemove = currentRestaurant.cats[activeCard];
+      show()
       const body = {
         locationId: currentRestaurant._id,
         catId: catIdToRemove,
@@ -142,9 +145,11 @@ const Manage: React.FC = () => {
       hide();
     }
   };
+
   const removeAllClick = () => {
     setShowDialog(true);
   };
+
   const assignSuccess = async () => {
     show();
     await fetchRestaurants();
@@ -183,6 +188,7 @@ const Manage: React.FC = () => {
       }, 1000);
     }
   };
+
   const autoAssign = async () => {
     if (currentRestaurant === null) return;
     const emptySlot =
@@ -262,17 +268,15 @@ const Manage: React.FC = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.CAFE)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.CAFE ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.CAFE ? isActive : ""
+                }`}
             >
               Cafe
             </div>
             <div
               onClick={() => handleTabClick(TABS.STAFF)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.STAFF ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.STAFF ? isActive : ""
+                }`}
             >
               Staff
             </div>
@@ -455,7 +459,7 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
                   {currentRestaurant &&
-                  currentRestaurant.level === currentRestaurant.maxLevel ? (
+                    currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>
@@ -522,7 +526,6 @@ const Manage: React.FC = () => {
           Not eanough cats!
         </div>
       )}
-      {isShowing && <Loading />}
     </div>
   );
 };

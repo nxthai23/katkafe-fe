@@ -40,7 +40,7 @@ const RestaurantCard = ({ restaurant, onUnlock, onCardClick }: Props) => {
   };
 
   const restaurantLocked = (<>
-    <div className="flex flex-col items-center justify-center gap-4 absolute w-full h-full z-20 bg-black/75 backdrop-blur-sm">
+    <div className="flex flex-col items-center justify-center gap-4 absolute w-full h-full z-10 bg-black/75 backdrop-blur-sm">
       <div>
         <Image src={"/images/unlock.png"} alt={""} width={24} height={32} />
       </div>
@@ -57,12 +57,12 @@ const RestaurantCard = ({ restaurant, onUnlock, onCardClick }: Props) => {
   </>)
 
   return (
-    <div className="relative flex flex-col justify-center items-center min-h-[198px]" onClick={handleCardClick}>
+    <div className="relative flex flex-col justify-center items-center min-h-[175px]" onClick={handleCardClick}>
       <Image
         src={imageUrl}
         alt="res pic"
         width={288}
-        height={144}
+        height={125}
         className="aspect-[2/1] object-cover rounded"
       />
       {

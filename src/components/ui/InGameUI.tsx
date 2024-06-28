@@ -10,16 +10,18 @@ import { getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
 import { useDialogStore } from "@/stores/DialogStore";
-import Dialog from "./common/Dialog";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import { useStaffStore } from "@/stores/staffStore";
 import { Dot } from "lucide-react";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import Image from "next/image";
-import usePower from "@/lib/hooks/restaurant/useRestaurant";
+import usePower, { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { Staff } from "@/types/common-types";
 import { get } from "lodash";
+import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
+import { useLoadingStore } from "@/stores/LoadingStore";
+import Dialog from "./common/Dialog";
 
 type Click = {
   id: number;
@@ -31,6 +33,20 @@ type Click = {
 //   handleClick: () => void;
 // }
 export const InGameUI = () => {
+  let homeUrl = "/icons/ic-home.png";
+  let staffUrl = "/icons/ic-staff.png";
+  let manageUrl = "/icons/ic-manage.png";
+  let shopUrl = "/icons/ic-shop.png";
+  let friendUrl = "/icons/ic-friend.png";
+  const [clicks, setClicks] = useState<Click[]>([]);
+  const [showLoginAward, setShowLoginAward] = useState(false);
+  const [initStaff, setInitStaff] = useState<Staff | null>(null);
+  const [claimableData, setClaimableData] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
+  const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const [
     setShowFriendPanel,
     setShowManagePanel,
@@ -44,11 +60,7 @@ export const InGameUI = () => {
     state.setShowShopPanel,
     state.setShowRestaurantPanel,
   ]);
-  const [clicks, setClicks] = useState<Click[]>([]);
-  const { setStartIntervalRecoverPower, setStartIntervalPostTapping } =
-    useGamePlay();
-  const [showLoginAward, setShowLoginAward] = useState(false);
-  const [initStaff, setInitStaff] = useState<Staff | null>(null);
+
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
   const [
     currentPower,
@@ -86,20 +98,21 @@ export const InGameUI = () => {
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
   );
-  const [claimableData, setClaimableData] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const power = usePower(get(currentRestaurant, "_id", ""));
   const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
     state.staffs,
     state.staffUpgradeConfigs,
   ]);
+  const [show, hide] = useLoadingStore((state) => [
+    state.show,
+    state.hide,
+  ]);
   // const telegramData = useInitData()
-  const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
-  const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
-    useState(false);
+
+  const power = usePower(get(currentRestaurant, "_id", ""));
   const { fetchUser } = useFetchUser();
-  const { handleClaim } = useGamePlay();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffs } = useFetchStaffs();
+  const { setStartIntervalRecoverPower, setStartIntervalPostTapping, handleClaim } = useGamePlay();
 
   const checkStaffsUpgrade = () => {
     setShowNotiCatUpgrade(false);
@@ -139,12 +152,15 @@ export const InGameUI = () => {
   const handleClick = async () => {
     if (DialogType === "login") {
       try {
+        show()
         const response = await updateLoginStatus();
         if (response) {
           setInitStaff(response);
         }
       } catch (error) {
         console.log("Error updating login status", error);
+      } finally {
+        hide()
       }
       setShowLoginAward(true);
     }
@@ -152,6 +168,7 @@ export const InGameUI = () => {
   };
   const handleClaimFirstTimeLogin = async () => {
     try {
+      show()
       const response = await updateStatus();
       if (response) {
         setUser(response);
@@ -159,17 +176,17 @@ export const InGameUI = () => {
       throw new Error("Error updating status");
     } catch (error) {
       console.log("Create error", error);
+    } finally {
+      hide()
     }
     setShowLoginAward(false);
+    fetchRestaurants()
+    fetchStaffs()
     setStartIntervalRecoverPower(true);
     setStartIntervalPostTapping(true);
   };
 
-  let homeUrl = "/icons/ic-home.png";
-  let staffUrl = "/icons/ic-staff.png";
-  let manageUrl = "/icons/ic-manage.png";
-  let shopUrl = "/icons/ic-shop.png";
-  let friendUrl = "/icons/ic-friend.png";
+
   switch (currentRestaurant?.order) {
     case 2:
       homeUrl = "/icons/ic-home-2.png";
@@ -186,6 +203,7 @@ export const InGameUI = () => {
       friendUrl = "/icons/ic-friend-3.png";
       break;
   }
+
   const handleTaptapLayoutClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       // event.preventDefault()
@@ -212,6 +230,7 @@ export const InGameUI = () => {
     },
     [clicks]
   );
+
   useEffect(() => {
     resetTapping();
     const handleClaimable = async () => {

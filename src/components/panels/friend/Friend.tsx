@@ -3,8 +3,6 @@ import Button from "../../ui/Button";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useFetchFriends } from "@/lib/hooks/friend/useFriend";
 import CardBarista from "@/components/ui/CardBarista";
-import { useFetchBaristas } from "@/lib/hooks/friend/useBarista";
-import { useFetchUser } from "@/lib/hooks/useUser";
 import { useUserStore } from "@/stores/userStore";
 import Image from "next/image";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -21,28 +19,28 @@ export const TABS = {
 };
 
 const Friend: React.FC = () => {
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
+  const [activeTab, setActiveTab] = useState(TABS.FRIENDLIST);
+  const [inviteUrl, setInviteUrl] = useState("");
+  const [showNotiCoppyRight, setShowNotiCoppyRight] = useState(false);
+
   const [setShowFriendPanel] = useLayoutStore((state) => [
     state.setShowFriendPanel,
   ]);
-  const handleClose = () => {
-    setShowFriendPanel(false);
-  };
-  const [activeTab, setActiveTab] = useState(TABS.FRIENDLIST);
-  const { friends } = useFetchFriends();
-  const [rankConfigs, fetchRankConfigs] = useRankConfigs();
   const user = useUserStore((state) => state.user);
-  const [setShowInviteInfoPanel] = useLayoutStore((state) => [
-    state.setShowInviteInfoPanel,
-  ]);
 
-  const [inviteUrl, setInviteUrl] = useState("");
-  const [showNotiCoppyRight, setShowNotiCoppyRight] = useState(false);
-  const { claimRankReward } = useFetchRanks();
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
+
+  const { friends } = useFetchFriends();
+  const [rankConfigs, fetchRankConfigs] = useRankConfigs();
+  const { claimRankReward } = useFetchRanks();
+
+  const handleClose = () => {
+    setShowFriendPanel(false);
+  };
 
   const handleClaim = async (id: string) => {
     try {
@@ -59,13 +57,13 @@ const Friend: React.FC = () => {
     }
   };
 
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
   const handleInviteUrl = async () => {
     try {
+      show();
       const response = await getInviteUrl();
       if (response.inviteUrl) {
         setInviteUrl(response.inviteUrl);
@@ -76,16 +74,10 @@ const Friend: React.FC = () => {
       }, 2000);
     } catch (error) {
       console.error("Error fetching", error);
+    } finally {
+      hide()
     }
   };
-
-  const { fetchBaristas } = useFetchBaristas();
-  const { fetchUser } = useFetchUser();
-
-  useEffect(() => {
-    fetchBaristas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     fetchRankConfigs();
@@ -323,7 +315,6 @@ const Friend: React.FC = () => {
           Copied to clipboard!
         </div>
       )}
-      {isShowing && <Loading />}
     </div>
   );
 };

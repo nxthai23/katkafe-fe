@@ -10,7 +10,6 @@ type Props = {
     description: string;
     catOwned: number;
     shopLevel: number;
-    fee: string;
   };
   onClose?: () => void;
   onUnclock?: () => void;

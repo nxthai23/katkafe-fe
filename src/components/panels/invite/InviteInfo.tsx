@@ -7,9 +7,8 @@ import Button from "@/components/ui/Button";
 
 const InviteInfo: React.FC = () => {
   const { fetchBonuses } = useFetchBonuses();
-  const [bonuses, setCurrentBonus] = useBonusStore((state) => [
+  const [bonuses] = useBonusStore((state) => [
     state.bonuses,
-    state.setCurrentBonus,
   ]);
   const [setShowInviteInfoPanel] = useLayoutStore((state) => [
     state.setShowInviteInfoPanel,
@@ -97,7 +96,7 @@ const InviteInfo: React.FC = () => {
                 </div>
                 {bonuses.map((bonus) => (
                   <div key={bonus.id} className="w-full h-full cursor-pointer">
-                    <CardBonus bonus={bonus} />
+                    {/* <CardBonus bonus={bonus} /> fix error --- to do */}
                   </div>
                 ))}
               </div>

@@ -60,7 +60,7 @@ export const useFetchRestaurants = () => {
       setMyRestaurants(restaurants);
       if (isFetchingFirstTime) {
         setCurrentRestaurant(
-          restaurants && (restaurants[0] as Restaurant | null)
+          restaurants && (restaurants[restaurants?.length - 1] as Restaurant | null)
         );
       }
     } catch (error) {
