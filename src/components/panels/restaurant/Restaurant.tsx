@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
@@ -113,14 +113,6 @@ function Restaurant() {
     const restaurantSelected = restaurants.find((restaurant) => restaurant.order === order)
     setCurrentRestaurant(restaurantSelected as RestaurantType | null)
   }
-  useEffect(() => {
-    fetchRestaurants();
-    if (!currentRestaurant) {
-      setCurrentRestaurant(restaurants && restaurants[0] as RestaurantType | null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">

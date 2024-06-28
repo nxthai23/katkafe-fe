@@ -22,7 +22,6 @@ function Guild({}: Props) {
     state.setCurrentGuild,
   ]);
 
-  const { fetchGuilds } = useFetchGuilds();
   const { fetchOneGuild } = useFetchOneGuild();
 
   const handleClose = () => {
@@ -36,7 +35,6 @@ function Guild({}: Props) {
   const isGuildIdInList = guilds.some((guild) => guild.id === userGuildId);
 
   useEffect(() => {
-    fetchGuilds();
     if (userGuildId) {
       fetchOneGuild(userGuildId);
     }

@@ -84,13 +84,11 @@ const Friend: React.FC = () => {
 
   useEffect(() => {
     fetchBaristas();
-    fetchUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchRankConfigs();
-    fetchUser();
     // if using fetchRankConfigs inside dependencies, it will cause infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
@@ -110,17 +108,15 @@ const Friend: React.FC = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.FRIENDLIST)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.FRIENDLIST ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.FRIENDLIST ? isActive : ""
+                }`}
             >
               {TABS.FRIENDLIST}
             </div>
             <div
               onClick={() => handleTabClick(TABS.INVITE)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.INVITE ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.INVITE ? isActive : ""
+                }`}
             >
               {TABS.INVITE}
             </div>

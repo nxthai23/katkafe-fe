@@ -5,7 +5,7 @@ import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useStaffStore } from "@/stores/staffStore";
-import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import usePower, { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
@@ -37,24 +37,21 @@ const Manage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(TABS.CAFE);
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
-  const { fetchUser } = useUserStore();
 
   const handleClose = () => {
     setShowManagePanel(false);
   };
   const [
     currentRestaurant,
-    restaurants,
-    power,
     setCurrentRestaurant,
     setRestaurants,
   ] = useRestaurantStore((state) => [
     state.currentRestaurant,
-    state.restaurants,
-    state.power,
     state.setCurrentRestaurant,
     state.setRestaurants,
   ]);
+  const power = currentRestaurant && usePower(currentRestaurant._id);
+
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
   const [showAlertAssign, setShowAlertAssign] = useState(false);
@@ -81,6 +78,24 @@ const Manage: React.FC = () => {
   ]);
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
 
+  const fetchDataUpgrade = async () => {
+    if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
+    try {
+      if (!user || !currentRestaurant) return;
+      show();
+      const body = {
+        currentLocationLevel: currentRestaurant.level,
+        currentLocationOrder: currentRestaurant.order,
+      };
+      const response = await upgradeRequireRestaurant(body);
+      setFee(response.fee);
+      setNumberCatsRequire(response.numberCats);
+    } catch (error) {
+      console.error("Error upgrade", error);
+    } finally {
+      hide();
+    }
+  };
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
@@ -212,8 +227,8 @@ const Manage: React.FC = () => {
         locationId: currentRestaurant._id,
       });
       setCurrentRestaurant(data.upgradedLocation);
-      // await fetchUser();
-      setIsUpdated(true);
+      fetchDataUpgrade();
+      fetchRestaurants();
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {
@@ -227,42 +242,8 @@ const Manage: React.FC = () => {
     }
   };
 
-  const fetchDataUpgrade = async () => {
-    if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
-    try {
-      if (!user || !currentRestaurant) return;
-      show();
-      const body = {
-        currentLocationLevel: currentRestaurant.level,
-        currentLocationOrder: currentRestaurant.order,
-      };
-      const response = await upgradeRequireRestaurant(body);
-      setFee(response.fee);
-      setNumberCatsRequire(response.numberCats);
-      setIsUpdated(false);
-    } catch (error) {
-      console.error("Error upgrade", error);
-    } finally {
-      hide();
-    }
-  };
-  useEffect(() => {
-    if (isUpdated) {
-      fetchDataUpgrade();
-      fetchRestaurants();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUpdated]);
-
   useEffect(() => {
     fetchDataUpgrade();
-    fetchRestaurants();
-    fetchStaffs();
-    if (!currentRestaurant) {
-      setCurrentRestaurant(
-        restaurants && (restaurants[0] as RestaurantType | null)
-      );
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -281,17 +262,15 @@ const Manage: React.FC = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.CAFE)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.CAFE ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.CAFE ? isActive : ""
+                }`}
             >
               Cafe
             </div>
             <div
               onClick={() => handleTabClick(TABS.STAFF)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.STAFF ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.STAFF ? isActive : ""
+                }`}
             >
               Staff
             </div>
@@ -474,7 +453,7 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
                   {currentRestaurant &&
-                  currentRestaurant.level === currentRestaurant.maxLevel ? (
+                    currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>
