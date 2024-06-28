@@ -34,14 +34,14 @@ export const useEventBus = () => {
           console.log("Friend button clicked");
           setShowFriendPanel(true);
           break;
-        case UI_BUTTON.GACHA:
-          console.log("Gacha button clicked");
-          setShowRollPanel(true);
-          break;
-        case UI_BUTTON.GUIDE:
-          console.log("Guide button clicked");
-          setShowGuildPanel(true);
-          break;
+        // case UI_BUTTON.GACHA:
+        //   console.log("Gacha button clicked");
+        //   setShowRollPanel(true);
+        //   break;
+        // case UI_BUTTON.GUIDE:
+        //   console.log("Guide button clicked");
+        //   setShowGuildPanel(true);
+        //   break;
         case UI_BUTTON.QUEST:
           console.log("Quest button clicked");
           setShowQuestPanel(true);

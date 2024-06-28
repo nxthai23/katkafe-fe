@@ -152,13 +152,8 @@ function Restaurant() {
             {currentRestaurants.map((restaurant) => (
               <>
                 <div
-                  key={restaurant._id}
-                  className={classNames(
-                    "bg-orange-10 p-2 rounded-lg",
-                    currentRestaurant?.order === restaurant.order
-                      ? "border-2 border-primary !shadow-none"
-                      : "border border-[#cccbbd]"
-                  )}
+                  key={`${restaurant._id}+ ${restaurant.name}`}
+                  className={classNames("bg-orange-10 p-2 rounded-lg", currentRestaurant?.order === restaurant.order ? 'border-2 border-primary !shadow-none' : 'border border-[#cccbbd]')}
                   style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
                 >
                   <RestaurantCard
