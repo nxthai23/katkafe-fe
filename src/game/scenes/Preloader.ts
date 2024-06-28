@@ -1,4 +1,5 @@
 import {
+  ASSETS,
   CATS_COUNT,
   CATS_FRAME_RATE,
   CAT_CONFIGS,
@@ -29,7 +30,7 @@ export class Preloader extends Scene {
   init() {
     //  We loaded this image in our Boot Scene, so we can display it here
 
-    this.background = drawBackground(this, "background");
+    this.background = drawBackground(this, ASSETS.DEFAULT_BACKGROUND);
 
     // //  A simple progress bar. This is the outline of the bar.
     // this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
@@ -49,7 +50,7 @@ export class Preloader extends Scene {
       .sprite(
         this.cameras.main.width / 2,
         this.cameras.main.height / 2,
-        "loading-cat"
+        ASSETS.LOADING_CAT
       )
       .play("walking");
 
@@ -93,6 +94,10 @@ export class Preloader extends Scene {
     this.waitBeforeGoToGame();
   }
 
+  loadSprites() {
+    this.load.image("logo");
+  }
+
   loadLocationAssets() {
     //@TODO: Load location based on data from server
     for (let i = 1; i < LOCATIONS_COUNT + 1; i++) {
@@ -105,14 +110,6 @@ export class Preloader extends Scene {
         `locations/location-${i}/${LOCATION_ASSETS.BTN_FRIEND}.png`
       );
       this.load.image(
-        `${LOCATION_ASSETS.BTN_GACHA}-${i}`,
-        `locations/location-${i}/${LOCATION_ASSETS.BTN_GACHA}.png`
-      );
-      this.load.image(
-        `${LOCATION_ASSETS.BTN_PARTY}-${i}`,
-        `locations/location-${i}/${LOCATION_ASSETS.BTN_PARTY}.png`
-      );
-      this.load.image(
         `${LOCATION_ASSETS.BTN_QUEST}-${i}`,
         `locations/location-${i}/${LOCATION_ASSETS.BTN_QUEST}.png`
       );
@@ -120,31 +117,10 @@ export class Preloader extends Scene {
         `${LOCATION_ASSETS.BTN_RANK}-${i}`,
         `locations/location-${i}/${LOCATION_ASSETS.BTN_RANK}.png`
       );
-      this.load.image(
-        `${LOCATION_ASSETS.BTN_SWAP}-${i}`,
-        `locations/location-${i}/${LOCATION_ASSETS.BTN_SWAP}.png`
-      );
     }
   }
 
   loadCatSpriteSheets() {
-    // for (let i = 1; i < CATS_COUNT + 1; i++) {
-    //   this.load.spritesheet(`Cat-${i}`, `/spritesheets/cats/Cat-${i}.png`, {
-    //     frameWidth: 128,
-    //     frameHeight: 128,
-    //   });
-    // }
-    // for (let i = 1; i < CATS_COUNT + 1; i++) {
-    //   this.load.spritesheet(
-    //     `Cat-${i}-Apron`,
-    //     `/spritesheets/apron-cats/Cat-${i}-Apron.png`,
-    //     {
-    //       frameWidth: 128,
-    //       frameHeight: 128,
-    //     }
-    //   );
-    // }
-
     for (let i = 0; i < this.catConfigs.length; i++) {
       const catConfig = this.catConfigs[i];
       this.load.spritesheet(
@@ -200,128 +176,7 @@ export class Preloader extends Scene {
     this.loadCatSpriteSheets();
   }
 
-  createCatAnimations() {
-    for (let i = 1; i < CATS_COUNT + 1; i++) {
-      this.anims.create({
-        key: `Cat-${i}-${CAT_ANIMATIONS.IDLE}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
-          start: 0,
-          end: 3,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-${CAT_ANIMATIONS.SLEEP}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
-          start: 4,
-          end: 7,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_DOWN}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
-          start: 8,
-          end: 11,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_UP}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
-          start: 12,
-          end: 15,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
-          start: 16,
-          end: 19,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-${CAT_ANIMATIONS.WALKING_LEFT}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}`, {
-          start: 20,
-          end: 23,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-    }
-  }
-
-  createCatApronAnimations() {
-    for (let i = 1; i < CATS_COUNT + 1; i++) {
-      this.anims.create({
-        key: `Cat-${i}-Apron-${CAT_ANIMATIONS.IDLE}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
-          start: 0,
-          end: 3,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-Apron-${CAT_ANIMATIONS.SLEEP}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
-          start: 4,
-          end: 7,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_DOWN}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
-          start: 8,
-          end: 11,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_UP}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
-          start: 12,
-          end: 15,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_RIGHT}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
-          start: 16,
-          end: 19,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-      this.anims.create({
-        key: `Cat-${i}-Apron-${CAT_ANIMATIONS.WALKING_LEFT}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${i}-Apron`, {
-          start: 20,
-          end: 23,
-        }),
-        frameRate: CATS_FRAME_RATE,
-        repeat: -1,
-      });
-    }
-  }
-
   async waitBeforeGoToGame() {
-    //@TODO: Remove this
-    // this.createCatAnimations();
-    // this.createCatApronAnimations();
     this.createCatAnimationsFromConfig(CatLevelType.Apron);
     this.createCatAnimationsFromConfig(CatLevelType.Base);
     this.createCatAnimationsFromConfig(CatLevelType.Coat);

@@ -6,9 +6,9 @@ export const GAME_HEIGHT = 558;
 export const CAT_CONFIGS = "cat-configs";
 
 //@TODO: Load from server/config
-export const LOCATIONS_COUNT = 1;
+export const LOCATIONS_COUNT = 3;
 export const LOCATION_ASSETS = {
-  BACKGROUND: "Floor-BG",
+  BACKGROUND: "Floor",
   BTN_FRIEND: "Button-Friend",
   BTN_GACHA: "Button-Gacha",
   BTN_PARTY: "Button-Party",
@@ -16,6 +16,13 @@ export const LOCATION_ASSETS = {
   BTN_RANK: "Button-Rank",
   BTN_SWAP: "Button-Swap",
 };
+
+export const ASSETS = {
+  DEFAULT_BACKGROUND: "default-background",
+  LOADING_CAT: "loading-cat",
+  LOGO: "logo",
+};
+export const ASSET_SCALE = 2 / 5;
 
 //@TODO: Load from server/config
 export const ACTIVE_AREA = {
@@ -35,6 +42,7 @@ export enum COLLISION_CATEGORIES {
 //@TODO: Load from server/config
 export const CATS_COUNT = 15;
 export const CATS_FRAME_RATE = 8;
+export const CATS_SCALE = (1 / 2) * 1.3;
 
 export const CAT_MAX_LEVEL = 44;
 export const CAT_MAX_SPEED = 50;

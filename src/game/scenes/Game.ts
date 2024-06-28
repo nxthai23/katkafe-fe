@@ -4,10 +4,9 @@ import { GameManager } from "../GameManager";
 import { GameUI } from "../ui/GameUI";
 import { SoundManager } from "../SoundManager";
 import { AUDIO_EVENTS, EVENT_BUS_TYPES } from "@/constants/events";
-import { LAYERS } from "@/constants/layers";
-import { Restaurant } from "@/types/common-types";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { getRestaurant } from "@/requests/restaurant";
+import { Restaurant } from "@/types/restaurant";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -15,6 +14,8 @@ export class Game extends Scene {
   gameUI: GameUI;
   gameManager: GameManager;
   soundManager: SoundManager;
+
+  currentLocation: number;
 
   restaurantSubscriber: any;
 
@@ -24,22 +25,23 @@ export class Game extends Scene {
     this.gameManager = new GameManager(this);
   }
 
-  init() {
-    this.gameUI.loadLocation();
-
-    this.events.on(EVENT_BUS_TYPES.SCENE_READY, () => {
-      console.log("Scene Ready!");
-    });
+  async generateCatsByRestaurant(restaurant: Restaurant) {
+    const response = await getRestaurant(restaurant._id);
+    this.gameManager.createCats(response.cats, restaurant.order, true);
+    // this.gameManager.generateGuests(restaurant.order, true);
   }
 
-  async loadCatsByRestaurant(locationId: string) {
-    const response = await getRestaurant(locationId);
-    this.gameManager.createCats(response.cats);
+  onChooseNewRestaurant(restaurant?: Restaurant | null) {
+    if (restaurant && this.currentLocation !== restaurant.order) {
+      this.currentLocation = restaurant.order;
+      this.generateCatsByRestaurant(restaurant!);
+      this.gameUI.removeLoadingLocation();
+      this.gameUI.drawLocation(restaurant!.order);
+    }
   }
-
-  destroy() {}
 
   create() {
+    this.gameUI.drawLoadingLocation();
     this.soundManager = new SoundManager(
       this,
       // @ts-ignore: Unreachable code error
@@ -50,38 +52,32 @@ export class Game extends Scene {
 
     this.restaurantSubscriber = useRestaurantStore.subscribe(
       (state) => state.currentRestaurant,
-      (restaurant, newRestaurant) => {
-        if (newRestaurant) this.loadCatsByRestaurant(newRestaurant!._id);
-      }
+      (newRestaurant, restaurant) => this.onChooseNewRestaurant(newRestaurant)
     );
 
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
 
-    // this.gameManager.createTempCats();
+    this.gameManager.createGroups();
     this.gameManager.createWalls();
-    // this.gameManager.createEmptyPointsForSpawn();
-    // this.gameManager.createEmptyPoints();
 
+    this.physics.world.addCollider(
+      this.gameManager.catGroup,
+      this.gameManager.wallGroup
+    );
+    this.physics.world.addCollider(
+      this.gameManager.catGroup,
+      this.gameManager.catGroup
+    );
+    this.physics.world.addCollider(
+      this.gameManager.guestGroup,
+      this.gameManager.wallGroup
+    );
+    this.physics.world.addCollider(
+      this.gameManager.guestGroup,
+      this.gameManager.guestGroup
+    );
     // this.gameManager.guestGenerator.play();
-
-    this.physics.world.addCollider(
-      this.gameManager.cats,
-      this.gameManager.walls
-    );
-    this.physics.world.addCollider(
-      this.gameManager.cats,
-      this.gameManager.cats
-    );
-    // this.physics.world.addCollider(
-    //   this.gameManager.guestGenerator.guests,
-    //   this.gameManager.walls
-    // );
-
-    // this.physics.world.addCollider(
-    //   this.gameManager.guestGenerator.guests,
-    //   this.gameManager.guestGenerator.guests
-    // );
 
     EventBus.on("destroy", () => {
       this.restaurantSubscriber();

@@ -1,5 +1,6 @@
 import { CAT_ANIMATIONS, CAT_DIRECTIONS, CAT_STATES } from "@/constants/anims";
 import {
+  CATS_SCALE,
   CAT_MAX_SPEED,
   CAT_MIN_SPEED,
   COLLISION_CATEGORIES,
@@ -21,6 +22,7 @@ import { EventBus } from "../EventBus";
 import { AUDIO_EVENTS } from "@/constants/events";
 import { CAT_AUDIO_COUNT } from "@/constants/audio";
 import { Staff } from "@/types/common-types";
+import { Events } from "matter";
 
 export class CatObject extends Phaser.Physics.Arcade.Sprite {
   id: string;
@@ -42,7 +44,7 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setDepth(LAYERS.STAFF);
-    this.setScale((1 / 2) * 1.2);
+    this.setScale(CATS_SCALE);
     this.setVelocity(0);
 
     this.setBounce(0, 0);
@@ -68,6 +70,20 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
       callbackScope: this,
       loop: false,
     });
+  }
+
+  removedFromScene() {
+    super.removedFromScene();
+
+    if (this.dialog) {
+      this.dialog.destroy();
+    }
+    if (this.animInterval) {
+      this.animInterval.remove();
+    }
+    if (this.dialogInterval) {
+      this.dialogInterval.remove();
+    }
   }
 
   private playAnimation() {

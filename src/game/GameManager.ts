@@ -1,41 +1,42 @@
-import { ACTIVE_AREA, CATS_COUNT, CAT_MAX_LEVEL } from "@/constants/config";
 import { CatObject } from "./models/Cat";
-import { Cat } from "@/types/cat";
 import { WallObject } from "./models/Wall";
 
 import Locations from "@/game/config/locations.json";
 import { LocationsData, PathData } from "@/types/location";
-import { userStore } from "./store/user";
 import { LAYERS } from "@/constants/layers";
 import { GuestGenerator } from "./components/GuestGenerator";
 import { Staff } from "@/types/common-types";
-import { EventBus } from "./EventBus";
-import { EVENT_BUS_TYPES } from "@/constants/events";
-import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 export class GameManager {
   scene: Phaser.Scene;
   locationsData: LocationsData;
-  paths: PathData[] = [];
 
-  currentLocation: number = 1;
   guestGenerator: GuestGenerator;
 
-  //Objects
-  cats: Phaser.Physics.Arcade.Sprite[] = [];
-  walls: Phaser.Physics.Arcade.Sprite[] = [];
+  catGroup: Phaser.GameObjects.Group;
+  wallGroup: Phaser.GameObjects.Group;
+  guestGroup: Phaser.GameObjects.Group;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.locationsData = Locations as LocationsData;
-    this.currentLocation = userStore.currentLocation;
-    this.paths = this.locationsData[`location-${this.currentLocation}`].paths;
-    this.guestGenerator = new GuestGenerator(this.scene, this.paths);
   }
 
-  createCats(cats: Staff[]) {
+  removeAllCats() {
+    this.catGroup.clear(true, false);
+  }
+
+  createGroups() {
+    this.catGroup = this.scene.add.group();
+    this.wallGroup = this.scene.add.group();
+    this.guestGroup = this.scene.add.group();
+  }
+
+  createCats(cats: Staff[], currentLocation: number, showSpawnPoints = false) {
+    if (this.catGroup && this.catGroup.getLength() > 0) this.removeAllCats();
     const spawnPoints =
-      this.locationsData[`location-${this.currentLocation}`].spawnPoints;
+      this.locationsData[`location-${currentLocation}`].spawnPoints;
+    if (showSpawnPoints) this.createEmptyPointsForSpawn(currentLocation);
     for (let i = 0; i < cats.length; i++) {
       const cat = cats[i];
       const catObj = new CatObject(
@@ -44,13 +45,13 @@ export class GameManager {
         spawnPoints[i].y,
         cat
       );
-      this.cats.push(catObj);
+      this.catGroup.add(catObj);
     }
   }
 
-  createTempCats() {
+  createTempCats(currentLocation: number) {
     const spawnPoints =
-      this.locationsData[`location-${this.currentLocation}`].spawnPoints;
+      this.locationsData[`location-${currentLocation}`].spawnPoints;
     for (let i = 0; i < spawnPoints.length; i++) {
       const cat = new CatObject(
         this.scene,
@@ -58,20 +59,13 @@ export class GameManager {
         spawnPoints[i].y,
         {} as Staff
       );
-      this.cats.push(cat);
+      this.catGroup.add(cat);
     }
   }
 
-  createEmptyPointsForPaths() {
-    for (let i = 0; i < this.paths.length; i++) {
-      const path = this.paths[i];
-      this.createEmptyPointsForPath(path);
-    }
-  }
-
-  createEmptyPointsForSpawn() {
+  private createEmptyPointsForSpawn(currentLocation: number) {
     const spawnPoints =
-      this.locationsData[`location-${this.currentLocation}`].spawnPoints;
+      this.locationsData[`location-${currentLocation}`].spawnPoints;
     for (let i = 0; i < spawnPoints.length; i++) {
       const point = spawnPoints[i];
       const renderedPoint = new Phaser.GameObjects.Rectangle(
@@ -83,6 +77,21 @@ export class GameManager {
         0x00ff00
       ).setDepth(LAYERS.DEBUG);
       this.scene.add.existing(renderedPoint);
+    }
+  }
+
+  generateGuests(currentLocation: number, showPath = false) {
+    const paths = this.locationsData[`location-${currentLocation}`].paths;
+    if (this.guestGroup.getLength() > 0) this.guestGenerator.remove();
+    if (showPath) this.createEmptyPointsForPaths(paths);
+    this.guestGenerator = new GuestGenerator(this, this.scene, paths);
+    this.guestGenerator.play();
+  }
+
+  private createEmptyPointsForPaths(paths: PathData[]) {
+    for (let i = 0; i < paths.length; i++) {
+      const path = paths[i];
+      this.createEmptyPointsForPath(path);
     }
   }
 
@@ -106,11 +115,11 @@ export class GameManager {
   }
 
   createWalls() {
-    this.walls = [
+    this.wallGroup.addMultiple([
       new WallObject(this.scene, 0, 358, 36, 296),
       new WallObject(this.scene, 384 / 2 - 16, 226, 384, 32),
       new WallObject(this.scene, 384 - 36, 358, 32, 296),
-      new WallObject(this.scene, 384 / 2 - 16, 608 - 64, 384, 32),
-    ];
+      new WallObject(this.scene, 384 / 2 - 16, 554 - 64, 384, 32),
+    ]);
   }
 }

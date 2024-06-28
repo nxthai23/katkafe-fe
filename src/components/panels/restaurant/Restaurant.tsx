@@ -126,6 +126,7 @@ function Restaurant() {
     );
     setCurrentRestaurant(restaurantSelected as RestaurantType | null);
   };
+
   useEffect(() => {
     fetchRestaurants();
     if (!currentRestaurant) {

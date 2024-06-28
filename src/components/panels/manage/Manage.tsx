@@ -266,8 +266,6 @@ const Manage: React.FC = () => {
         restaurants && (restaurants[0] as RestaurantType | null)
       );
     }
-    console.log("currentRestaurant", currentRestaurant);
-    EventBus.emit(EVENT_BUS_TYPES.CHOOSE_RESTAURANT);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

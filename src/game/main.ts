@@ -26,9 +26,9 @@ const config: Phaser.Types.Core.GameConfig = {
     default: "arcade",
     arcade: {
       gravity: { y: 0, x: 0 },
-      // debug: true,
-      // debugShowBody: true,
-      // debugShowStaticBody: true,
+      debug: true,
+      debugShowBody: true,
+      debugShowStaticBody: true,
     },
   },
 };
@@ -37,7 +37,6 @@ const StartGame = (parent: string) => {
   try {
     // (window as any).Telegram.WebApp.expand();
     //@TODO: load config from server here
-    //const config = await fetchConfig();
 
     //@TODO: load plugins
 

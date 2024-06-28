@@ -5,6 +5,7 @@ import {
   GUEST_STATES,
 } from "@/constants/anims";
 import {
+  CATS_SCALE,
   COLLISION_CATEGORIES,
   DIALOG_MAX_DURATION,
   DIALOG_MIN_DURATION,
@@ -13,7 +14,6 @@ import {
   GUEST_SPEED,
 } from "@/constants/config";
 import { LAYERS } from "@/constants/layers";
-import { Cat } from "@/types/cat";
 import { ToCatDirection } from "../utils/direction";
 import { DialogObject } from "./Dialog";
 import {
@@ -25,14 +25,13 @@ import { AUDIO_EVENTS } from "@/constants/events";
 import { GUEST_AUDIO_COUNT } from "@/constants/audio";
 
 export class GuestObject extends Phaser.Physics.Arcade.Sprite {
-  id: number;
-  assetId: number;
+  name: string;
   speed: number;
   state: string; //GUEST_STATES
   direction: CAT_DIRECTIONS;
   path: PathData;
 
-  onDestroy?: (index: number) => void;
+  onDestroy?: (guest: GuestObject) => void;
 
   currentPointIndex: number = 0;
 
@@ -41,18 +40,17 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
 
   constructor(
     scene: Phaser.Scene,
-    id: number,
-    assetId: number,
+    name: string,
     path: PathData,
-    onDestroy: (index: number) => void
+    onDestroy: (guest: GuestObject) => void
   ) {
-    super(scene, path[0].position.x, path[0].position.y, `Cat-${assetId}`);
+    super(scene, path[0].position.x, path[0].position.y, `Cat-${name}`);
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
     this.setDepth(LAYERS.GUEST);
-    this.setScale((1 / 2) * 1.2);
+    this.setScale(CATS_SCALE);
     this.setVelocity(0);
     this.setPushable(false);
 
@@ -62,10 +60,10 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
     this.setCollidesWith([COLLISION_CATEGORIES.GUEST]);
 
     this.body?.setSize(64, 80);
+    this.body?.setOffset(0, 0);
 
-    this.id = id;
-    this.assetId = assetId;
     this.path = path;
+    this.name = name;
     this.onDestroy = onDestroy;
 
     this.speed = GUEST_SPEED;
@@ -96,11 +94,10 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
       this.x < 0 ||
       this.y < 0
     ) {
-      this.body?.destroy();
-      this.destroy();
       if (this.dialog) {
         this.dialog.destroy();
       }
+      this.onDestroy?.(this);
     }
 
     if (
@@ -131,6 +128,12 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
           loop: false,
         });
       }
+    }
+  }
+
+  removedFromScene(): void {
+    if (this.dialog) {
+      this.dialog.destroy();
     }
   }
 
@@ -220,22 +223,22 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
       default:
       case GUEST_STATES.IDLE:
       case GUEST_STATES.ORDERING:
-        this.play(`Cat-${this.assetId}-${CAT_ANIMATIONS.IDLE}`);
+        this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.IDLE}`);
         break;
       case GUEST_STATES.ARRIVING:
       case GUEST_STATES.LEAVING:
         switch (this.direction) {
           case CAT_DIRECTIONS.UP:
-            this.play(`Cat-${this.assetId}-${CAT_ANIMATIONS.WALKING_UP}`);
+            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_UP}`);
             break;
           case CAT_DIRECTIONS.DOWN:
-            this.play(`Cat-${this.assetId}-${CAT_ANIMATIONS.WALKING_DOWN}`);
+            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_DOWN}`);
             break;
           case CAT_DIRECTIONS.LEFT:
-            this.play(`Cat-${this.assetId}-${CAT_ANIMATIONS.WALKING_LEFT}`);
+            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_LEFT}`);
             break;
           case CAT_DIRECTIONS.RIGHT:
-            this.play(`Cat-${this.assetId}-${CAT_ANIMATIONS.WALKING_RIGHT}`);
+            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_RIGHT}`);
             break;
         }
         break;

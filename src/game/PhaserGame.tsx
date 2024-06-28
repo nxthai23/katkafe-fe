@@ -98,8 +98,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       } else {
         setIsGameScene(false);
       }
-
-      scene_instance.events.emit(EVENT_BUS_TYPES.CHOOSE_RESTAURANT);
     });
 
     registerEventListeners();
