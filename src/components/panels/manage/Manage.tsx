@@ -9,7 +9,6 @@ import usePower, { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaur
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
-import { Restaurant as RestaurantType } from "@/types/restaurant";
 
 import {
   removeCat,
@@ -43,14 +42,16 @@ const Manage: React.FC = () => {
   };
   const [
     currentRestaurant,
+    restaurants,
     setCurrentRestaurant,
     setRestaurants,
   ] = useRestaurantStore((state) => [
     state.currentRestaurant,
+    state.restaurants,
     state.setCurrentRestaurant,
     state.setRestaurants,
   ]);
-  const power = currentRestaurant && usePower(currentRestaurant._id);
+  const power = currentRestaurant && usePower(currentRestaurant._id, currentRestaurant);
 
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
@@ -65,8 +66,7 @@ const Manage: React.FC = () => {
   ]);
   const [fee, setFee] = useState(0);
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [isUpdated, setIsUpdated] = useState(false);
+  const [user] = useUserStore((state) => [state.user]);
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
@@ -227,8 +227,8 @@ const Manage: React.FC = () => {
         locationId: currentRestaurant._id,
       });
       setCurrentRestaurant(data.upgradedLocation);
+      fetchRestaurants()
       fetchDataUpgrade();
-      fetchRestaurants();
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {

@@ -31,7 +31,6 @@ export const useGamePlay = () => {
     }
   };
 
-
   const handlePostTapping = async (tappingNum: number) => {
     try {
       const res = await postTap(tappingNum!)
@@ -54,6 +53,7 @@ export const useGamePlay = () => {
       console.log("Error Claim", error);
     }
   };
+
   useEffect(() => {
     if (user && !user.isLoginFirstTime) {
       intervalRef.current = window.setInterval(() => {
@@ -63,7 +63,7 @@ export const useGamePlay = () => {
     return () => {
       clearClaimInterval();
     };
-  }, [user?.bean, user]);
+  }, [user?.bean, user, startIntervalPostTapping]);
 
   useEffect(() => {
     if (startIntervalRecoverPower) {
@@ -89,6 +89,7 @@ export const useGamePlay = () => {
   return {
     setStartIntervalRecoverPower,
     setStartIntervalPostTapping,
-    clearClaimInterval
+    clearClaimInterval,
+    handleClaim
   }
 }
