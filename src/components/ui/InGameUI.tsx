@@ -19,6 +19,7 @@ import { useFetchUser } from "@/lib/hooks/useUser";
 import Image from "next/image";
 import usePower from "@/lib/hooks/restaurant/useRestaurant";
 import { Staff } from "@/types/common-types";
+import { get } from "lodash";
 
 type Click = {
   id: number;
@@ -87,7 +88,7 @@ export const InGameUI = () => {
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const power = usePower(currentRestaurant!._id);
+  const power = usePower(get(currentRestaurant, "_id", ""));
   const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
     state.staffs,
     state.staffUpgradeConfigs,

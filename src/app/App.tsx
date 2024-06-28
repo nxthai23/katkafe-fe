@@ -50,6 +50,7 @@ function App() {
   const fetchData = async () => {
     try {
       setFinnishLoading(false);
+      await Login();
       const res = await Promise.all([
         fetchRestaurants(true),
         fetchStaffs(),
@@ -64,7 +65,6 @@ function App() {
     }
   };
   useEffect(() => {
-    Login();
     fetchData();
     const app = (window as any).Telegram?.WebApp;
     if (app) {
