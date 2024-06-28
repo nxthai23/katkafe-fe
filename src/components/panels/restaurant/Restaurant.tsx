@@ -28,8 +28,8 @@ function Restaurant() {
     state.show,
     state.hide,
   ]);
-  const [showSuccessDialog, setDialogType, setDialogContent] = useDialogStore(
-    (state) => [state.show, state.setDialogType, state.setDialogContent]
+  const [showSuccessDialog, setDialogType] = useDialogStore(
+    (state) => [state.show, state.setDialogType]
   );
   const [
     restaurants,
@@ -44,7 +44,7 @@ function Restaurant() {
   ]);
 
   const { fetchRestaurants } = useFetchRestaurants();
-  
+
   const dataUnlock = {
     title: "Unlock the coffee shop!",
     description: "To unlock this coffee shopo you'll need:",
@@ -96,13 +96,12 @@ function Restaurant() {
           setShowDialog(false);
           setShowRestaurantPanel(false);
           setDialogType("restaurant");
-          setDialogContent({
+          showSuccessDialog({
             title: "Congratulation!",
             content: "You have unlocked a new shop.",
             buttonText: "Check it out",
             imgUrl: res?.newLocation.imgUrl,
           });
-          showSuccessDialog();
         }
       } catch (error) {
         console.error("Error fetching", error);

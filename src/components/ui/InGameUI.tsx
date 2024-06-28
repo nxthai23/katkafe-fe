@@ -84,12 +84,11 @@ export const InGameUI = () => {
     state.setCoinTapping,
   ]);
 
-  const [hideDialog, showDialog, setDialogType, setDialogContent, DialogType] =
+  const [hideDialog, showDialog, setDialogType, DialogType] =
     useDialogStore((state) => [
       state.hide,
       state.show,
       state.setDialogType,
-      state.setDialogContent,
       state.type,
     ]);
   const [restaurantUpgradeConfigs, currentRestaurant] = useRestaurantStore(
@@ -274,14 +273,13 @@ export const InGameUI = () => {
     fetchUser();
     if (user?.isLoginFirstTime) {
       setDialogType("login");
-      setDialogContent({
+      showDialog({
         title: "Congratulation!",
         content:
           "You received a new comer gift. Open it to get your first staff.",
         buttonText: "Open",
         imgUrl: "/images/login.png",
       });
-      showDialog();
     }
     useRestaurantStore.setState({ power: 0 });
 

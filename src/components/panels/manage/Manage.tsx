@@ -21,6 +21,7 @@ import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import NumberFormatter from "@/components/ui/NumberFormat";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 
 const TABS = {
   CAFE: "Cafe",
@@ -67,6 +68,9 @@ const Manage: React.FC = () => {
   const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
+  ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
   ]);
 
   const { fetchRestaurants } = useFetchRestaurants();
@@ -135,12 +139,14 @@ const Manage: React.FC = () => {
       };
       const response = await removeCat(body);
       setCurrentRestaurant(response);
+      showSnackbar('Remove successfully!')
+      setActiveCard(null);
       await fetchRestaurants();
       await fetchStaffs();
-      setActiveCard(null);
     } catch (error) {
       console.error("Error removing staff", error);
       alert("Failed to delete staff. Please try again.");
+      showSnackbar('Failed to delete staff. Please try again.')
     } finally {
       hide();
     }

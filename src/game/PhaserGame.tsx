@@ -27,6 +27,8 @@ import Task from "@/components/panels/quest/Quest";
 import Restaurant from "@/components/panels/restaurant/Restaurant";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
+import SnackBar from "@/components/ui/common/SnackBar";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -71,10 +73,13 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     state.showRestaurantPanel,
   ]);
 
-  const [isShowing] = useLoadingStore((state) => [
+  const [isShowingLoading] = useLoadingStore((state) => [
     state.isShowing,
   ]);
-  
+  const [isShowingSnackbar] = useSnackBarStore((state) => [
+    state.isShowing
+  ]);
+
   useLayoutEffect(() => {
     if (game.current === null) {
       game.current = StartGame("game-container");
@@ -113,7 +118,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       removeAllEventListeners();
     };
   }, [ref, registerEventListeners, removeAllEventListeners]);
-
   return (
     <div className="mx-auto">
       <div id="game-container" className="relative">
@@ -130,7 +134,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showFindGuildPanel && <FindGuild />}
         {showGuildDetailPanel && <GuildDetail />}
         {showRestaurantPanel && <Restaurant />}
-        {isShowing && <Loading />}
+        {isShowingLoading && <Loading />}
+        {isShowingSnackbar && <SnackBar />}
       </div>
     </div>
   );

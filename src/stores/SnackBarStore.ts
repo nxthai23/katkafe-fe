@@ -15,7 +15,6 @@ type Actions = {
 };
 
 export const useSnackBarStore = create<State & Actions>((set) => ({
-  showCount: 0,
   isShowing: false,
   content: "",
   showContent: false,
@@ -25,7 +24,7 @@ export const useSnackBarStore = create<State & Actions>((set) => ({
       isShowing: true,
     })),
   hide: () =>
-    set((state) => ({
-      isShowing: state.isShowing,
+    set(() => ({
+      isShowing: false,
     })),
 }));

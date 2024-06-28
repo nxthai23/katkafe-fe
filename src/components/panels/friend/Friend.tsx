@@ -12,6 +12,7 @@ import CardBonus from "@/components/ui/CardBonus";
 import { useFetchRanks } from "@/lib/hooks/rank/useRank";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 
 export const TABS = {
   FRIENDLIST: "Friendlist",
@@ -33,6 +34,9 @@ const Friend: React.FC = () => {
     state.show,
     state.hide,
   ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
+  ]);
 
   const { friends } = useFetchFriends();
   const [rankConfigs, fetchRankConfigs] = useRankConfigs();
@@ -50,8 +54,10 @@ const Friend: React.FC = () => {
       };
       await claimRankReward(body);
       await fetchRankConfigs();
+      showSnackbar('Claim Successfully!');
     } catch (error) {
       console.error("Error claiming", error);
+      showSnackbar('Claim Fail!');
     } finally {
       hide();
     }
