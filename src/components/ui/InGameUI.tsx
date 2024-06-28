@@ -7,14 +7,6 @@ import { createCat, updateLoginStatus, updateStatus } from "@/requests/login";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
 import { UserType } from "@/types/user";
-import {
-  useFetchStaffs,
-  useFetchStaffUpgradeConfigs,
-} from "@/lib/hooks/cat/useStaff";
-import {
-  useFetchRestaurantUpgradeConfigs,
-  useFetchRestaurants,
-} from "@/lib/hooks/restaurant/useRestaurant";
 import { getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
@@ -25,15 +17,17 @@ import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import { useStaffStore } from "@/stores/staffStore";
 import { Dot } from "lucide-react";
+import { useFetchUser } from "@/lib/hooks/useUser";
+import Image from "next/image";
 
 type Click = {
   id: number;
   x: number;
   y: number;
 }
-type CoinRef = {
-  handleClick: () => void;
-}
+// type CoinRef = {
+//   handleClick: () => void;
+// }
 export const InGameUI = () => {
   const [
     setShowFriendPanel,
@@ -49,7 +43,6 @@ export const InGameUI = () => {
     state.setShowRestaurantPanel,
   ]);
   const [clicks, setClicks] = useState<Click[]>([]);
-  // const coinRef = useRef<CoinRef>();
   const { setStartIntervalRecoverPower, setStartIntervalPostTapping } = useGamePlay()
   const [showLoginAward, setShowLoginAward] = useState(false);
   const [response, setResponse] = useState<UserType | null>(null);
@@ -114,13 +107,8 @@ export const InGameUI = () => {
   const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
     useState(false);
   const telegramData = useInitData();
-
-  const { fetchStaffs } = useFetchStaffs();
-  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchUser } = useFetchUser();
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
-  const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
 
   const checkStaffsUpgrade = () => {
     setShowNotiCatUpgrade(false);
@@ -286,7 +274,8 @@ export const InGameUI = () => {
       }
     };
 
-    Login();
+    Login()
+    fetchUser()
     if (user?.isLoginFirstTime) {
       setDialogType("login");
       setDialogContent({
@@ -302,17 +291,6 @@ export const InGameUI = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setUser]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchRestaurants();
-      await fetchStaffs();
-      await fetchStaffUpgradeConfigs();
-      await fetchRestaurantUpgradeConfigs();
-    };
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     checkStaffsUpgrade();
@@ -348,10 +326,18 @@ export const InGameUI = () => {
           <>
             <div
               key={click?.id}
-              className='clickNumber text-white z-10'
+              className='clickNumber text-white z-10 flex justify-center gap-x-1 items-center'
               style={{ left: click?.x, top: click?.y }}
             >
-              +5
+              <div>
+                +5
+              </div>
+              <Image
+                src='/images/coin.png'
+                width={16}
+                height={16}
+                alt="icon"
+              />
             </div>
             {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
           </>
