@@ -57,6 +57,7 @@ export const useFetchRestaurants = () => {
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
       setCurrentRestaurant(restaurants && restaurants[0] as Restaurant | null)
+      
     } catch (error) {
       console.error("Error fetching", error);
     }

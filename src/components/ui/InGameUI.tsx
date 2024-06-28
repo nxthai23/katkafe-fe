@@ -19,6 +19,7 @@ import { useStaffStore } from "@/stores/staffStore";
 import { Dot } from "lucide-react";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import Image from "next/image";
+import usePower from "@/lib/hooks/restaurant/useRestaurant";
 
 type Click = {
   id: number;
@@ -87,9 +88,8 @@ export const InGameUI = () => {
     state.setDialogContent,
     state.type
   ]);
-  const [power, restaurantUpgradeConfigs, currentRestaurant] =
+  const [restaurantUpgradeConfigs, currentRestaurant] =
     useRestaurantStore((state) => [
-      state.power,
       state.restaurantUpgradeConfigs,
       state.currentRestaurant,
     ]);
@@ -98,7 +98,7 @@ export const InGameUI = () => {
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const power = currentRestaurant && usePower(currentRestaurant._id);
   const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
     state.staffs,
     state.staffUpgradeConfigs,

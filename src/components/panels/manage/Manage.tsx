@@ -5,7 +5,7 @@ import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useStaffStore } from "@/stores/staffStore";
-import { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import usePower, { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
@@ -43,17 +43,15 @@ const Manage: React.FC = () => {
   };
   const [
     currentRestaurant,
-    restaurants,
-    power,
     setCurrentRestaurant,
     setRestaurants,
   ] = useRestaurantStore((state) => [
     state.currentRestaurant,
-    state.restaurants,
-    state.power,
     state.setCurrentRestaurant,
     state.setRestaurants,
   ]);
+  const power = currentRestaurant && usePower(currentRestaurant._id);
+
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
   const [showAlertAssign, setShowAlertAssign] = useState(false);

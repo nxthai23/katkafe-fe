@@ -1,6 +1,6 @@
 'use client'
 import { useUserStore } from "@/stores/userStore";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { postTap } from "@/requests/taptap/taptap";
 import { getClaim } from "@/requests/user";
@@ -31,17 +31,7 @@ export const useGamePlay = () => {
     }
   };
 
-  useEffect(() => {
-    if (user && !user.isLoginFirstTime) {
-      intervalRef.current = window.setInterval(() => {
-        handleClaim();
-      }, 5000);
-    }
-    return () => {
-      clearClaimInterval();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   const handlePostTapping = async (tappingNum: number) => {
     try {
       const res = await postTap(tappingNum!)
@@ -56,6 +46,7 @@ export const useGamePlay = () => {
   const handleClaim = async () => {
     try {
       const response = await getClaim();
+      console.log('claim');
       if (response) {
         setUser(response);
       }
@@ -63,6 +54,16 @@ export const useGamePlay = () => {
       console.log("Error Claim", error);
     }
   };
+  useEffect(() => {
+    if (user && !user.isLoginFirstTime) {
+      intervalRef.current = window.setInterval(() => {
+        handleClaim();
+      }, 5000);
+    }
+    return () => {
+      clearClaimInterval();
+    };
+  }, [user?.bean, user]);
 
   useEffect(() => {
     if (startIntervalRecoverPower) {
@@ -77,8 +78,7 @@ export const useGamePlay = () => {
   useEffect(() => {
     if (startIntervalPostTapping) {
       const interval = setInterval(() => {
-        if (tapping! !== 0 || tapping)
-        {
+        if (tapping! !== 0 || tapping) {
           handlePostTapping(tapping!)
         }
       }, 5000); // Update every second
@@ -88,7 +88,7 @@ export const useGamePlay = () => {
   }, [startIntervalPostTapping, tapping]);
   return {
     setStartIntervalRecoverPower,
-    setStartIntervalPostTapping, 
+    setStartIntervalPostTapping,
     clearClaimInterval
   }
 }
