@@ -1,4 +1,6 @@
+import { GameManager } from "./../GameManager";
 import {
+  CAT_CONFIGS,
   GUEST_MAX_GEN_DELAY,
   GUEST_MIN_GEN_DELAY,
   MAX_GUESTS,
@@ -7,15 +9,19 @@ import { GuestObject } from "../models/Guest";
 import { PathData } from "@/types/location";
 
 export class GuestGenerator {
+  gameManager: GameManager;
   scene: Phaser.Scene;
 
-  guests: GuestObject[] = [];
   paths: PathData[] = [];
 
   private guestGeneratorTimer: Phaser.Time.TimerEvent;
-  private guestIndex: number = 0;
 
-  constructor(scene: Phaser.Scene, paths: PathData[]) {
+  constructor(
+    gameManager: GameManager,
+    scene: Phaser.Scene,
+    paths: PathData[]
+  ) {
+    this.gameManager = gameManager;
     this.scene = scene;
     this.paths = paths;
   }
@@ -39,26 +45,28 @@ export class GuestGenerator {
     });
   }
 
+  removeAllGuests() {
+    this.gameManager.guestGroup.clear(true, false);
+    this.guestGeneratorTimer.remove();
+  }
+
   generateGuest() {
-    // if (this.guests.length < MAX_GUESTS) {
-    const rndPathIndex = Phaser.Math.Between(0, this.paths.length - 1);
-    this.guests.push(
-      new GuestObject(
-        this.scene,
-        this.guestIndex,
-        1,
-        this.paths[rndPathIndex],
-        this.removeGuest
-      )
-    );
-    this.guestIndex++;
-    // }
+    if (this.gameManager.guestGroup.getLength() < MAX_GUESTS) {
+      const rndPathIndex = Phaser.Math.Between(0, this.paths.length - 1);
+      this.gameManager.guestGroup.add(
+        new GuestObject(
+          this.scene,
+          this.randomGuestCatAsset(),
+          this.paths[rndPathIndex]
+        )
+      );
+    }
     this.resetGeneratorTimer();
   }
 
-  private removeGuest(index: number) {
-    console.log("index", index);
-    console.log("this.guests", this.guests);
-    // this.guests = this.guests.filter((g) => g.id !== index);
+  private randomGuestCatAsset() {
+    const catConfigs = this.scene.registry.get(CAT_CONFIGS);
+    const rndIndex = Phaser.Math.Between(0, catConfigs.length - 1);
+    return catConfigs[rndIndex].assetName;
   }
 }

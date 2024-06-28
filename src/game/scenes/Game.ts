@@ -3,7 +3,10 @@ import { Scene } from "phaser";
 import { GameManager } from "../GameManager";
 import { GameUI } from "../ui/GameUI";
 import { SoundManager } from "../SoundManager";
-import { AUDIO_EVENTS } from "@/constants/events";
+import { AUDIO_EVENTS, EVENT_BUS_TYPES } from "@/constants/events";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
+import { getRestaurant } from "@/requests/restaurant";
+import { Restaurant } from "@/types/restaurant";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -12,17 +15,33 @@ export class Game extends Scene {
   gameManager: GameManager;
   soundManager: SoundManager;
 
+  currentLocation: number;
+
+  restaurantSubscriber: any;
+
   constructor() {
     super("Game");
     this.gameUI = new GameUI(this);
     this.gameManager = new GameManager(this);
   }
 
-  init() {
-    this.gameUI.loadLocation();
+  async generateCatsByRestaurant(restaurant: Restaurant) {
+    const response = await getRestaurant(restaurant._id);
+    this.gameManager.createCats(response.cats, restaurant.order);
+    this.gameManager.generateGuests(restaurant.order);
+  }
+
+  onChooseNewRestaurant(restaurant?: Restaurant | null) {
+    if (restaurant) {
+      this.currentLocation = restaurant.order;
+      this.generateCatsByRestaurant(restaurant!);
+      this.gameUI.removeLoadingLocation();
+      this.gameUI.drawLocation(restaurant!.order);
+    }
   }
 
   create() {
+    this.gameUI.drawLoadingLocation();
     this.soundManager = new SoundManager(
       this,
       // @ts-ignore: Unreachable code error
@@ -31,39 +50,40 @@ export class Game extends Scene {
       Phaser.Sound.SoundManagerCreator.create(this.game)
     );
 
+    this.restaurantSubscriber = useRestaurantStore.subscribe(
+      (state) => state.currentRestaurant,
+      (newRestaurant, restaurant) => this.onChooseNewRestaurant(newRestaurant)
+    );
+
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
 
-    this.gameManager.createTempCats();
+    this.gameManager.createGroups();
     this.gameManager.createWalls();
-    // this.gameManager.createEmptyPointsForSpawn();
-    // this.gameManager.createEmptyPoints();
-
-    // this.gameManager.guestGenerator.play();
 
     this.physics.world.addCollider(
-      this.gameManager.cats,
-      this.gameManager.walls
+      this.gameManager.catGroup,
+      this.gameManager.wallGroup
     );
     this.physics.world.addCollider(
-      this.gameManager.cats,
-      this.gameManager.cats
+      this.gameManager.catGroup,
+      this.gameManager.catGroup
     );
-    // this.physics.world.addCollider(
-    //   this.gameManager.guestGenerator.guests,
-    //   this.gameManager.walls
-    // );
+    this.physics.world.addCollider(
+      this.gameManager.guestGroup,
+      this.gameManager.wallGroup
+    );
+    this.physics.world.addCollider(
+      this.gameManager.guestGroup,
+      this.gameManager.guestGroup
+    );
+    this.onChooseNewRestaurant(
+      useRestaurantStore.getState().currentRestaurant!
+    );
 
-    // this.physics.world.addCollider(
-    //   this.gameManager.guestGenerator.guests,
-    //   this.gameManager.guestGenerator.guests
-    // );
-
-    EventBus.emit("current-scene-ready", this);
-
-    // Audios
-    this.soundManager.playBGM();
-    this.soundManager.playAmbience();
+    EventBus.on("destroy", () => {
+      this.restaurantSubscriber();
+    });
 
     // Events
     EventBus.on(
@@ -87,5 +107,11 @@ export class Game extends Scene {
       },
       this
     );
+
+    EventBus.emit(EVENT_BUS_TYPES.SCENE_READY, this);
+
+    // Audios
+    this.soundManager.playBGM();
+    this.soundManager.playAmbience();
   }
 }

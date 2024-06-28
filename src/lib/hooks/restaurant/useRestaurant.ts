@@ -1,4 +1,6 @@
 "use client";
+import { EVENT_BUS_TYPES } from "@/constants/events";
+import { EventBus } from "@/game/EventBus";
 import {
   getNextRestaurantUnclockConfig,
   getPower,
@@ -56,8 +58,9 @@ export const useFetchRestaurants = () => {
       setNextRestaurantUnclockIndex(restaurants.length + 1);
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
-      setCurrentRestaurant(restaurants && restaurants[0] as Restaurant | null)
-      
+      setCurrentRestaurant(
+        restaurants && (restaurants[0] as Restaurant | null)
+      );
     } catch (error) {
       console.error("Error fetching", error);
     }
@@ -68,7 +71,7 @@ export const useFetchRestaurants = () => {
   };
 };
 
-const usePower = (locationId: string) => {
+const usePower = (locationId?: string) => {
   const [power, setPower] = useState(null);
 
   useEffect(() => {

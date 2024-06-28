@@ -25,7 +25,7 @@ type Click = {
   id: number;
   x: number;
   y: number;
-}
+};
 // type CoinRef = {
 //   handleClick: () => void;
 // }
@@ -44,7 +44,8 @@ export const InGameUI = () => {
     state.setShowRestaurantPanel,
   ]);
   const [clicks, setClicks] = useState<Click[]>([]);
-  const { setStartIntervalRecoverPower, setStartIntervalPostTapping } = useGamePlay()
+  const { setStartIntervalRecoverPower, setStartIntervalPostTapping } =
+    useGamePlay();
   const [showLoginAward, setShowLoginAward] = useState(false);
   const [response, setResponse] = useState<UserType | null>(null);
   const [user, login, setUser] = useUserStore((state) => [
@@ -61,44 +62,36 @@ export const InGameUI = () => {
     resetTapping,
     increaseCoinTaping,
     increaseTaping,
-    setCoinTapping
-  ] = useGamePlayStore((state) =>
-    [
-      state.currentPower,
-      state.setCurrentPower,
-      state.setMaxPower,
-      state.decreasePower,
-      state.coinTaping,
-      state.resetTapping,
-      state.increaseCoinTapping,
-      state.increaseTapping,
-      state.setCoinTapping,
-    ])
-
-  const [
-    hideDialog,
-    showDialog,
-    setDialogType,
-    setDialogContent,
-    DialogType
-  ] = useDialogStore((state) => [
-    state.hide,
-    state.show,
-    state.setDialogType,
-    state.setDialogContent,
-    state.type
+    setCoinTapping,
+  ] = useGamePlayStore((state) => [
+    state.currentPower,
+    state.setCurrentPower,
+    state.setMaxPower,
+    state.decreasePower,
+    state.coinTaping,
+    state.resetTapping,
+    state.increaseCoinTapping,
+    state.increaseTapping,
+    state.setCoinTapping,
   ]);
-  const [restaurantUpgradeConfigs, currentRestaurant] =
-    useRestaurantStore((state) => [
-      state.restaurantUpgradeConfigs,
-      state.currentRestaurant,
+
+  const [hideDialog, showDialog, setDialogType, setDialogContent, DialogType] =
+    useDialogStore((state) => [
+      state.hide,
+      state.show,
+      state.setDialogType,
+      state.setDialogContent,
+      state.type,
     ]);
+  const [restaurantUpgradeConfigs, currentRestaurant] = useRestaurantStore(
+    (state) => [state.restaurantUpgradeConfigs, state.currentRestaurant]
+  );
   const [showOfflineEarning, setShowOfflineEarning] = useLayoutStore(
     (state) => [state.showOfflineEarning, state.setShowOfflineEarning]
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const power = currentRestaurant && usePower(currentRestaurant._id);
+  const power = usePower(currentRestaurant?._id);
   const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
     state.staffs,
     state.staffUpgradeConfigs,
@@ -202,28 +195,33 @@ export const InGameUI = () => {
       friendUrl = "/icons/ic-friend-3.png";
       break;
   }
-  const handleTaptapLayoutClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    // event.preventDefault()
-    // event.stopPropagation()
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const newClick: Click = {
-        id: clicks.length,
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
-      };
-      setClicks([...clicks, newClick]);
-      setTimeout(() => {
-        setClicks((currentClicks) => currentClicks.filter((click) => click.id !== newClick.id));
-      }, 1000);
-    }
-    // triggerCoinAnimation()
-    decreasePower()
-    increaseCoinTaping()
-    increaseTaping()
-  }, [clicks])
+  const handleTaptapLayoutClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      // event.preventDefault()
+      // event.stopPropagation()
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const newClick: Click = {
+          id: clicks.length,
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+        };
+        setClicks([...clicks, newClick]);
+        setTimeout(() => {
+          setClicks((currentClicks) =>
+            currentClicks.filter((click) => click.id !== newClick.id)
+          );
+        }, 1000);
+      }
+      // triggerCoinAnimation()
+      decreasePower();
+      increaseCoinTaping();
+      increaseTaping();
+    },
+    [clicks]
+  );
   useEffect(() => {
-    resetTapping()
+    resetTapping();
     const handleClaimable = async () => {
       try {
         const response = await getClaimable();
@@ -240,9 +238,9 @@ export const InGameUI = () => {
       handleClaimable();
     }
     if (user) {
-      setCurrentPower(user.currentTabs)
-      setMaxPower(user.maxTabs)
-      setCoinTapping(Number(user.bean))
+      setCurrentPower(user.currentTabs);
+      setMaxPower(user.maxTabs);
+      setCoinTapping(Number(user.bean));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -255,7 +253,7 @@ export const InGameUI = () => {
   }, [loading]);
   useEffect(() => {
     if (user?.bean) {
-      setCoinTapping(Number(user?.bean))
+      setCoinTapping(Number(user?.bean));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.bean]);
@@ -274,8 +272,8 @@ export const InGameUI = () => {
       }
     };
 
-    Login()
-    fetchUser()
+    Login();
+    fetchUser();
     if (user?.isLoginFirstTime) {
       setDialogType("login");
       setDialogContent({
@@ -302,7 +300,7 @@ export const InGameUI = () => {
       <div className="absolute flex w-full justify-around py-4">
         <InfoBox
           key="branch"
-          icon={{ url: '/images/coin.png' }}
+          icon={{ url: "/images/coin.png" }}
           content={user ? <NumberFormatter value={coinTaping!} /> : "0"}
         />
         {/* <NumberFormatter value={coinTaping!} />  */}
@@ -321,23 +319,20 @@ export const InGameUI = () => {
           }}
         />
       </div>
-      <div ref={containerRef} className="absolute w-full h-[52.5%] top-[36%] bg-transparent z-8" onClick={(e) => handleTaptapLayoutClick(e)}>
+      <div
+        ref={containerRef}
+        className="absolute w-full h-[52.5%] top-[36%] bg-transparent z-8"
+        onClick={(e) => handleTaptapLayoutClick(e)}
+      >
         {clicks.map((click) => (
           <>
             <div
               key={click?.id}
-              className='clickNumber text-white z-10 flex justify-center gap-x-1 items-center'
+              className="clickNumber text-white z-10 flex justify-center gap-x-1 items-center"
               style={{ left: click?.x, top: click?.y }}
             >
-              <div>
-                +5
-              </div>
-              <Image
-                src='/images/coin.png'
-                width={16}
-                height={16}
-                alt="icon"
-              />
+              <div>+5</div>
+              <Image src="/images/coin.png" width={16} height={16} alt="icon" />
             </div>
             {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
           </>

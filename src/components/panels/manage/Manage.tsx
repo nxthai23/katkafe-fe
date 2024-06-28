@@ -5,7 +5,9 @@ import StaffAssign from "../staff/UserStaffAssign";
 import CardInfo from "@/components/ui/CardInfo";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { useStaffStore } from "@/stores/staffStore";
-import usePower, { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import usePower, {
+  useFetchRestaurants,
+} from "@/lib/hooks/restaurant/useRestaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
@@ -21,6 +23,8 @@ import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import NumberFormatter from "@/components/ui/NumberFormat";
+import { EventBus } from "@/game/EventBus";
+import { EVENT_BUS_TYPES } from "@/constants/events";
 
 const TABS = {
   CAFE: "Cafe",
@@ -41,16 +45,13 @@ const Manage: React.FC = () => {
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [
-    currentRestaurant,
-    setCurrentRestaurant,
-    setRestaurants,
-  ] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-    state.setCurrentRestaurant,
-    state.setRestaurants,
-  ]);
-  const power = currentRestaurant && usePower(currentRestaurant._id);
+  const [currentRestaurant, setCurrentRestaurant, setRestaurants] =
+    useRestaurantStore((state) => [
+      state.currentRestaurant,
+      state.setCurrentRestaurant,
+      state.setRestaurants,
+    ]);
+  const power = usePower(currentRestaurant?._id);
 
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
@@ -262,15 +263,17 @@ const Manage: React.FC = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.CAFE)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.CAFE ? isActive : ""
-                }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === TABS.CAFE ? isActive : ""
+              }`}
             >
               Cafe
             </div>
             <div
               onClick={() => handleTabClick(TABS.STAFF)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.STAFF ? isActive : ""
-                }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === TABS.STAFF ? isActive : ""
+              }`}
             >
               Staff
             </div>
@@ -453,7 +456,7 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
                   {currentRestaurant &&
-                    currentRestaurant.level === currentRestaurant.maxLevel ? (
+                  currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>

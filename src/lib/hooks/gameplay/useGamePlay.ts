@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useUserStore } from "@/stores/userStore";
 import { useEffect, useState, useRef } from "react";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
@@ -6,23 +6,17 @@ import { postTap } from "@/requests/taptap/taptap";
 import { getClaim } from "@/requests/user";
 
 export const useGamePlay = () => {
-  const [startIntervalRecoverPower, setStartIntervalRecoverPower] = useState(false);
-  const [startIntervalPostTapping, setStartIntervalPostTapping] = useState(false);
+  const [startIntervalRecoverPower, setStartIntervalRecoverPower] =
+    useState(false);
+  const [startIntervalPostTapping, setStartIntervalPostTapping] =
+    useState(false);
   const intervalRef = useRef<number | null>(null);
-  const [user, setUser] = useUserStore((state) => [
-    state.user,
-    state.setUser,
+  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [increasePower, tapping, resetTapping] = useGamePlayStore((state) => [
+    state.increasePower,
+    state.tapping,
+    state.resetTapping,
   ]);
-  const [
-    increasePower,
-    tapping,
-    resetTapping,
-  ] = useGamePlayStore((state) =>
-    [
-      state.increasePower,
-      state.tapping,
-      state.resetTapping,
-    ])
 
   const clearClaimInterval = () => {
     if (intervalRef.current !== null) {
@@ -31,22 +25,20 @@ export const useGamePlay = () => {
     }
   };
 
-
   const handlePostTapping = async (tappingNum: number) => {
     try {
-      const res = await postTap(tappingNum!)
+      const res = await postTap(tappingNum!);
       if (res) {
-        resetTapping()
-        setUser(res)
+        resetTapping();
+        setUser(res);
       }
     } catch (error) {
-      console.log('error', error);
+      console.log("error", error);
     }
-  }
+  };
   const handleClaim = async () => {
     try {
       const response = await getClaim();
-      console.log('claim');
       if (response) {
         setUser(response);
       }
@@ -68,7 +60,7 @@ export const useGamePlay = () => {
   useEffect(() => {
     if (startIntervalRecoverPower) {
       const interval = setInterval(() => {
-        increasePower()
+        increasePower();
       }, 1000); // Update every second
       // Cleanup the interval on component unmount
       return () => clearInterval(interval);
@@ -79,7 +71,7 @@ export const useGamePlay = () => {
     if (startIntervalPostTapping) {
       const interval = setInterval(() => {
         if (tapping! !== 0 || tapping) {
-          handlePostTapping(tapping!)
+          handlePostTapping(tapping!);
         }
       }, 5000); // Update every second
       // Cleanup the interval on component unmount
@@ -89,6 +81,6 @@ export const useGamePlay = () => {
   return {
     setStartIntervalRecoverPower,
     setStartIntervalPostTapping,
-    clearClaimInterval
-  }
-}
+    clearClaimInterval,
+  };
+};
