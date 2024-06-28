@@ -89,6 +89,27 @@ export class GameUI {
       )
     );
 
+    this.uiGroup.add(
+      this.scene.add
+        .text(GAME_WIDTH / 2, 402, "Tap here", {
+          fontFamily: "Pixelify Sans",
+          fontSize: 36,
+          color: "#ffffff",
+          stroke: "#5D5D5D",
+          strokeThickness: 3,
+          align: "center",
+          shadow: {
+            offsetX: 0,
+            offsetY: 2,
+            color: "#000000",
+            fill: true,
+          },
+        })
+        .setDepth(LAYERS.OBJECT)
+        .setOrigin(0.5, 0.5)
+        .setAlpha(0.5)
+    );
+
     const renderedBtnQuest = drawSpriteButton(
       this.scene,
       `${LOCATION_ASSETS.BTN_QUEST}-${currentLocation}`,
