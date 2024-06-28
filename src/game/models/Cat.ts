@@ -1,5 +1,6 @@
 import { CAT_ANIMATIONS, CAT_DIRECTIONS, CAT_STATES } from "@/constants/anims";
 import {
+  CATS_SCALE,
   CAT_MAX_SPEED,
   CAT_MIN_SPEED,
   COLLISION_CATEGORIES,
@@ -20,6 +21,8 @@ import { getCatSpriteByLevel } from "../utils/anim";
 import { EventBus } from "../EventBus";
 import { AUDIO_EVENTS } from "@/constants/events";
 import { CAT_AUDIO_COUNT } from "@/constants/audio";
+import { Staff } from "@/types/common-types";
+import { Events } from "matter";
 
 export class CatObject extends Phaser.Physics.Arcade.Sprite {
   id: string;
@@ -27,21 +30,21 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
   state: string; //CAT_STATES
   direction: CAT_DIRECTIONS;
   assetId: number;
-  catData: Cat;
+  catData: Staff;
 
   private dialog: DialogObject;
 
   private animInterval: Phaser.Time.TimerEvent;
   private dialogInterval: Phaser.Time.TimerEvent;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, data: Cat) {
+  constructor(scene: Phaser.Scene, x: number, y: number, data: Staff) {
     super(scene, x, y, getCatSpriteByLevel(data));
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
     this.setDepth(LAYERS.STAFF);
-    this.setScale((1 / 2) * 1.2);
+    this.setScale(CATS_SCALE);
     this.setVelocity(0);
 
     this.setBounce(0, 0);
@@ -52,8 +55,7 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
 
     this.body?.setSize(64, 80);
 
-    this.id = data.id;
-    this.assetId = data.assetId;
+    this.id = data._id;
     this.catData = data;
 
     this.state = CAT_STATES.WALKING;
@@ -68,6 +70,14 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
       callbackScope: this,
       loop: false,
     });
+  }
+
+  removedFromScene() {
+    super.removedFromScene();
+    if (this.body) this.body.destroy();
+    if (this.dialog) this.dialog.destroy();
+    if (this.animInterval) this.animInterval.remove();
+    if (this.dialogInterval) this.dialogInterval.remove();
   }
 
   private playAnimation() {

@@ -38,7 +38,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
   const game = useRef<Phaser.Game | null>(null);
 
   const [isGameScene, setIsGameScene] = useState(false);
-  const { registerEventListeners, removeAllEventListeners } = useEventBus();
+  const { registerEventListeners, removeAllEventListeners, onGameSceneReady } =
+    useEventBus();
 
   const [
     showFriendPanel,

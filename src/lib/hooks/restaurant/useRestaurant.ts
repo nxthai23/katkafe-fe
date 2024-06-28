@@ -1,4 +1,6 @@
 "use client";
+import { EVENT_BUS_TYPES } from "@/constants/events";
+import { EventBus } from "@/game/EventBus";
 import {
   getNextRestaurantUnclockConfig,
   getPower,

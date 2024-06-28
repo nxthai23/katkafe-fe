@@ -7,14 +7,22 @@ import {
   UpgradeBody,
 } from "@/types/restaurant";
 const BASE_URL = process.env.NEXT_PUBLIC_KATCAFE_BASE_URL;
+
 export const getRestaurants = async () => {
   const response = await katAxios.get(`${BASE_URL}/locations`);
   return response.data;
 };
+
+export const getRestaurant = async (locationId: string) => {
+  const response = await katAxios.get(`${BASE_URL}/locations/${locationId}`);
+  return response.data;
+};
+
 export const getRestaurantConfigs = async () => {
   const response = await katAxios.get(`${BASE_URL}/location-configs`);
   return response.data;
 };
+
 export const getNextRestaurantUnclockConfig = async (
   currentLocationOrder: number
 ) => {

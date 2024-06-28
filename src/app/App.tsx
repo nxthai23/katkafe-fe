@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
+import { getClaim } from "@/requests/user";
+import { useUserStore } from "@/stores/userStore";
+import { UserType } from "@/types/user";
+
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import { useFetchRestaurants, useFetchRestaurantUpgradeConfigs } from "@/lib/hooks/restaurant/useRestaurant";
 import { useFetchStaffs, useFetchStaffUpgradeConfigs } from "@/lib/hooks/cat/useStaff";
@@ -11,7 +15,7 @@ function App() {
   const [finnishLoading, setFinnishLoading] = useState(false)
   const { clearClaimInterval } = useGamePlay()
   const { fetchRestaurants } = useFetchRestaurants();
-  const { fetchStaffs } = useFetchStaffs()
+  const { fetchStaffs } = useFetchStaffs();
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
   const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
   // const [progress, setProgress] = useState(100);
@@ -38,7 +42,7 @@ function App() {
     }
   }
   useEffect(() => {
-    fetchData()
+    fetchData();
     const app = (window as any).Telegram?.WebApp;
     if (app) {
       app.ready();

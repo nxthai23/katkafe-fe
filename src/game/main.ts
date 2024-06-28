@@ -37,7 +37,6 @@ const StartGame = (parent: string) => {
   try {
     // (window as any).Telegram.WebApp.expand();
     //@TODO: load config from server here
-    //const config = await fetchConfig();
 
     //@TODO: load plugins
 
