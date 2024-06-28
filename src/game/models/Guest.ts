@@ -31,19 +31,15 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
   direction: CAT_DIRECTIONS;
   path: PathData;
 
-  onDestroy?: (guest: GuestObject) => void;
-
   currentPointIndex: number = 0;
 
   private worldBounds: Phaser.Geom.Rectangle;
   private dialog: DialogObject;
+  private isRemoved: boolean;
 
-  constructor(
-    scene: Phaser.Scene,
-    name: string,
-    path: PathData,
-    onDestroy: (guest: GuestObject) => void
-  ) {
+  private orderInterval: Phaser.Time.TimerEvent;
+
+  constructor(scene: Phaser.Scene, name: string, path: PathData) {
     super(scene, path[0].position.x, path[0].position.y, `Cat-${name}`);
 
     scene.add.existing(this);
@@ -62,9 +58,9 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
     this.body?.setSize(64, 80);
     this.body?.setOffset(0, 0);
 
+    this.isRemoved = false;
     this.path = path;
     this.name = name;
-    this.onDestroy = onDestroy;
 
     this.speed = GUEST_SPEED;
     this.state = GUEST_STATES.ARRIVING;
@@ -94,10 +90,13 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
       this.x < 0 ||
       this.y < 0
     ) {
-      if (this.dialog) {
-        this.dialog.destroy();
+      if (!this.isRemoved) {
+        this.isRemoved = true;
+        if (this.dialog) {
+          this.dialog.destroy(true);
+        }
+        this.destroy(true);
       }
-      this.onDestroy?.(this);
     }
 
     if (
@@ -118,7 +117,7 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityByState();
         this.playAnimation();
         this.playCatSound();
-        this.scene.time.addEvent({
+        this.orderInterval = this.scene.time.addEvent({
           delay: Phaser.Math.Between(
             GUEST_MIN_ORDER_DELAY,
             GUEST_MAX_ORDER_DELAY
@@ -132,14 +131,15 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
   }
 
   removedFromScene(): void {
-    if (this.dialog) {
-      this.dialog.destroy();
-    }
+    super.removedFromScene();
+    if (this.orderInterval) this.orderInterval.remove();
+    if (this.body) this.body.destroy();
+    if (this.dialog) this.dialog.destroy(true);
   }
 
   private showOrderDialog() {
     if (this.dialog) {
-      this.dialog.destroy();
+      this.dialog.destroy(true);
     }
     const rndIndex = Phaser.Math.Between(
       0,
@@ -158,7 +158,7 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
 
   private showLeaveDialog() {
     if (this.dialog) {
-      this.dialog.destroy();
+      this.dialog.destroy(true);
     }
     const rndIndex = Phaser.Math.Between(
       0,

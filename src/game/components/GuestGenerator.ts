@@ -15,7 +15,6 @@ export class GuestGenerator {
   paths: PathData[] = [];
 
   private guestGeneratorTimer: Phaser.Time.TimerEvent;
-  private guestIndex: number = 0;
 
   constructor(
     gameManager: GameManager,
@@ -46,8 +45,8 @@ export class GuestGenerator {
     });
   }
 
-  remove() {
-    this.gameManager.guestGroup.clear(true, true);
+  removeAllGuests() {
+    this.gameManager.guestGroup.clear(true, false);
     this.guestGeneratorTimer.remove();
   }
 
@@ -58,17 +57,11 @@ export class GuestGenerator {
         new GuestObject(
           this.scene,
           this.randomGuestCatAsset(),
-          this.paths[rndPathIndex],
-          this.removeGuest
+          this.paths[rndPathIndex]
         )
       );
-      this.guestIndex++;
     }
     this.resetGeneratorTimer();
-  }
-
-  private removeGuest(guest: GuestObject) {
-    this.gameManager.guestGroup.remove(guest, true, true);
   }
 
   private randomGuestCatAsset() {

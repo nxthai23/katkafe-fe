@@ -106,7 +106,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       EventBus.removeListener("current-scene-ready");
       removeAllEventListeners();
     };
-  }, [onGameSceneReady, ref, registerEventListeners, removeAllEventListeners]);
+  }, [ref, registerEventListeners, removeAllEventListeners]);
 
   return (
     <div className="mx-auto">

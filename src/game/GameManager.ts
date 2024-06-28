@@ -6,6 +6,9 @@ import { LocationsData, PathData } from "@/types/location";
 import { LAYERS } from "@/constants/layers";
 import { GuestGenerator } from "./components/GuestGenerator";
 import { Staff } from "@/types/common-types";
+import { EventBus } from "./EventBus";
+import { EVENT_BUS_TYPES } from "@/constants/events";
+import { GuestObject } from "./models/Guest";
 
 export class GameManager {
   scene: Phaser.Scene;
@@ -82,7 +85,7 @@ export class GameManager {
 
   generateGuests(currentLocation: number, showPath = false) {
     const paths = this.locationsData[`location-${currentLocation}`].paths;
-    if (this.guestGroup.getLength() > 0) this.guestGenerator.remove();
+    if (this.guestGroup.getLength() > 0) this.guestGenerator.removeAllGuests();
     if (showPath) this.createEmptyPointsForPaths(paths);
     this.guestGenerator = new GuestGenerator(this, this.scene, paths);
     this.guestGenerator.play();

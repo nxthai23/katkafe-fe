@@ -27,12 +27,12 @@ export class Game extends Scene {
 
   async generateCatsByRestaurant(restaurant: Restaurant) {
     const response = await getRestaurant(restaurant._id);
-    this.gameManager.createCats(response.cats, restaurant.order, true);
-    // this.gameManager.generateGuests(restaurant.order, true);
+    this.gameManager.createCats(response.cats, restaurant.order);
+    this.gameManager.generateGuests(restaurant.order);
   }
 
   onChooseNewRestaurant(restaurant?: Restaurant | null) {
-    if (restaurant && this.currentLocation !== restaurant.order) {
+    if (restaurant) {
       this.currentLocation = restaurant.order;
       this.generateCatsByRestaurant(restaurant!);
       this.gameUI.removeLoadingLocation();
@@ -77,7 +77,9 @@ export class Game extends Scene {
       this.gameManager.guestGroup,
       this.gameManager.guestGroup
     );
-    // this.gameManager.guestGenerator.play();
+    this.onChooseNewRestaurant(
+      useRestaurantStore.getState().currentRestaurant!
+    );
 
     EventBus.on("destroy", () => {
       this.restaurantSubscriber();

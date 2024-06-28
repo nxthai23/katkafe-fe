@@ -74,16 +74,10 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
 
   removedFromScene() {
     super.removedFromScene();
-
-    if (this.dialog) {
-      this.dialog.destroy();
-    }
-    if (this.animInterval) {
-      this.animInterval.remove();
-    }
-    if (this.dialogInterval) {
-      this.dialogInterval.remove();
-    }
+    if (this.body) this.body.destroy();
+    if (this.dialog) this.dialog.destroy();
+    if (this.animInterval) this.animInterval.remove();
+    if (this.dialogInterval) this.dialogInterval.remove();
   }
 
   private playAnimation() {

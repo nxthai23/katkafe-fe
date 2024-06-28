@@ -9,7 +9,7 @@ export const AUDIO_EVENTS = {
 export const EVENT_BUS_TYPES = {
   SCENE_READY: "current-scene-ready",
   UI_BUTTON_CLICK: "ui-button-click",
-  CHOOSE_RESTAURANT: "choose-restaurant",
+  REMOVE_GUEST: "remove-guest",
 };
 
 export const UI_BUTTON = {
