@@ -20,28 +20,30 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
-import { Loading } from "@/components/ui/Loading";
 import NumberFormatter from "@/components/ui/NumberFormat";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 
 const TABS = {
   CAFE: "Cafe",
   STAFF: "Staff",
 };
+const CONFIRM_DIALOG_TYPE = {
+  REMOVE: "remove",
+  UPGRADE: "upgrade"
+};
 
 const Manage: React.FC = () => {
-  const [setShowManagePanel] = useLayoutStore((state) => [
-    state.setShowManagePanel,
-  ]);
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [showStaffPanel, setShowStaffPanel] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [activeTab, setActiveTab] = useState(TABS.CAFE);
-  const { fetchRestaurants } = useFetchRestaurants();
-  const { fetchStaffs } = useFetchStaffs();
-
-  const handleClose = () => {
-    setShowManagePanel(false);
-  };
+  const [showDialog, setShowDialog] = useState(false);
+  const [fee, setFee] = useState(0);
+  const [confirmDialog, setConfirmDialog] = useState(false);
+  const [confirmDialogType, setConfirmDialogType] = useState('');
+  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [
     currentRestaurant,
     setCurrentRestaurant,
@@ -51,32 +53,33 @@ const Manage: React.FC = () => {
     state.setCurrentRestaurant,
     state.setRestaurants,
   ]);
-  const power = currentRestaurant && usePower(currentRestaurant._id, currentRestaurant);
-
-  const [showDialog, setShowDialog] = useState(false);
-  const [showAlertRemove, setShowAlertRemove] = useState(false);
-  const [showAlertAssign, setShowAlertAssign] = useState(false);
-  const [showAlertAvaliable, setShowAlertAvaliable] = useState(false);
-  const [showNotiCat, setShowNotiCat] = useState(false);
-  const [showNotiBean, setShowNotiBean] = useState(false);
-  const [showNotiLevel, setShowNotiLevel] = useState(false);
+  const [setShowManagePanel] = useLayoutStore((state) => [
+    state.setShowManagePanel,
+  ]);
   const [staffs, setCurrentStaff] = useStaffStore((state) => [
     state.staffs,
     state.setCurrentStaff,
   ]);
-  const [fee, setFee] = useState(0);
-  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [user] = useUserStore((state) => [state.user]);
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
   ]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
+  ]);
+
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchStaffs } = useFetchStaffs();
+  const power = usePower(currentRestaurant!._id, currentRestaurant!);
+
+  const handleClose = () => {
+    setShowManagePanel(false);
+  };
 
   const fetchDataUpgrade = async () => {
     if (currentRestaurant?.level === currentRestaurant?.maxLevel) return;
@@ -96,6 +99,7 @@ const Manage: React.FC = () => {
       hide();
     }
   };
+
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
@@ -108,6 +112,7 @@ const Manage: React.FC = () => {
   const handleCardClick = (index: number) => {
     setActiveCard(index === activeCard ? null : index);
   };
+
   const handleViewClick = (catId: string) => {
     const staff = staffs.find((staff) => get(staff, "_id") === catId);
     if (staff) {
@@ -116,6 +121,7 @@ const Manage: React.FC = () => {
     setShowCardInfo(!showCardInfo);
     setActiveCard(null);
   };
+
   const handleRemoveClick = async () => {
     try {
       if (
@@ -126,25 +132,27 @@ const Manage: React.FC = () => {
       )
         return;
       const catIdToRemove = currentRestaurant.cats[activeCard];
+      setConfirmDialog(false)
+      show()
       const body = {
         locationId: currentRestaurant._id,
         catId: catIdToRemove,
       };
       const response = await removeCat(body);
       setCurrentRestaurant(response);
+      showSnackbar('Remove successfully!')
+      setActiveCard(null);
       await fetchRestaurants();
       await fetchStaffs();
-      setActiveCard(null);
     } catch (error) {
       console.error("Error removing staff", error);
       alert("Failed to delete staff. Please try again.");
+      showSnackbar('Failed to delete staff. Please try again.')
     } finally {
       hide();
     }
   };
-  const removeAllClick = () => {
-    setShowDialog(true);
-  };
+
   const assignSuccess = async () => {
     show();
     await fetchRestaurants();
@@ -152,16 +160,14 @@ const Manage: React.FC = () => {
     setActiveCard(null);
     hide();
     if (!isOneAssign) {
-      setShowAlertAssign(true);
-      setTimeout(() => {
-        setShowAlertAssign(false);
-      }, 1000);
+      showSnackbar('Assign successfully!')
     }
   };
 
   const handleRemoveAll = async () => {
     try {
       if (!user || !currentRestaurant || !user.cats) return;
+      setShowDialog(false)
       show();
       const body = {
         locationId: currentRestaurant._id,
@@ -169,29 +175,25 @@ const Manage: React.FC = () => {
       };
 
       const response = await removeCat(body);
-      setRestaurants(response);
+      setCurrentRestaurant(response);
       await fetchRestaurants();
       await fetchStaffs();
     } catch (error) {
       console.error("Error remove all", error);
+      showSnackbar('Remove all Fail!')
     } finally {
       hide();
       setShowDialog(false);
-      setShowAlertRemove(true);
-      setTimeout(() => {
-        setShowAlertRemove(false);
-      }, 1000);
+      showSnackbar('Remove all successfully!')
     }
   };
+
   const autoAssign = async () => {
     if (currentRestaurant === null) return;
     const emptySlot =
       Number(currentRestaurant.slot) - (currentRestaurant.cats.length ?? 0);
     if (emptySlot === 0) {
-      setShowAlertAvaliable(true);
-      setTimeout(() => {
-        setShowAlertAvaliable(false);
-      }, 1000);
+      showSnackbar('No slot avaliable!')
     } else {
       setIsOneAssign(false);
       setShowStaffPanel(true);
@@ -202,26 +204,18 @@ const Manage: React.FC = () => {
     try {
       if (!user || !currentRestaurant) return;
       if (currentRestaurant.level >= currentRestaurant.maxLevel) {
-        setShowNotiLevel(true);
-        setTimeout(() => {
-          setShowNotiLevel(false);
-        }, 1000);
+        showSnackbar('Max level!')
         return;
       }
       if (Number(user.bean) < fee) {
-        setShowNotiBean(true);
-        setTimeout(() => {
-          setShowNotiBean(false);
-        }, 1000);
+        showSnackbar('Not enough bean!')
         return;
       }
       if (user.cats.length < numberCatsRequire) {
-        setShowNotiCat(true);
-        setTimeout(() => {
-          setShowNotiCat(false);
-        }, 1000);
+        showSnackbar('Not eanough cats!')
         return;
       }
+      setConfirmDialog(false)
       show();
       const data = await upgradeRestaurant({
         locationId: currentRestaurant._id,
@@ -229,8 +223,10 @@ const Manage: React.FC = () => {
       setCurrentRestaurant(data.upgradedLocation);
       fetchRestaurants()
       fetchDataUpgrade();
+      showSnackbar('Upgrade Successfully!')
     } catch (error) {
       console.error("Error upgrade", error);
+      showSnackbar('Upgrade Fail!')
     } finally {
       if (
         currentRestaurant &&
@@ -242,6 +238,32 @@ const Manage: React.FC = () => {
     }
   };
 
+  const handleShowConfirmDialog = (confirmDialogType: any) => {
+    switch (confirmDialogType) {
+      case CONFIRM_DIALOG_TYPE.REMOVE:
+        setConfirmDialogType(CONFIRM_DIALOG_TYPE.REMOVE)
+        break;
+      case CONFIRM_DIALOG_TYPE.UPGRADE:
+        setConfirmDialogType(CONFIRM_DIALOG_TYPE.UPGRADE)
+        break;
+      default:
+        break;
+    }
+    setConfirmDialog(true)
+  }
+
+  const handleAgreeConfirmDialog = () => {
+    switch (confirmDialogType) {
+      case CONFIRM_DIALOG_TYPE.REMOVE:
+        handleRemoveClick()
+        break;
+      case CONFIRM_DIALOG_TYPE.UPGRADE:
+        handleUpgrade()
+        break;
+      default:
+        break;
+    }
+  }
   useEffect(() => {
     fetchDataUpgrade();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,17 +284,15 @@ const Manage: React.FC = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.CAFE)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.CAFE ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.CAFE ? isActive : ""
+                }`}
             >
               Cafe
             </div>
             <div
               onClick={() => handleTabClick(TABS.STAFF)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === TABS.STAFF ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.STAFF ? isActive : ""
+                }`}
             >
               Staff
             </div>
@@ -322,7 +342,9 @@ const Manage: React.FC = () => {
                             onClick={() => handleCardClick(index)}
                           >
                             <StaffCard
-                              onRemoveClick={handleRemoveClick}
+                              onRemoveClick={() =>
+                                handleShowConfirmDialog(CONFIRM_DIALOG_TYPE.REMOVE)
+                              }
                               onViewClick={() =>
                                 handleViewClick(currentRestaurant.cats[index])
                               }
@@ -339,7 +361,7 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex gap-2 justify-center">
                   <div className="w-[156px] h-[39px]">
-                    <Button onClick={removeAllClick}>Remove All</Button>
+                    <Button onClick={() => setShowDialog(true)}>Remove All</Button>
                   </div>
                   <div className="w-[156px] h-[39px]">
                     <Button onClick={autoAssign}>Auto Assign</Button>
@@ -455,12 +477,14 @@ const Manage: React.FC = () => {
                 <hr className="mt-4 my-2 border-[#e8ddbd]" />
                 <div className="flex flex-wrap gap-2 justify-center">
                   {currentRestaurant &&
-                  currentRestaurant.level === currentRestaurant.maxLevel ? (
+                    currentRestaurant.level === currentRestaurant.maxLevel ? (
                     <div className="w-[172px] h-[39px]">
                       <Button disabled>Max Level</Button>
                     </div>
                   ) : (
-                    <div className="w-[172px] h-[39px]" onClick={handleUpgrade}>
+                    <div className="w-[172px] h-[39px]" onClick={() => {
+                      handleShowConfirmDialog(CONFIRM_DIALOG_TYPE.UPGRADE)
+                    }}>
                       <Button>Upgrade</Button>
                     </div>
                   )}
@@ -470,7 +494,7 @@ const Manage: React.FC = () => {
           )}
         </div>
         {showStaffPanel && (
-          <div className="absolute z-30 w-full h-full top-0 left-0">
+          <div className="absolute !z-20 w-full h-full top-0 left-0">
             <StaffAssign
               showStaffPanel={setShowStaffPanel}
               onAssignSuccess={assignSuccess}
@@ -478,52 +502,28 @@ const Manage: React.FC = () => {
           </div>
         )}
         {showCardInfo && (
-          <div className="absolute z-30 w-full h-full top-0 left-0">
+          <div className="absolute !z-20 w-full h-full top-0 left-0">
             <CardInfo onBack={() => setShowCardInfo(false)} />
           </div>
         )}
       </div>
-      {showDialog && (
-        <>
-          <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
-          <RemoveConfirmDialog
-            handleClick={handleRemoveAll}
-            onClose={() => setShowDialog(false)}
-          />
-        </>
-      )}
-      {showAlertRemove && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Remove Successfully!
-        </div>
-      )}
-      {showAlertAssign && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Assign Successfully!
-        </div>
-      )}
-      {showAlertAvaliable && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          No slot avaliable!
-        </div>
-      )}
-      {showNotiLevel && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Max level!
-        </div>
-      )}
-      {showNotiBean && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not enough bean!
-        </div>
-      )}
-      {showNotiCat && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not eanough cats!
-        </div>
-      )}
-      {isShowing && <Loading />}
-    </div>
+      {
+        showDialog && (
+          <>
+            <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
+            <RemoveConfirmDialog
+              handleClick={handleRemoveAll}
+              onClose={() => setShowDialog(false)}
+            />
+          </>
+        )
+      }
+      {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)}
+          onAgree={handleAgreeConfirmDialog} title={confirmDialogType === CONFIRM_DIALOG_TYPE.UPGRADE ? "Upgrade Confirmation" : "Remove Confirmation"} content={confirmDialogType === CONFIRM_DIALOG_TYPE.UPGRADE ? "Do you want to upgrade this restaurant?" : "Do you want to remove this cat?"} ></ConfirmDialog>
+      }
+    </div >
   );
 };
 

@@ -1,4 +1,4 @@
-import { getRolls } from "@/requests/roll";
+// import { getRolls } from "@/requests/roll";
 import { useRollStore } from "../../../stores/roll/rollStore";
 
 export const useFetchRolls = () => {
@@ -6,8 +6,8 @@ export const useFetchRolls = () => {
 
   const fetchRolls = async () => {
     try {
-      const response = await getRolls();
-      setRolls(response);
+      // const response = await getRolls();
+      // setRolls(response);
     } catch (error) {
       console.error("Error fetching", error);
     }

@@ -39,13 +39,13 @@ const CatCard = ({ cat, active, handleClick }: Props) => {
         <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
           <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-contain h-full flex items-end justify-center">
             <div className="flex justify-center relative">
-              <div className="absolute bg-[#898989] w-[50%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-2 z-30"></div>
+              <div className="absolute bg-[#898989] w-[50%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-2 z-10"></div>
               <Image
                 src={imageUrl}
                 alt="cat pic"
                 width={92.5}
                 height={106}
-                className="relative z-40"
+                className="relative z-10"
               />
             </div>
           </div>

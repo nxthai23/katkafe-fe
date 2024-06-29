@@ -1,4 +1,5 @@
 import { claimReferralRankReward, getRanks } from "@/requests/rank";
+import { useLoadingStore } from "@/stores/LoadingStore";
 import { useRankStore } from "@/stores/rank/rankStore";
 import { ClaimReferralRankRewardRequest } from "@/types/friend";
 
@@ -8,9 +9,14 @@ export const useFetchRanks = () => {
     state.setCurrentRank,
     state.setTotalUsers,
   ]);
+  const [show, hide] = useLoadingStore((state) => [
+    state.show,
+    state.hide,
+  ]);
 
   const fetchRanks = async () => {
     try {
+      show()
       const response = await getRanks();
       console.log("response", response);
       setRanks(response.topUsers);
@@ -18,6 +24,8 @@ export const useFetchRanks = () => {
       setTotalUsers(response.totalUsers);
     } catch (error) {
       console.error("Error fetching", error);
+    } finally {
+      hide()
     }
   };
 

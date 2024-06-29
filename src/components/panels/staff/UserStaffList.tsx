@@ -12,59 +12,63 @@ import {
 } from "@/requests/staff";
 import { useUserStore } from "@/stores/userStore";
 import { Dot } from "lucide-react";
-import { Loading } from "@/components/ui/Loading";
 import { useLoadingStore } from "@/stores/LoadingStore";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
-  const [activeSelect, setActiveSelect] = useState("All");
-  const [showStaffList, setShowStaffList] = useState(true);
+  const [activeSelect] = useState<string>("All");
   const [isActive, setIsActive] = useState<number | null>(null);
-  const [fee, setFee] = useStaffStore((state) => [state.fee, state.setFee]);
-  const { fetchStaffs } = useFetchStaffs();
-  const [staffs, setStaffs, currentStaff, setCurrentStaff] = useStaffStore(
+  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
+  const [confirmDialog, setConfirmDialog] = useState(false);
+
+  const [user, fetchUser] = useUserStore((state) => [state.user, state.fetchUser]);
+  const [
+    fee,
+    setFee,
+    staffs,
+    setStaffs,
+    staff,
+    setCurrentStaff,
+    isChooseUpgrade,
+    setIsChooseUpgrade,
+    setNumberCatPick
+  ] = useStaffStore(
     (state) => [
+      state.fee, state.setFee,
       state.staffs,
       state.setStaffs,
       state.currentStaff,
       state.setCurrentStaff,
+      state.isChooseUpgrade,
+      state.setIsChooseUpgrade,
+      state.setNumberCatPick,
     ]
   );
-  const [staff] = useStaffStore((state) => [state.currentStaff]);
-  const [isUpgraded, setIsUpgraded] = useState(false);
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
   ]);
-  const { fetchUser } = useUserStore();
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [numberCatsRequire, setNumberCatsRequire] = useState(0);
-  const [showNotiCat, setShowNotiCat] = useState(false);
-  const [showNotiBean, setShowNotiBean] = useState(false);
-  const [numberCatPick, setNumberCatPick] = useStaffStore((state) => [
-    state.numberCatPick,
-    state.setNumberCatPick,
-  ]);
-  const [isChooseUpgrade, setIsChooseUpgrade] = useStaffStore((state) => [
-    state.isChooseUpgrade,
-    state.setIsChooseUpgrade,
-  ]);
-
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
+  ]);
 
-  const options = [
-    { value: 1, label: "All" },
-    { value: 2, label: "Level" },
-    // { value: 3, label: "Star" },
-  ];
+  const { fetchStaffs } = useFetchStaffs();
 
-  const customClass =
-    "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
-  const boxShadowStyle = { boxShadow: "0px -2px 0px 0px #BC9D9B inset" };
+  // const options = [
+  //   { value: 1, label: "All" },
+  //   { value: 2, label: "Level" },
+  //   // { value: 3, label: "Star" },
+  // ];
+
+  // const customClass =
+  //   "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
+  // const boxShadowStyle = { boxShadow: "0px -2px 0px 0px #BC9D9B inset" };
 
   const staffNotAssign = async (staffs: Staff[]) => {
     return Promise.all(
@@ -77,9 +81,18 @@ const StaffList: React.FC = () => {
       })
     );
   };
+
   const fetchStaffData = async () => {
-    const processedStaffs = await staffNotAssign(staffs);
-    setStaffs(processedStaffs);
+    try {
+      show()
+      const processedStaffs = await staffNotAssign(staffs);
+      setStaffs(processedStaffs);
+    }
+    catch (error) {
+      console.log('error', error);
+    } finally {
+      hide()
+    }
   };
 
   const getFilteredStaffs = () => {
@@ -110,13 +123,13 @@ const StaffList: React.FC = () => {
     setShowCardInfo(!showCardInfo);
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setActiveSelect(event.target.value);
-  };
+  // const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setActiveSelect(event.target.value);
+  // };
 
-  const handleStarFilterClick = (filterName: string) => {
-    setActiveStarFilter(filterName);
-  };
+  // const handleStarFilterClick = (filterName: string) => {
+  //   setActiveStarFilter(filterName);
+  // };
 
   const handleClose = () => {
     setShowStaffPanel(false);
@@ -145,20 +158,19 @@ const StaffList: React.FC = () => {
       if (!staff) return;
       if (!user) return;
       if (Number(user.bean) < fee) {
-        setShowNotiBean(true);
-        setTimeout(() => setShowNotiBean(false), 1000);
+        showSnackbar('Not enough bean!')
         return;
       }
       if (Number(user.cats.length) < numberCatsRequire) {
-        setShowNotiCat(true);
-        setTimeout(() => setShowNotiCat(false), 1000);
+        showSnackbar('Not enough cat!')
         return;
       }
+      setConfirmDialog(false)
       show();
-
       const data = await upgradeStaff({ catId: staff._id });
       setCurrentStaff(data.upgradedCat);
       setNumberCatPick(0);
+      showSnackbar('Upgrade successfully!')
       if (isChooseUpgrade.length > 0) {
         const body = { catIds: isChooseUpgrade };
         await removeStaff(body);
@@ -201,7 +213,7 @@ const StaffList: React.FC = () => {
           </span>
 
           <div className="w-full bg-[#fff8de] rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-1 overflow-hidden mt-8">
-            {showStaffList && (
+            {/* {showStaffList && (
               <div className="flex mt-2 items-center justify-between cursor-pointer">
                 <select
                   className="z-20 h-7 !border-[#5d5d5d] !border !rounded-md bg-[#FFFDE9] px-1 uppercase"
@@ -250,7 +262,7 @@ const StaffList: React.FC = () => {
                   </span>
                 </div>
               </div>
-            )}
+            )} */}
             <div className="mt-2 gap-[6px] flex flex-wrap max-h-[405px] overflow-y-auto overflow-x-hidden">
               {getFilteredStaffs().map((staff) => (
                 <div
@@ -271,19 +283,12 @@ const StaffList: React.FC = () => {
         </div>
       </div>
       {showCardInfo && (
-        <CardInfo onBack={handleCloseDetail} handleUpgrade={handleUpgrade} />
+        <CardInfo onBack={handleCloseDetail} handleUpgrade={() => setConfirmDialog(true)} />
       )}
-      {showNotiBean && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not enough bean!
-        </div>
-      )}
-      {showNotiCat && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not enough cats!
-        </div>
-      )}
-      {isShowing && <Loading />}
+       {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={handleUpgrade} title="Upgrade Confirmation" content="Do you want to upgrade this cat?" />
+      }
     </div>
   );
 };

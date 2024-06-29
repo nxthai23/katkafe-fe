@@ -13,24 +13,25 @@ import { unclockRestaurant } from "@/requests/restaurant";
 import { useDialogStore } from "@/stores/DialogStore";
 import { Restaurant as RestaurantType } from "@/types/restaurant";
 import classNames from "classnames";
-import { EventBus } from "@/game/EventBus";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 const itemsPerPage = 2;
 
 function Restaurant() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showDialog, setShowDialog] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(false);
+
   const [setShowRestaurantPanel] = useLayoutStore((state) => [
     state.setShowRestaurantPanel,
   ]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [showDialog, setShowDialog] = useState(false);
-  const [unclockError, setUnclockError] = useState(false);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
-  const [showSuccessDialog, setDialogType, setDialogContent] = useDialogStore(
-    (state) => [state.show, state.setDialogType, state.setDialogContent]
+  const [showSuccessDialog, setDialogType] = useDialogStore(
+    (state) => [state.show, state.setDialogType]
   );
   const [
     restaurants,
@@ -43,6 +44,18 @@ function Restaurant() {
     state.currentRestaurant,
     state.setCurrentRestaurant,
   ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
+  ]);
+
+  const { fetchRestaurants } = useFetchRestaurants();
+
+  const dataUnlock = {
+    title: "Unlock the coffee shop!",
+    description: "To unlock this coffee shopo you'll need:",
+    catOwned: 4,
+    shopLevel: 9,
+  };
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -52,16 +65,6 @@ function Restaurant() {
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
-  };
-
-  const { fetchRestaurants } = useFetchRestaurants();
-
-  const dataUnlock = {
-    title: "Unlock the coffee shop!",
-    description: "To unlock this coffee shopo you'll need:",
-    catOwned: 4,
-    shopLevel: 9,
-    fee: "20000",
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -89,6 +92,7 @@ function Restaurant() {
       Number(user?.bean) >= Number(nextRestaurantUnclock?.fee)
     ) {
       try {
+        setConfirmDialog(false)
         show();
         const res = await unclockRestaurant();
         if (res) {
@@ -98,26 +102,23 @@ function Restaurant() {
           setShowDialog(false);
           setShowRestaurantPanel(false);
           setDialogType("restaurant");
-          setDialogContent({
+          showSuccessDialog({
             title: "Congratulation!",
             content: "You have unlocked a new shop.",
             buttonText: "Check it out",
             imgUrl: res?.newLocation.imgUrl,
           });
-          showSuccessDialog();
         }
       } catch (error) {
         console.error("Error fetching", error);
+        showSnackbar('Unlock Fail')
       } finally {
         setTimeout(() => {
           hide();
         }, 1000);
       }
     } else {
-      setUnclockError(true);
-      setTimeout(() => {
-        setUnclockError(false);
-      }, 1000);
+      showSnackbar('Insufficient resource')
     }
   };
   const handleOnCardClick = (order: number) => {
@@ -125,6 +126,7 @@ function Restaurant() {
       (restaurant) => restaurant.order === order
     );
     setCurrentRestaurant(restaurantSelected as RestaurantType | null);
+    setShowRestaurantPanel(false)
   };
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -175,7 +177,7 @@ function Restaurant() {
             )} */}
             <Pagination
               onPageClick={handlePageClick}
-              customClassName="flex justify-center absolute bottom-2 w-full left-1/2 -translate-x-1/2"
+              customClassName="flex justify-center absolute bottom-2 w-full left-1/2 -translate-x-1/2 z-20"
               currentPage={currentPage}
               totalPages={Math.ceil((restaurants.length + 1) / itemsPerPage)}
               onClickNextPage={handleNextPage}
@@ -192,17 +194,18 @@ function Restaurant() {
           ></div>
           <UnlockDialog
             data={dataUnlock}
-            onUnclock={handleClickUnlockDialog}
+            onUnclock={() => {
+              setConfirmDialog(true),
+                setShowDialog(false)
+            }}
             onClose={() => setShowDialog(false)}
           />
         </>
       )}
-      {unclockError && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Insufficient resource
-        </div>
-      )}
-      {isShowing && <Loading />}
+      {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={handleClickUnlockDialog} title="Unlock Confirmation" content="Do you want to unlock this restaurant?" />
+      }
     </div>
   );
 }

@@ -13,9 +13,8 @@ type States = {
 
 type Actions = {
   hide: () => void;
-  show: () => void;
+  show: (value: DialogContent) => void;
   setDialogType: (type: 'login' | 'restaurant') => void;
-  setDialogContent: (value: DialogContent) => void;
 };
 
 const defaultStates = {
@@ -36,9 +35,10 @@ export const useDialogStore = create<States & Actions>((set) => ({
       isShowDialog: false,
     });
   },
-  show: () => {
+  show: (value: DialogContent) => {
     set({
       isShowDialog: true,
+      dialogContent: value
     });
   },
   setDialogType: (type: 'login' | 'restaurant') => {
@@ -46,9 +46,4 @@ export const useDialogStore = create<States & Actions>((set) => ({
       type
     })
   },
-  setDialogContent: (value: DialogContent) => {
-    set({
-      dialogContent: value
-    })
-  }
 }));

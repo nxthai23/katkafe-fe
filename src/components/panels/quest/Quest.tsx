@@ -1,14 +1,15 @@
 import CardTask from "@/components/ui/CardTask";
-import { useFetchAchievements } from "@/lib/hooks/quest/useAchievement";
 import { useFetchQuests } from "@/lib/hooks/quest/useFetchQuests";
 import { checkIn, visitWebsite, youtube } from "@/requests/quest/quests";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useAchievementStore } from "@/stores/quest/achievementStore";
 import React, { useEffect, useState } from "react";
 import { QuestCodes } from "@/constants/quest";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import RewardQuest from "@/components/ui/RewardQuest";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
+import { Quest } from "@/types/quest";
 
 type Props = {};
 const TAB = {
@@ -16,22 +17,23 @@ const TAB = {
   SOCIAL: "Social",
 };
 
-function Task({}: Props) {
+function Task({ }: Props) {
+  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [activeTab, setActiveTab] = useState(TAB.DAILY);
   const [showReward, setShowReward] = useState(false);
+
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
   ]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
-  const [achievements] = useAchievementStore((state) => [state.achievements]);
-  const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
+  ]);
 
-  const { quests, questTasks, refetchQuests } = useFetchQuests();
-  const { fetchAchievements } = useFetchAchievements();
+  const { quests, refetchQuests } = useFetchQuests();
 
   const handleTaskTabClick = () => {
     setActiveTab(TAB.DAILY);
@@ -46,8 +48,10 @@ function Task({}: Props) {
       show();
       await checkIn();
       refetchQuests();
+      showSnackbar('Check in successfully!')
     } catch (error) {
       console.error("Failed to check in", error);
+      showSnackbar('Check in fail!')
     } finally {
       hide();
       setShowReward(true);
@@ -56,10 +60,13 @@ function Task({}: Props) {
 
   const handleVisitWebsiteQuest = async () => {
     try {
+      show();
       await visitWebsite();
       refetchQuests();
+      showSnackbar('Visit website successfully!')
     } catch (error) {
       console.error("Failed to visit website", error);
+      showSnackbar('Visit website faild!')
     } finally {
       hide();
       setShowReward(true);
@@ -68,17 +75,38 @@ function Task({}: Props) {
 
   const handleYoutubeQuest = async () => {
     try {
+      show();
       await youtube();
       refetchQuests();
+      showSnackbar('Quest youtube successfully!')
     } catch (error) {
       console.error("Failed to youtube", error);
+      showSnackbar('Quest youtube faild!')
     } finally {
       hide();
       setShowReward(true);
     }
   };
+  // const handleQuestButtonClick = (quest: Quest) => {
+  //   if (quest.questCode === QuestCodes.CHECK_IN) {
+  //     handleQuestSubmit(quest.questCode)
+  //   } else {
+  //     setSelectedQuestCode(quest.questCode)
+  //     switch (quest.questCode) {
+  //       case QuestCodes.VISIT_WEBSITE:
+  //         setConfirmDialogContent('This action will redirect to other channel!')
+  //         break;
+  //       case QuestCodes.YOUTUBE:
+  //         setConfirmDialogContent('This action will redirect to other platform!')
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
 
-  const handleQuestButtonClick = async (questCode: QuestCodes) => {
+  //   setConfirmDialog(true)
+  // }
+  const handleQuestSubmit = async (questCode: QuestCodes) => {
     switch (questCode) {
       case QuestCodes.CHECK_IN:
         await handleCheckInQuest();
@@ -102,10 +130,6 @@ function Task({}: Props) {
     e.stopPropagation();
     setShowQuestPanel(false);
   };
-  useEffect(() => {
-    fetchAchievements();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -122,17 +146,15 @@ function Task({}: Props) {
           <div className="flex">
             <div
               onClick={handleTaskTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Daily" ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Daily" ? isActive : ""
+                }`}
             >
               Daily Task
             </div>
             <div
               onClick={handleAchievementTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
-                activeTab === "Social" ? isActive : ""
-              }`}
+              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Social" ? isActive : ""
+                }`}
             >
               Social Task
             </div>
@@ -168,7 +190,7 @@ function Task({}: Props) {
                         button={{
                           text: "Go",
                           onClick: () =>
-                            handleQuestButtonClick(quest.questCode),
+                            handleQuestSubmit(quest.questCode),
                         }}
                         isDone={quest.progress}
                         visitUrl={quest.visitUrl}
@@ -203,7 +225,7 @@ function Task({}: Props) {
                         button={{
                           text: "Go",
                           onClick: () =>
-                            handleQuestButtonClick(quest.questCode),
+                            handleQuestSubmit(quest.questCode),
                         }}
                         isDone={quest.progress}
                         visitUrl={quest.visitUrl}
@@ -215,8 +237,11 @@ function Task({}: Props) {
           </div>
         </div>
       </div>
-      {isShowing && <Loading />}
       {showReward && <RewardQuest onClick={handleOnClick} />}
+      {/* {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={() => handleQuestSubmit(selectedQuestCode!)} title="Quest Confirmation" content={confirmDialogContent} />
+      } */}
     </div>
   );
 }

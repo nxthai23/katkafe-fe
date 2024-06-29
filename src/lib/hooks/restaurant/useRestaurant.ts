@@ -58,10 +58,10 @@ export const useFetchRestaurants = () => {
       setNextRestaurantUnclockIndex(restaurants.length + 1);
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
-      if (
-        isFetchingFirstTime
-      ) {
-        setCurrentRestaurant(restaurants && restaurants[0] as Restaurant | null)
+      if (isFetchingFirstTime) {
+        setCurrentRestaurant(
+          restaurants && (restaurants[restaurants?.length - 1] as Restaurant | null)
+        );
       }
     } catch (error) {
       console.error("Error fetching", error);
@@ -92,7 +92,7 @@ const usePower = (locationId: string, restaurant?: Restaurant) => {
     } else {
       setPower(null);
     }
-  }, [locationId]);
+  }, [locationId, restaurant?.cats]);
 
   return power;
 };

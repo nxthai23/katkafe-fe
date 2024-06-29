@@ -4,8 +4,6 @@ import { get } from "lodash";
 import { Rank } from "@/types/friend";
 import Button from "./Button";
 import { Check } from "lucide-react";
-import { useFetchRanks } from "@/lib/hooks/rank/useRank";
-import { useLoadingStore } from "@/stores/LoadingStore";
 
 type Props = {
   rankConfig: Rank;
