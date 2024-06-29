@@ -14,12 +14,13 @@ import { useDialogStore } from "@/stores/DialogStore";
 import { Restaurant as RestaurantType } from "@/types/restaurant";
 import classNames from "classnames";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 const itemsPerPage = 2;
 
 function Restaurant() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showDialog, setShowDialog] = useState(false);
-  const [unclockError, setUnclockError] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(false);
 
   const [setShowRestaurantPanel] = useLayoutStore((state) => [
     state.setShowRestaurantPanel,
@@ -91,6 +92,7 @@ function Restaurant() {
       Number(user?.bean) >= Number(nextRestaurantUnclock?.fee)
     ) {
       try {
+        setConfirmDialog(false)
         show();
         const res = await unclockRestaurant();
         if (res) {
@@ -192,11 +194,18 @@ function Restaurant() {
           ></div>
           <UnlockDialog
             data={dataUnlock}
-            onUnclock={handleClickUnlockDialog}
+            onUnclock={() => {
+              setConfirmDialog(true),
+                setShowDialog(false)
+            }}
             onClose={() => setShowDialog(false)}
           />
         </>
       )}
+      {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={handleClickUnlockDialog} title="Unlock Confirmation" content="Do you want to unlock this restaurant?" />
+      }
     </div>
   );
 }

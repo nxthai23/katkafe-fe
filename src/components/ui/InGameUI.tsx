@@ -107,7 +107,7 @@ export const InGameUI = () => {
   ]);
   // const telegramData = useInitData()
 
-  const power = usePower(get(currentRestaurant, "_id", ""));
+  const power = usePower(currentRestaurant!._id, currentRestaurant! );
   const { fetchUser } = useFetchUser();
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();

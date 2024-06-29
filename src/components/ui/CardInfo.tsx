@@ -11,6 +11,7 @@ import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "./Loading";
 import NumberFormatter from "./NumberFormat";
 import { MoveRight } from "lucide-react";
+import classNames from "classnames";
 
 type Props = {
   onBack?: () => void;
@@ -209,7 +210,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                 )}
 
                 {staff && staff.level < 100 ? (
-                  <div className="w-[172px] h-[39px]">
+                  <div className={classNames("w-[172px] h-[39px]", !handleUpgrade && 'hidden')} >
                     {numberCatPick >= numberCatRequire ? (
                       <Button onClick={handleUpgrade}>Upgrade</Button>
                     ) : (

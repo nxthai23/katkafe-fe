@@ -14,6 +14,7 @@ import { useUserStore } from "@/stores/userStore";
 import { Dot } from "lucide-react";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -21,6 +22,7 @@ const StaffList: React.FC = () => {
   const [activeSelect] = useState<string>("All");
   const [isActive, setIsActive] = useState<number | null>(null);
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
+  const [confirmDialog, setConfirmDialog] = useState(false);
 
   const [user, fetchUser] = useUserStore((state) => [state.user, state.fetchUser]);
   const [
@@ -281,8 +283,12 @@ const StaffList: React.FC = () => {
         </div>
       </div>
       {showCardInfo && (
-        <CardInfo onBack={handleCloseDetail} handleUpgrade={handleUpgrade} />
+        <CardInfo onBack={handleCloseDetail} handleUpgrade={() => setConfirmDialog(true)} />
       )}
+       {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={handleUpgrade} title="Upgrade Confirmation" content="Do you want to upgrade this cat?" />
+      }
     </div>
   );
 };

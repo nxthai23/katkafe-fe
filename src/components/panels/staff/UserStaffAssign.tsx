@@ -5,6 +5,7 @@ import { useStaffStore } from "@/stores/staffStore";
 import { assignCat } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,6 +36,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   const [isActive, setIsActive] = useState<string[]>([]);
   const [activeSelect, setActiveSelect] = useState("All");
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
+  const [confirmDialog, setConfirmDialog] = useState(false);
 
   const [autoActives, setAutoActives, staffs, isOneAssign] = useStaffStore((state) => [state.autoActives, state.setAutoActives, state.staffs, state.isOneAssign]);
   const [currentRestaurant, setCurrentRestaurant] = useRestaurantStore(
@@ -93,6 +95,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
       };
       const response = await assignCat(body);
       setCurrentRestaurant(response);
+      setConfirmDialog(false)
       onAssignSuccess();
     } catch (error) {
       console.error("Error assign cat", error);
@@ -221,7 +224,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
             <div
               className="flex flex-wrap gap-2 justify-center"
               onClick={() =>
-                handleAssign(Array.isArray(isActive) ? isActive : [])
+                setConfirmDialog(true)
               }
             >
               <div className="w-[172px] h-[39px] -mb-[3px]">
@@ -231,6 +234,10 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
           </div>
         </div>
       </div>
+      {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={() => handleAssign(Array.isArray(isActive) ? isActive : [])} title="Assign Confirmation" content="Do you want to assign this cat?" />
+      }
     </div>
   );
 };

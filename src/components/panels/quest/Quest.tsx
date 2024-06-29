@@ -10,6 +10,8 @@ import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import RewardQuest from "@/components/ui/RewardQuest";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
+import { Quest } from "@/types/quest";
 
 type Props = {};
 const TAB = {
@@ -21,6 +23,9 @@ function Task({ }: Props) {
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [activeTab, setActiveTab] = useState(TAB.DAILY);
   const [showReward, setShowReward] = useState(false);
+  const [selectedQuestCode, setSelectedQuestCode] = useState<QuestCodes | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState(false);
+  const [confirmDialogContent, setConfirmDialogContent] = useState('');
 
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
@@ -88,8 +93,26 @@ function Task({ }: Props) {
       setShowReward(true);
     }
   };
+  // const handleQuestButtonClick = (quest: Quest) => {
+  //   if (quest.questCode === QuestCodes.CHECK_IN) {
+  //     handleQuestSubmit(quest.questCode)
+  //   } else {
+  //     setSelectedQuestCode(quest.questCode)
+  //     switch (quest.questCode) {
+  //       case QuestCodes.VISIT_WEBSITE:
+  //         setConfirmDialogContent('This action will redirect to other channel!')
+  //         break;
+  //       case QuestCodes.YOUTUBE:
+  //         setConfirmDialogContent('This action will redirect to other platform!')
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
 
-  const handleQuestButtonClick = async (questCode: QuestCodes) => {
+  //   setConfirmDialog(true)
+  // }
+  const handleQuestSubmit = async (questCode: QuestCodes) => {
     switch (questCode) {
       case QuestCodes.CHECK_IN:
         await handleCheckInQuest();
@@ -178,7 +201,7 @@ function Task({ }: Props) {
                         button={{
                           text: "Go",
                           onClick: () =>
-                            handleQuestButtonClick(quest.questCode),
+                            handleQuestSubmit(quest.questCode),
                         }}
                         isDone={quest.progress}
                         visitUrl={quest.visitUrl}
@@ -213,7 +236,7 @@ function Task({ }: Props) {
                         button={{
                           text: "Go",
                           onClick: () =>
-                            handleQuestButtonClick(quest.questCode),
+                            handleQuestSubmit(quest.questCode),
                         }}
                         isDone={quest.progress}
                         visitUrl={quest.visitUrl}
@@ -226,6 +249,10 @@ function Task({ }: Props) {
         </div>
       </div>
       {showReward && <RewardQuest onClick={handleOnClick} />}
+      {/* {
+        confirmDialog &&
+        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={() => handleQuestSubmit(selectedQuestCode!)} title="Quest Confirmation" content={confirmDialogContent} />
+      } */}
     </div>
   );
 }
