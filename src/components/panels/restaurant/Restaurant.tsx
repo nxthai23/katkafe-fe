@@ -13,6 +13,7 @@ import { unclockRestaurant } from "@/requests/restaurant";
 import { useDialogStore } from "@/stores/DialogStore";
 import { Restaurant as RestaurantType } from "@/types/restaurant";
 import classNames from "classnames";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 const itemsPerPage = 2;
 
 function Restaurant() {
@@ -41,6 +42,9 @@ function Restaurant() {
     state.nextRestaurantUnclock,
     state.currentRestaurant,
     state.setCurrentRestaurant,
+  ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
   ]);
 
   const { fetchRestaurants } = useFetchRestaurants();
@@ -105,16 +109,14 @@ function Restaurant() {
         }
       } catch (error) {
         console.error("Error fetching", error);
+        showSnackbar('Unlock Fail')
       } finally {
         setTimeout(() => {
           hide();
         }, 1000);
       }
     } else {
-      setUnclockError(true);
-      setTimeout(() => {
-        setUnclockError(false);
-      }, 1000);
+      showSnackbar('Insufficient resource')
     }
   };
   const handleOnCardClick = (order: number) => {
@@ -194,11 +196,6 @@ function Restaurant() {
             onClose={() => setShowDialog(false)}
           />
         </>
-      )}
-      {unclockError && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Insufficient resource
-        </div>
       )}
     </div>
   );

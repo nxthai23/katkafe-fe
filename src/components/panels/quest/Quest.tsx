@@ -9,6 +9,7 @@ import { QuestCodes } from "@/constants/quest";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import RewardQuest from "@/components/ui/RewardQuest";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 
 type Props = {};
 const TAB = {
@@ -28,6 +29,9 @@ function Task({ }: Props) {
     state.show,
     state.hide,
   ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
+  ]);
 
   const { quests, refetchQuests } = useFetchQuests();
   const { fetchAchievements } = useFetchAchievements();
@@ -45,8 +49,10 @@ function Task({ }: Props) {
       show();
       await checkIn();
       refetchQuests();
+      showSnackbar('Check in successfully!')
     } catch (error) {
       console.error("Failed to check in", error);
+      showSnackbar('Check in fail!')
     } finally {
       hide();
       setShowReward(true);
@@ -58,8 +64,10 @@ function Task({ }: Props) {
       show();
       await visitWebsite();
       refetchQuests();
+      showSnackbar('Visit website successfully!')
     } catch (error) {
       console.error("Failed to visit website", error);
+      showSnackbar('Visit website faild!')
     } finally {
       hide();
       setShowReward(true);
@@ -71,8 +79,10 @@ function Task({ }: Props) {
       show();
       await youtube();
       refetchQuests();
+      showSnackbar('Quest youtube successfully!')
     } catch (error) {
       console.error("Failed to youtube", error);
+      showSnackbar('Quest youtube faild!')
     } finally {
       hide();
       setShowReward(true);

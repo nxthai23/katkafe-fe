@@ -13,6 +13,7 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import { Dot } from "lucide-react";
 import { useLoadingStore } from "@/stores/LoadingStore";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -20,8 +21,6 @@ const StaffList: React.FC = () => {
   const [activeSelect] = useState<string>("All");
   const [isActive, setIsActive] = useState<number | null>(null);
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
-  const [showNotiCat, setShowNotiCat] = useState(false);
-  const [showNotiBean, setShowNotiBean] = useState(false);
 
   const [user, fetchUser] = useUserStore((state) => [state.user, state.fetchUser]);
   const [
@@ -52,6 +51,9 @@ const StaffList: React.FC = () => {
   const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
+  ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
   ]);
 
   const { fetchStaffs } = useFetchStaffs();
@@ -154,13 +156,11 @@ const StaffList: React.FC = () => {
       if (!staff) return;
       if (!user) return;
       if (Number(user.bean) < fee) {
-        setShowNotiBean(true);
-        setTimeout(() => setShowNotiBean(false), 1000);
+        showSnackbar('Not enough bean!')
         return;
       }
       if (Number(user.cats.length) < numberCatsRequire) {
-        setShowNotiCat(true);
-        setTimeout(() => setShowNotiCat(false), 1000);
+        showSnackbar('Not enough cat!')
         return;
       }
       show();
@@ -168,6 +168,7 @@ const StaffList: React.FC = () => {
       const data = await upgradeStaff({ catId: staff._id });
       setCurrentStaff(data.upgradedCat);
       setNumberCatPick(0);
+      showSnackbar('Upgrade successfully!')
       if (isChooseUpgrade.length > 0) {
         const body = { catIds: isChooseUpgrade };
         await removeStaff(body);
@@ -281,16 +282,6 @@ const StaffList: React.FC = () => {
       </div>
       {showCardInfo && (
         <CardInfo onBack={handleCloseDetail} handleUpgrade={handleUpgrade} />
-      )}
-      {showNotiBean && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not enough bean!
-        </div>
-      )}
-      {showNotiCat && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Not enough cats!
-        </div>
       )}
     </div>
   );

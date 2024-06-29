@@ -181,6 +181,7 @@ const Manage: React.FC = () => {
 
       const response = await removeCat(body);
       setRestaurants(response);
+      showSnackbar('Remove all successfully!')
       await fetchRestaurants();
       await fetchStaffs();
     } catch (error) {
@@ -192,6 +193,7 @@ const Manage: React.FC = () => {
       setTimeout(() => {
         setShowAlertRemove(false);
       }, 1000);
+      showSnackbar('Remove all Fail!')
     }
   };
 
@@ -241,8 +243,10 @@ const Manage: React.FC = () => {
       setCurrentRestaurant(data.upgradedLocation);
       fetchRestaurants()
       fetchDataUpgrade();
+      showSnackbar('Upgrade Successfully!')
     } catch (error) {
       console.error("Error upgrade", error);
+      showSnackbar('Upgrade Fail!')
     } finally {
       if (
         currentRestaurant &&

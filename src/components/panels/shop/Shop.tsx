@@ -14,6 +14,7 @@ import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import Image from "next/image";
 import { useLoadingStore } from "@/stores/LoadingStore";
+import { useSnackBarStore } from "@/stores/SnackBarStore";
 
 const TABS = {
   CAT: "Cat",
@@ -48,6 +49,9 @@ const Shop = () => {
   const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
+  ]);
+  const [showSnackbar] = useSnackBarStore((state) => [
+    state.show,
   ]);
 
   const { fetchStaffs } = useFetchStaffs();
@@ -99,9 +103,11 @@ const Shop = () => {
         setUser(response.user);
         fetchStaffs();
         setCurrentStaff(response.items.cats[0]);
+        showSnackbar('Purchase successfully!')
       }
     } catch (error) {
       console.error("Failed to buy item", error);
+      showSnackbar('Purchase fail!')
     } finally {
       hide()
     }
