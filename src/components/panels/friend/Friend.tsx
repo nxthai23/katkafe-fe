@@ -74,10 +74,7 @@ const Friend: React.FC = () => {
       if (response.inviteUrl) {
         setInviteUrl(response.inviteUrl);
       }
-      setShowNotiCoppyRight(true);
-      setTimeout(() => {
-        setShowNotiCoppyRight(false);
-      }, 2000);
+      showSnackbar('Copied to clipboard!')
     } catch (error) {
       console.error("Error fetching", error);
     } finally {
@@ -316,11 +313,6 @@ const Friend: React.FC = () => {
           )}
         </div>
       </div>
-      {showNotiCoppyRight && (
-        <div className="bg-[#000] opacity-70 text-bodyLg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 text-white px-4 py-2 w-max">
-          Copied to clipboard!
-        </div>
-      )}
     </div>
   );
 };

@@ -1,9 +1,7 @@
 import CardTask from "@/components/ui/CardTask";
-import { useFetchAchievements } from "@/lib/hooks/quest/useAchievement";
 import { useFetchQuests } from "@/lib/hooks/quest/useFetchQuests";
 import { checkIn, visitWebsite, youtube } from "@/requests/quest/quests";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useAchievementStore } from "@/stores/quest/achievementStore";
 import React, { useEffect, useState } from "react";
 import { QuestCodes } from "@/constants/quest";
 import { useLoadingStore } from "@/stores/LoadingStore";
@@ -23,9 +21,6 @@ function Task({ }: Props) {
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [activeTab, setActiveTab] = useState(TAB.DAILY);
   const [showReward, setShowReward] = useState(false);
-  const [selectedQuestCode, setSelectedQuestCode] = useState<QuestCodes | null>(null);
-  const [confirmDialog, setConfirmDialog] = useState(false);
-  const [confirmDialogContent, setConfirmDialogContent] = useState('');
 
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
@@ -39,7 +34,6 @@ function Task({ }: Props) {
   ]);
 
   const { quests, refetchQuests } = useFetchQuests();
-  const { fetchAchievements } = useFetchAchievements();
 
   const handleTaskTabClick = () => {
     setActiveTab(TAB.DAILY);
@@ -136,11 +130,6 @@ function Task({ }: Props) {
     e.stopPropagation();
     setShowQuestPanel(false);
   };
-
-  useEffect(() => {
-    fetchAchievements();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">

@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
-import { useFetchBonuses } from "@/lib/hooks/friend/useBonus";
 import { useBonusStore } from "@/stores/friend/bonusStore";
 import { useLayoutStore } from "@/stores/layoutStore";
-import CardBonus from "@/components/ui/CardBonus";
 import Button from "@/components/ui/Button";
 
 const InviteInfo: React.FC = () => {
-  const { fetchBonuses } = useFetchBonuses();
   const [bonuses] = useBonusStore((state) => [
     state.bonuses,
   ]);
@@ -17,11 +14,6 @@ const InviteInfo: React.FC = () => {
   const handleClose = () => {
     setShowInviteInfoPanel(false);
   };
-
-  useEffect(() => {
-    fetchBonuses();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="invite-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">

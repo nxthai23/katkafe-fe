@@ -1,5 +1,4 @@
 import Button from "@/components/ui/Button";
-import { useFetchGuilds, useFetchOneGuild } from "@/lib/hooks/guild/useGuild";
 import { useLayoutStore } from "@/stores/layoutStore";
 import React, { useEffect } from "react";
 import Image from "next/image";
@@ -22,7 +21,6 @@ function Guild({}: Props) {
     state.setCurrentGuild,
   ]);
 
-  const { fetchOneGuild } = useFetchOneGuild();
 
   const handleClose = () => {
     setShowGuildPanel(false);
@@ -33,13 +31,6 @@ function Guild({}: Props) {
   };
   const userGuildId = user?.guildId;
   const isGuildIdInList = guilds.some((guild) => guild.id === userGuildId);
-
-  useEffect(() => {
-    if (userGuildId) {
-      fetchOneGuild(userGuildId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userGuildId]);
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">

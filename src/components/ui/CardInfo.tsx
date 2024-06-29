@@ -40,9 +40,8 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
     state.setSpeed,
   ]);
   const { fetchStaffs } = useFetchStaffs();
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [isShowing, show, hide] = useLoadingStore((state) => [
-    state.isShowing,
+  const [user] = useUserStore((state) => [state.user]);
+  const [show, hide] = useLoadingStore((state) => [
     state.show,
     state.hide,
   ]);
@@ -79,7 +78,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
   }, [staff, fee]);
 
   return (
-    <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-40 p-4 top-0 left-0">
+    <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-20 p-4 top-0 left-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
         <div className="rounded-[21px] border-solid border-orange-30 border-4 bg-orange-30 h-full relative">
           <div className="absolute -top-4 -left-3 cursor-pointer">
@@ -105,13 +104,13 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                   <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
                     <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
                       <div className="flex justify-center mt-14 relative">
-                        <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-30"></div>
+                        <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-20"></div>
                         <Image
                           src={staff?.imgUrl || "/images/Cat.png"}
                           alt="cat pic"
                           width={106}
                           height={106}
-                          className="relative z-40"
+                          className="relative z-20"
                         />
                       </div>
                     </div>
@@ -191,7 +190,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                 {staff && staff.level < 100 && (
                   <>
                     {numberCatRequire === 0 ||
-                    numberCatPick > numberCatRequire ? (
+                      numberCatPick > numberCatRequire ? (
                       <div
                         className="w-[172px] h-[39px] hidden"
                         onClick={handleShowStaffUpgrade}
@@ -234,7 +233,6 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
           <StaffUpgrade showStaffUpgradePanel={setShowStaffUpgradePanel} />
         </div>
       )}
-      {isShowing && <Loading />}
     </div>
   );
 };

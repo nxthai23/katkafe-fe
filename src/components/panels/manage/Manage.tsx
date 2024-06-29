@@ -483,7 +483,7 @@ const Manage: React.FC = () => {
                     </div>
                   ) : (
                     <div className="w-[172px] h-[39px]" onClick={() => {
-                      setConfirmDialogType(CONFIRM_DIALOG_TYPE.UPGRADE)
+                      handleShowConfirmDialog(CONFIRM_DIALOG_TYPE.UPGRADE)
                     }}>
                       <Button>Upgrade</Button>
                     </div>
@@ -494,7 +494,7 @@ const Manage: React.FC = () => {
           )}
         </div>
         {showStaffPanel && (
-          <div className="absolute z-30 w-full h-full top-0 left-0">
+          <div className="absolute !z-20 w-full h-full top-0 left-0">
             <StaffAssign
               showStaffPanel={setShowStaffPanel}
               onAssignSuccess={assignSuccess}
@@ -502,7 +502,7 @@ const Manage: React.FC = () => {
           </div>
         )}
         {showCardInfo && (
-          <div className="absolute z-30 w-full h-full top-0 left-0">
+          <div className="absolute !z-20 w-full h-full top-0 left-0">
             <CardInfo onBack={() => setShowCardInfo(false)} />
           </div>
         )}
