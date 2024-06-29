@@ -46,13 +46,8 @@ const Shop = () => {
     state.setCurrentStaff,
   ]);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
-  const [showSnackbar] = useSnackBarStore((state) => [
-    state.show,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+  const [showSnackbar] = useSnackBarStore((state) => [state.show]);
 
   const { fetchStaffs } = useFetchStaffs();
 
@@ -85,12 +80,12 @@ const Shop = () => {
     if (!user) return;
     if (Number(user.bean) < item.price) {
       setShowNotiBean(true);
-      showSnackbar('Not enough bean!')
+      showSnackbar("Not enough bean!");
       return;
     }
     try {
       if (!user || !item) return;
-      show()
+      show();
       const body = {
         itemId: item._id,
       };
@@ -101,19 +96,20 @@ const Shop = () => {
         setUser(response.user);
         fetchStaffs();
         setCurrentStaff(response.items.cats[0]);
-        showSnackbar('Purchase successfully!')
+        showSnackbar("Purchase successfully!");
+        setShowRewardDialog(true);
       }
     } catch (error) {
       console.error("Failed to buy item", error);
-      showSnackbar('Purchase fail!')
+      showSnackbar("Purchase fail!");
     } finally {
-      hide()
+      hide();
     }
   };
 
   const fetchItems = async () => {
     try {
-      show()
+      show();
       let type;
       switch (activeTab) {
         case TABS.ROLL:
@@ -132,7 +128,7 @@ const Shop = () => {
     } catch (error) {
       console.error("Failed to fetch cat deals", error);
     } finally {
-      hide()
+      hide();
     }
   };
 
@@ -146,7 +142,6 @@ const Shop = () => {
     if (currentItem) {
       handleBuyItem(currentItem);
     }
-    setShowRewardDialog(true);
   };
 
   useEffect(() => {
@@ -170,15 +165,17 @@ const Shop = () => {
             <div className="flex">
               <div
                 onClick={() => handleTabClick(TABS.ROLL)}
-                className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.ROLL ? isActive : ""
-                  }`}
+                className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                  activeTab === TABS.ROLL ? isActive : ""
+                }`}
               >
                 Roll
               </div>
               <div
                 onClick={() => handleTabClick(TABS.CAT)}
-                className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.CAT ? isActive : ""
-                  }`}
+                className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                  activeTab === TABS.CAT ? isActive : ""
+                }`}
               >
                 Cat
               </div>
@@ -286,7 +283,12 @@ const Shop = () => {
         )}
         {showConfirmDialog && (
           <>
-            <ConfirmDialog onCancel={handleCancel} onAgree={handleAgree} title="Purchase Confirmation" content="Do you want to buy this items?" />
+            <ConfirmDialog
+              onCancel={handleCancel}
+              onAgree={handleAgree}
+              title="Purchase Confirmation"
+              content="Do you want to buy this items?"
+            />
           </>
         )}
       </div>
