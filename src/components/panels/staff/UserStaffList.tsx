@@ -165,8 +165,8 @@ const StaffList: React.FC = () => {
         showSnackbar('Not enough cat!')
         return;
       }
+      setConfirmDialog(false)
       show();
-
       const data = await upgradeStaff({ catId: staff._id });
       setCurrentStaff(data.upgradedCat);
       setNumberCatPick(0);
