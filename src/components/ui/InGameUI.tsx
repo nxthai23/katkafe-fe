@@ -16,7 +16,9 @@ import { useStaffStore } from "@/stores/staffStore";
 import { Dot } from "lucide-react";
 import { useFetchUser } from "@/lib/hooks/useUser";
 import Image from "next/image";
-import usePower, { useFetchRestaurants } from "@/lib/hooks/restaurant/useRestaurant";
+import usePower, {
+  useFetchRestaurants,
+} from "@/lib/hooks/restaurant/useRestaurant";
 import { Staff } from "@/types/common-types";
 import { get } from "lodash";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
@@ -44,7 +46,8 @@ export const InGameUI = () => {
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
-  const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] = useState(false);
+  const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
+    useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [
@@ -84,13 +87,9 @@ export const InGameUI = () => {
     state.setCoinTapping,
   ]);
 
-  const [hideDialog, showDialog, setDialogType, DialogType] =
-    useDialogStore((state) => [
-      state.hide,
-      state.show,
-      state.setDialogType,
-      state.type,
-    ]);
+  const [hideDialog, showDialog, setDialogType, DialogType] = useDialogStore(
+    (state) => [state.hide, state.show, state.setDialogType, state.type]
+  );
   const [restaurantUpgradeConfigs, currentRestaurant] = useRestaurantStore(
     (state) => [state.restaurantUpgradeConfigs, state.currentRestaurant]
   );
@@ -101,17 +100,18 @@ export const InGameUI = () => {
     state.staffs,
     state.staffUpgradeConfigs,
   ]);
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
   // const telegramData = useInitData()
 
   const power = usePower(currentRestaurant!._id, currentRestaurant!);
   const { fetchUser } = useFetchUser();
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
-  const { setStartIntervalRecoverPower, setStartIntervalPostTapping, handleClaim } = useGamePlay();
+  const {
+    setStartIntervalRecoverPower,
+    setStartIntervalPostTapping,
+    handleClaim,
+  } = useGamePlay();
 
   const checkStaffsUpgrade = () => {
     setShowNotiCatUpgrade(false);
@@ -151,7 +151,7 @@ export const InGameUI = () => {
   const handleClick = async () => {
     if (DialogType === "login") {
       try {
-        show()
+        show();
         const response = await updateLoginStatus();
         if (response) {
           setInitStaff(response);
@@ -159,7 +159,7 @@ export const InGameUI = () => {
       } catch (error) {
         console.log("Error updating login status", error);
       } finally {
-        hide()
+        hide();
       }
       setShowLoginAward(true);
     }
@@ -167,7 +167,7 @@ export const InGameUI = () => {
   };
   const handleClaimFirstTimeLogin = async () => {
     try {
-      show()
+      show();
       const response = await updateStatus();
       if (response) {
         setUser(response);
@@ -176,15 +176,14 @@ export const InGameUI = () => {
     } catch (error) {
       console.log("Create error", error);
     } finally {
-      hide()
+      hide();
     }
     setShowLoginAward(false);
-    fetchRestaurants()
-    fetchStaffs()
+    fetchRestaurants(true);
+    fetchStaffs();
     setStartIntervalRecoverPower(true);
     setStartIntervalPostTapping(true);
   };
-
 
   switch (currentRestaurant?.order) {
     case 2:
