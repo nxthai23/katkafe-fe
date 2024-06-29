@@ -7,7 +7,7 @@ const SnackBar = () => {
   useEffect(() => {
     setTimeout(() => {
       hideSnackBar()
-    }, 1500);
+    }, 2000);
   }, [])
 
   return (
