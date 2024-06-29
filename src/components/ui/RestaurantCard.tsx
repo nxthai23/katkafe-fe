@@ -23,7 +23,7 @@ const RestaurantCard = ({ restaurant, onUnlock, onCardClick }: Props) => {
     state.currentRestaurant
   ]);
   const cats = get(restaurant, "cats", []);
-  const power = cats && usePower(restaurant._id, restaurant);
+  const power = usePower(restaurant._id, restaurant);
   const name = get(restaurant, "name", "");
   const imageUrl = get(restaurant, "imgUrl", "");
   const staffSlot = get(restaurant, "slot", "");
