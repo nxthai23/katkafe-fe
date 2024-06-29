@@ -11,7 +11,7 @@ import { useStaffStore } from "@/stores/staffStore";
 import { buyItem, getItems } from "@/requests/shop/item";
 import { useUserStore } from "@/stores/userStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
-import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 import Image from "next/image";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
@@ -282,7 +282,7 @@ const Shop = () => {
       {showConfirmDialog && (
         <>
           <div className="bg-[#807f76] opacity-70 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-40"></div>
-          <ConfirmDialog onCancel={handleCancel} onAgree={handleAgree} />
+          <ConfirmDialog onCancel={handleCancel} onAgree={handleAgree} title="Purchase Confirmation" content="Do you want to buy this items?" />
         </>
       )}
       {showCardInfo && (
