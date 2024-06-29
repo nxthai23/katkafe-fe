@@ -11,7 +11,7 @@ type State = {
 };
 
 type Actions = {
-  login: (body: any) => Promise<void>;
+  login: (body: any) => Promise<UserType>;
   clear: () => void;
   setUser: (user: UserType | null) => void;
   fetchUser: () => Promise<void>;

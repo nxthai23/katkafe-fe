@@ -12,7 +12,7 @@ import OfflineEarning from "./OfflineEarning";
 import NumberFormatter from "./NumberFormat";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useDialogStore } from "@/stores/DialogStore";
-import Dialog from "./Dialog";
+import Dialog from "./common/Dialog";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import { useStaffStore } from "@/stores/staffStore";
@@ -23,6 +23,7 @@ import usePower from "@/lib/hooks/restaurant/useRestaurant";
 
 type Click = {
   id: number;
+  name: string;
   x: number;
   y: number;
 };
@@ -91,16 +92,17 @@ export const InGameUI = () => {
   );
   const [claimableData, setClaimableData] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const power = usePower(currentRestaurant?._id);
+  const power = usePower(currentRestaurant!._id);
   const [staffs, staffUpgradeConfigs] = useStaffStore((state) => [
     state.staffs,
     state.staffUpgradeConfigs,
   ]);
+  const telegramData = useInitData()
   const [showNotiCatUpgrade, setShowNotiCatUpgrade] = useState(false);
   const [showNotiRestaurantUpgrade, setShowNotiRestaurantUpgrade] =
     useState(false);
-  const telegramData = useInitData();
-  const { fetchUser } = useFetchUser();
+  const { fetchUser } = useFetchUser()
+  const { handleClaim } = useGamePlay()
   const containerRef = useRef<HTMLDivElement>(null);
 
   const checkStaffsUpgrade = () => {
@@ -155,7 +157,7 @@ export const InGameUI = () => {
     }
     hideDialog();
   };
-  const handleClaim = async () => {
+  const handleClaimFirstTimeLogin = async () => {
     try {
       const response = await updateStatus();
       if (response) {
@@ -195,31 +197,27 @@ export const InGameUI = () => {
       friendUrl = "/icons/ic-friend-3.png";
       break;
   }
-  const handleTaptapLayoutClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      // event.preventDefault()
-      // event.stopPropagation()
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const newClick: Click = {
-          id: clicks.length,
-          x: event.clientX - rect.left,
-          y: event.clientY - rect.top,
-        };
-        setClicks([...clicks, newClick]);
-        setTimeout(() => {
-          setClicks((currentClicks) =>
-            currentClicks.filter((click) => click.id !== newClick.id)
-          );
-        }, 1000);
-      }
-      // triggerCoinAnimation()
-      decreasePower();
-      increaseCoinTaping();
-      increaseTaping();
-    },
-    [clicks]
-  );
+  const handleTaptapLayoutClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    // event.preventDefault()
+    // event.stopPropagation()
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const newClick: Click = {
+        id: clicks.length,
+        name: 'postion',
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
+      setClicks([...clicks, newClick]);
+      setTimeout(() => {
+        setClicks((currentClicks) => currentClicks.filter((click) => click.id !== newClick.id));
+      }, 1000);
+    }
+    // triggerCoinAnimation()
+    decreasePower()
+    increaseCoinTaping()
+    increaseTaping()
+  }, [clicks])
   useEffect(() => {
     resetTapping();
     const handleClaimable = async () => {
@@ -266,14 +264,14 @@ export const InGameUI = () => {
           initData: telegramData.initData,
           referralCode: telegramData.initDataUnsafe?.start_param,
         };
-        await login(loginBody);
+        const res = await login(loginBody);
       } catch (error) {
         console.error("Error during login:", error);
       }
     };
-
-    Login();
-    fetchUser();
+    Login()
+    handleClaim()
+    fetchUser()
     if (user?.isLoginFirstTime) {
       setDialogType("login");
       setDialogContent({
@@ -327,12 +325,19 @@ export const InGameUI = () => {
         {clicks.map((click) => (
           <>
             <div
-              key={click?.id}
-              className="clickNumber text-white z-10 flex justify-center gap-x-1 items-center"
+              key={`${click.name}-${click.id}-${click.x}`}
+              className='clickNumber text-white z-10 flex justify-center gap-x-1 items-center text-3xl'
               style={{ left: click?.x, top: click?.y }}
             >
-              <div>+5</div>
-              <Image src="/images/coin.png" width={16} height={16} alt="icon" />
+              <div className="">
+                +5
+              </div>
+              <Image
+                src='/images/coin.png'
+                width={24}
+                height={24}
+                alt="icon"
+              />
             </div>
             {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
           </>
@@ -404,7 +409,7 @@ export const InGameUI = () => {
       {showLoginAward && (
         <>
           <div className="bg-[#232322] opacity-80 absolute w-[384px] h-[608px] items-center flex justify-center top-0 left-0 z-10"></div>
-          <LoginAward handleClaim={handleClaim} response={response} />
+          <LoginAward handleClaim={handleClaimFirstTimeLogin} response={response} />
         </>
       )}
       {!loading && user && !user.isLoginFirstTime && showOfflineEarning && (

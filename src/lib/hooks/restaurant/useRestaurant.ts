@@ -36,7 +36,7 @@ export const useFetchRestaurants = () => {
     }
   };
 
-  const fetchRestaurants = async () => {
+  const fetchRestaurants = async (isFetchingFirstTime?: boolean) => {
     try {
       const [restaurants, restaurantConfig] = await Promise.all([
         getRestaurants(),
@@ -58,9 +58,11 @@ export const useFetchRestaurants = () => {
       setNextRestaurantUnclockIndex(restaurants.length + 1);
       setRestaurants(listRestaurantsMapped);
       setMyRestaurants(restaurants);
-      setCurrentRestaurant(
-        restaurants && (restaurants[0] as Restaurant | null)
-      );
+      if (
+        isFetchingFirstTime
+      ) {
+        setCurrentRestaurant(restaurants && restaurants[0] as Restaurant | null)
+      }
     } catch (error) {
       console.error("Error fetching", error);
     }
@@ -71,7 +73,7 @@ export const useFetchRestaurants = () => {
   };
 };
 
-const usePower = (locationId?: string) => {
+const usePower = (locationId: string, restaurant?: Restaurant) => {
   const [power, setPower] = useState(null);
 
   useEffect(() => {
@@ -85,7 +87,7 @@ const usePower = (locationId?: string) => {
       }
     };
 
-    if (locationId) {
+    if (locationId && restaurant?.cats) {
       fetchPower(locationId);
     } else {
       setPower(null);

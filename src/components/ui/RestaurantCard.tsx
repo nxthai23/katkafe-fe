@@ -17,22 +17,22 @@ const RestaurantCard = ({ restaurant, onUnlock, onCardClick }: Props) => {
   const [
     nextRestaurantUnclockIndex,
     myRestaurants,
-    currentRestaurant
   ] = useRestaurantStore((state) => [
     state.nextRestaurantUnclockIndex,
     state.myRestaurants,
     state.currentRestaurant
   ]);
   const cats = get(restaurant, "cats", []);
-  const power = cats && usePower(restaurant._id);
+  const power = cats && usePower(restaurant._id, restaurant);
   const name = get(restaurant, "name", "");
   const imageUrl = get(restaurant, "imgUrl", "");
   const staffSlot = get(restaurant, "slot", "");
-  const isUnlock = myRestaurants && myRestaurants.find(item => item.order === get(restaurant, "order"))
+  const isUnlock = myRestaurants && myRestaurants.some(item => item.order === get(restaurant, "order"))
 
   const handleClickUnlock = () => {
     onUnlock?.();
   };
+
   const handleCardClick = () => {
     if (isUnlock) {
       onCardClick?.(restaurant.order);

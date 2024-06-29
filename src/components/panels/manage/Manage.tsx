@@ -11,7 +11,6 @@ import usePower, {
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { get } from "lodash";
-import { Restaurant as RestaurantType } from "@/types/restaurant";
 
 import {
   removeCat,
@@ -23,8 +22,6 @@ import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import NumberFormatter from "@/components/ui/NumberFormat";
-import { EventBus } from "@/game/EventBus";
-import { EVENT_BUS_TYPES } from "@/constants/events";
 
 const TABS = {
   CAFE: "Cafe",
@@ -45,13 +42,16 @@ const Manage: React.FC = () => {
   const handleClose = () => {
     setShowManagePanel(false);
   };
-  const [currentRestaurant, setCurrentRestaurant, setRestaurants] =
-    useRestaurantStore((state) => [
-      state.currentRestaurant,
-      state.setCurrentRestaurant,
-      state.setRestaurants,
-    ]);
-  const power = usePower(currentRestaurant?._id);
+  const [
+    currentRestaurant,
+    setCurrentRestaurant,
+    setRestaurants,
+  ] = useRestaurantStore((state) => [
+    state.currentRestaurant,
+    state.setCurrentRestaurant,
+    state.setRestaurants,
+  ]);
+  const power = currentRestaurant && usePower(currentRestaurant._id, currentRestaurant);
 
   const [showDialog, setShowDialog] = useState(false);
   const [showAlertRemove, setShowAlertRemove] = useState(false);
@@ -66,8 +66,7 @@ const Manage: React.FC = () => {
   ]);
   const [fee, setFee] = useState(0);
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [isUpdated, setIsUpdated] = useState(false);
+  const [user] = useUserStore((state) => [state.user]);
   const [isOneAssign, setIsOneAssign] = useStaffStore((state) => [
     state.isOneAssign,
     state.setIsOneAssign,
@@ -228,8 +227,8 @@ const Manage: React.FC = () => {
         locationId: currentRestaurant._id,
       });
       setCurrentRestaurant(data.upgradedLocation);
+      fetchRestaurants()
       fetchDataUpgrade();
-      fetchRestaurants();
     } catch (error) {
       console.error("Error upgrade", error);
     } finally {

@@ -38,7 +38,7 @@ const OfflineEarning = ({ onClick, data }: Props) => {
 
         <div className="flex flex-wrap gap-2 justify-center border-[#E8DDBD] border-t py-3 mt-6">
           <div className="w-[164px] h-[39px]" onClick={onClick}>
-            <Button>Claim</Button>
+            <Button>Got it</Button>
           </div>
         </div>
       </div>
