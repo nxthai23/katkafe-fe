@@ -65,7 +65,10 @@ function App() {
     }
   };
   useEffect(() => {
-    fetchData();
+    if (telegramData.initData) {
+      fetchData();
+    }
+
     const app = (window as any).Telegram?.WebApp;
     if (app) {
       app.ready();
@@ -74,7 +77,7 @@ function App() {
       clearClaimInterval();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [telegramData.initData]);
   const loadingScreen = (
     <>
       <div className="relative w-full h-full flex flex-col justify-center items-center">
