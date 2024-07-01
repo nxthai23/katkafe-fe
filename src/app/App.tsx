@@ -61,7 +61,6 @@ function App() {
       if (res) {
         setTimeout(() => setFinnishLoading(true), 2000);
       }
-      setFinnishLoading(true);
     } catch (error) {
       console.log("error", error);
     }
@@ -76,13 +75,10 @@ function App() {
     if (app) {
       app.ready();
     }
-
-    setFinnishLoading(true);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [telegramData.initData]);
   const loadingScreen = (
-    <div className="relative w-full h-full flex flex-col justify-center items-center bg-[url('/images/loading.png')] bg-center bg-no-repeat bg-cover !z-20">
+    <div className="relative w-full h-screen flex flex-col justify-center items-center bg-[url('/images/loading.png')] bg-center bg-no-repeat bg-cover !z-20">
       <div className="!z-20 w-[60%] flex flex-col justify-center items-center">
         <Image
           src="/images/KatKafeLogo.png"

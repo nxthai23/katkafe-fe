@@ -50,7 +50,11 @@ const CardBarista = ({
             {referralCounter || bean}
           </div>
           <div className="w-4 h-4">
-            <img src="/images/coin.png" alt="" />
+            {type === TABS.FRIENDLIST ? (
+              <img src="/images/friend.png" alt="" />
+            ) : (
+              <img src="/images/coin.png" alt="" />
+            )}
           </div>
         </div>
         {type === TABS.INVITE && (
