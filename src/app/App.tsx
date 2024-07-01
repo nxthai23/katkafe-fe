@@ -16,6 +16,7 @@ import {
 import Image from "next/image";
 import { Lightbulb } from "lucide-react";
 import { useInitData } from "@zakarliuka/react-telegram-web-tools";
+import { DeviceGuard } from "@/hoc/DeviceGuard";
 
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
@@ -110,7 +111,9 @@ function App() {
   );
   return (
     <div id="app">
-      {finnishLoading ? <PhaserGame ref={phaserRef} /> : loadingScreen}
+      <DeviceGuard>
+        {finnishLoading ? <PhaserGame ref={phaserRef} /> : loadingScreen}
+      </DeviceGuard>
     </div>
   );
 }

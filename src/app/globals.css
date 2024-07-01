@@ -82,3 +82,11 @@ body {
     display: hidden;
   }
 }
+
+.notMobile {
+  background: url("/images/bg-notmobile.jpg") no-repeat center center fixed;
+  padding: 0 38px;
+}
+.notMobile h1 {
+  font-size: 24px;
+}
