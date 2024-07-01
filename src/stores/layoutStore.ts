@@ -1,3 +1,4 @@
+import { set } from "lodash";
 import { create } from "zustand";
 
 type States = {
@@ -17,6 +18,7 @@ type States = {
   showRestaurantPanel: boolean;
   showOfflineEarning: boolean;
   isAnyPanelOpen: boolean;
+  showBoostPanel: boolean;
 };
 
 type Actions = {
@@ -36,6 +38,7 @@ type Actions = {
   setShowRestaurantPanel: (show: boolean) => void;
   setShowOfflineEarning: (show: boolean) => void;
   setIsAnyPanelOpen: (show: boolean) => void;
+  setShowBoostPanel: (show: boolean) => void;
 };
 
 const defaultStates = {
@@ -55,6 +58,7 @@ const defaultStates = {
   showRestaurantPanel: false,
   showOfflineEarning: false,
   isAnyPanelOpen: false,
+  showBoostPanel: false,
 };
 
 export const useLayoutStore = create<States & Actions>((set) => ({
@@ -118,4 +122,8 @@ export const useLayoutStore = create<States & Actions>((set) => ({
     set({ isAnyPanelOpen: show });
   },
   setIsAnyPanelOpen: (show: boolean) => set({ isAnyPanelOpen: true }),
+  setShowBoostPanel: (show: boolean) => {
+    set({ showBoostPanel: show });
+    set({ isAnyPanelOpen: show });
+  },
 }));

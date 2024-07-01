@@ -56,12 +56,14 @@ export const InGameUI = () => {
     setShowStaffPanel,
     setShowShopPanel,
     setShowRestaurantPanel,
+    setShowBoostPanel,
   ] = useLayoutStore((state) => [
     state.setShowFriendPanel,
     state.setShowManagePanel,
     state.setShowStaffPanel,
     state.setShowShopPanel,
     state.setShowRestaurantPanel,
+    state.setShowBoostPanel,
   ]);
 
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
@@ -382,11 +384,11 @@ export const InGameUI = () => {
         />
         <MenuButton
           key="friend"
-          title="Friend"
+          title="Boost"
           icon={{
             url: friendUrl,
           }}
-          onClick={() => setShowFriendPanel(true)}
+          onClick={() => setShowBoostPanel(true)}
         />
       </div>
       {/* {user?.isLoginFirstTime && showLoginDialog && (

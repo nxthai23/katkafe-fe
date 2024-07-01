@@ -29,6 +29,7 @@ import { useLoadingStore } from "@/stores/LoadingStore";
 import { Loading } from "@/components/ui/Loading";
 import SnackBar from "@/components/ui/common/SnackBar";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
+import Boost from "@/components/panels/boost/Boost";
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -57,6 +58,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     showRankPanel,
     showGuildDetailPanel,
     showRestaurantPanel,
+    showBoostPanel,
   ] = useLayoutStore((state) => [
     state.showFriendPanel,
     state.showManagePanel,
@@ -70,6 +72,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     state.showRankPanel,
     state.showGuildDetailPanel,
     state.showRestaurantPanel,
+    state.showBoostPanel,
   ]);
 
   const [isShowingLoading] = useLoadingStore((state) => [state.isShowing]);
@@ -135,6 +138,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
         {showRestaurantPanel && <Restaurant />}
         {isShowingLoading && <Loading />}
         {isShowingSnackbar && <SnackBar />}
+        {showBoostPanel && <Boost />}
       </div>
     </div>
   );
