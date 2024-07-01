@@ -30,13 +30,8 @@ const Friend: React.FC = () => {
   ]);
   const user = useUserStore((state) => state.user);
 
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
-  const [showSnackbar] = useSnackBarStore((state) => [
-    state.show,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+  const [showSnackbar] = useSnackBarStore((state) => [state.show]);
 
   const { friends } = useFetchFriends();
   const [rankConfigs, fetchRankConfigs] = useRankConfigs();
@@ -54,10 +49,10 @@ const Friend: React.FC = () => {
       };
       await claimRankReward(body);
       await fetchRankConfigs();
-      showSnackbar('Claim Successfully!');
+      showSnackbar("Claim Successfully!");
     } catch (error) {
       console.error("Error claiming", error);
-      showSnackbar('Claim Fail!');
+      showSnackbar("Claim Fail!");
     } finally {
       hide();
     }
@@ -74,11 +69,11 @@ const Friend: React.FC = () => {
       if (response.inviteUrl) {
         setInviteUrl(response.inviteUrl);
       }
-      showSnackbar('Copied to clipboard!')
+      showSnackbar("Copied to clipboard!");
     } catch (error) {
       console.error("Error fetching", error);
     } finally {
-      hide()
+      hide();
     }
   };
 
@@ -103,15 +98,17 @@ const Friend: React.FC = () => {
           <div className="flex">
             <div
               onClick={() => handleTabClick(TABS.FRIENDLIST)}
-              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.FRIENDLIST ? isActive : ""
-                }`}
+              className={`absolute cursor-pointer left-1/2 -translate-x-[145px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === TABS.FRIENDLIST ? isActive : ""
+              }`}
             >
               {TABS.FRIENDLIST}
             </div>
             <div
               onClick={() => handleTabClick(TABS.INVITE)}
-              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === TABS.INVITE ? isActive : ""
-                }`}
+              className={`absolute cursor-pointer left-1/2 translate-x-[0px] border-2 border-b-0 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === TABS.INVITE ? isActive : ""
+              }`}
             >
               {TABS.INVITE}
             </div>
@@ -173,7 +170,8 @@ const Friend: React.FC = () => {
                     </div>
                   </div>
                   <div className="overflow-y-auto">
-                    {!friends?.referralList ? (
+                    {friends?.referralList &&
+                    friends.referralList.length > 0 ? (
                       <div className="flex flex-col bg-orange-10 border-[#e8ddbd] border rounded-lg">
                         {friends?.referralList.map((friend, index) => (
                           <div

@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
-import { getClaim } from "@/requests/user";
 import { useUserStore } from "@/stores/userStore";
-import { UserType } from "@/types/user";
 
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
 import {
@@ -16,11 +14,11 @@ import {
 import Image from "next/image";
 import { Lightbulb } from "lucide-react";
 import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
+import { DeviceGuard } from "@/hoc/DeviceGuard";
 
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [finnishLoading, setFinnishLoading] = useState(false);
-  const { clearClaimInterval } = useGamePlay();
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
@@ -77,6 +75,8 @@ function App() {
       app.ready();
     }
 
+    setFinnishLoading(true);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [telegramData.initData]);
   const loadingScreen = (
@@ -101,7 +101,9 @@ function App() {
   );
   return (
     <div id="app">
-      {finnishLoading ? <PhaserGame ref={phaserRef} /> : loadingScreen}
+      <DeviceGuard>
+        {finnishLoading ? <PhaserGame ref={phaserRef} /> : loadingScreen}
+      </DeviceGuard>
     </div>
   );
 }
