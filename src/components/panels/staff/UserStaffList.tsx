@@ -24,7 +24,10 @@ const StaffList: React.FC = () => {
   const [numberCatsRequire, setNumberCatsRequire] = useState(0);
   const [confirmDialog, setConfirmDialog] = useState(false);
 
-  const [user, fetchUser] = useUserStore((state) => [state.user, state.fetchUser]);
+  const [user, fetchUser] = useUserStore((state) => [
+    state.user,
+    state.fetchUser,
+  ]);
   const [
     fee,
     setFee,
@@ -34,29 +37,23 @@ const StaffList: React.FC = () => {
     setCurrentStaff,
     isChooseUpgrade,
     setIsChooseUpgrade,
-    setNumberCatPick
-  ] = useStaffStore(
-    (state) => [
-      state.fee, state.setFee,
-      state.staffs,
-      state.setStaffs,
-      state.currentStaff,
-      state.setCurrentStaff,
-      state.isChooseUpgrade,
-      state.setIsChooseUpgrade,
-      state.setNumberCatPick,
-    ]
-  );
+    setNumberCatPick,
+  ] = useStaffStore((state) => [
+    state.fee,
+    state.setFee,
+    state.staffs,
+    state.setStaffs,
+    state.currentStaff,
+    state.setCurrentStaff,
+    state.isChooseUpgrade,
+    state.setIsChooseUpgrade,
+    state.setNumberCatPick,
+  ]);
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
   ]);
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
-  const [showSnackbar] = useSnackBarStore((state) => [
-    state.show,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+  const [showSnackbar] = useSnackBarStore((state) => [state.show]);
 
   const { fetchStaffs } = useFetchStaffs();
 
@@ -84,14 +81,13 @@ const StaffList: React.FC = () => {
 
   const fetchStaffData = async () => {
     try {
-      show()
+      show();
       const processedStaffs = await staffNotAssign(staffs);
       setStaffs(processedStaffs);
-    }
-    catch (error) {
-      console.log('error', error);
+    } catch (error) {
+      console.log("error", error);
     } finally {
-      hide()
+      hide();
     }
   };
 
@@ -158,19 +154,19 @@ const StaffList: React.FC = () => {
       if (!staff) return;
       if (!user) return;
       if (Number(user.bean) < fee) {
-        showSnackbar('Not enough bean!')
+        showSnackbar("Not enough gold!");
         return;
       }
       if (Number(user.cats.length) < numberCatsRequire) {
-        showSnackbar('Not enough cat!')
+        showSnackbar("Not enough cat!");
         return;
       }
-      setConfirmDialog(false)
+      setConfirmDialog(false);
       show();
       const data = await upgradeStaff({ catId: staff._id });
       setCurrentStaff(data.upgradedCat);
       setNumberCatPick(0);
-      showSnackbar('Upgrade successfully!')
+      showSnackbar("Upgrade successfully!");
       if (isChooseUpgrade.length > 0) {
         const body = { catIds: isChooseUpgrade };
         await removeStaff(body);
@@ -283,12 +279,19 @@ const StaffList: React.FC = () => {
         </div>
       </div>
       {showCardInfo && (
-        <CardInfo onBack={handleCloseDetail} handleUpgrade={() => setConfirmDialog(true)} />
+        <CardInfo
+          onBack={handleCloseDetail}
+          handleUpgrade={() => setConfirmDialog(true)}
+        />
       )}
-       {
-        confirmDialog &&
-        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={handleUpgrade} title="Upgrade Confirmation" content="Do you want to upgrade this cat?" />
-      }
+      {confirmDialog && (
+        <ConfirmDialog
+          onCancel={() => setConfirmDialog(false)}
+          onAgree={handleUpgrade}
+          title="Upgrade Confirmation"
+          content="Do you want to upgrade this cat?"
+        />
+      )}
     </div>
   );
 };

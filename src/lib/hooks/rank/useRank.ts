@@ -9,23 +9,19 @@ export const useFetchRanks = () => {
     state.setCurrentRank,
     state.setTotalUsers,
   ]);
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
 
   const fetchRanks = async () => {
     try {
-      show()
+      show();
       const response = await getRanks();
-      console.log("response", response);
       setRanks(response.topUsers);
       setCurrentRank(response.userRank[0]);
       setTotalUsers(response.totalUsers);
     } catch (error) {
       console.error("Error fetching", error);
     } finally {
-      hide()
+      hide();
     }
   };
 
