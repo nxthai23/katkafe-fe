@@ -14,7 +14,7 @@ export class Boot extends Scene {
 
     this.load.setPath("assets");
     this.load.image(ASSETS.DEFAULT_BACKGROUND, "loading-bg.png");
-    this.load.image(ASSETS.LOGO, "loading-bg.png");
+    this.load.image(ASSETS.LOGO, "logo.png");
     this.load.spritesheet(ASSETS.LOADING_CAT, "loading-cat.png", {
       frameWidth: 128,
       frameHeight: 128,

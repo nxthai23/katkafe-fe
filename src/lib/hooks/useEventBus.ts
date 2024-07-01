@@ -1,8 +1,6 @@
 import { EVENT_BUS_TYPES, UI_BUTTON } from "@/constants/events";
 import { EventBus } from "@/game/EventBus";
 import { useLayoutStore } from "@/stores/layoutStore";
-import { useFetchRestaurants } from "./restaurant/useRestaurant";
-import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 export const useEventBus = () => {
   const [
@@ -20,11 +18,6 @@ export const useEventBus = () => {
     state.setShowFriendPanel,
     state.isAnyPanelOpen,
   ]);
-
-  const [currentRestaurant] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-  ]);
-  const { fetchRestaurants } = useFetchRestaurants();
 
   const registerUIButtonClicked = () => {
     EventBus.on(EVENT_BUS_TYPES.UI_BUTTON_CLICK, (uiButton: string) => {

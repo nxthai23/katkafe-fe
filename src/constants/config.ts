@@ -1,6 +1,7 @@
 // Default Telegram window size
 export const GAME_WIDTH = 384;
 export const GAME_HEIGHT = 558;
+// export const GAME_HEIGHT = 608;
 
 // Config
 export const CAT_CONFIGS = "cat-configs";
@@ -66,7 +67,7 @@ export const GUEST_MAX_ORDER_DELAY = 8000;
 export const GUEST_MIN_ORDER_DELAY = 3000;
 
 export const DIALOG_MAX_GEN_DELAY = 60000;
-export const DIALOG_MIN_GEN_DELAY = 20000;
+export const DIALOG_MIN_GEN_DELAY = 10000;
 export const DIALOG_MIN_DURATION = 3000;
 export const DIALOG_MAX_DURATION = 8000;
 
