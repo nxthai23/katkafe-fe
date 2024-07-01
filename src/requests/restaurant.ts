@@ -1,4 +1,4 @@
-// import { BASE_URL } from "@/constants/api-url";
+import { BASE_URL } from "@/constants/api-url";
 import katAxios from "./axios.config";
 import {
   AssignBody,
@@ -6,7 +6,6 @@ import {
   RequireUpgradeBody,
   UpgradeBody,
 } from "@/types/restaurant";
-const BASE_URL = process.env.NEXT_PUBLIC_KATCAFE_BASE_URL;
 
 export const getRestaurants = async () => {
   const response = await katAxios.get(`${BASE_URL}/locations`);

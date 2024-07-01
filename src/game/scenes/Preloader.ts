@@ -12,7 +12,6 @@ import { drawBackground } from "../utils/ui/sprite";
 import { CAT_ANIMATIONS } from "@/constants/anims";
 import { DIALOG_TYPES } from "@/constants/dialog";
 import { CAT_AUDIO_COUNT, GUEST_AUDIO_COUNT } from "@/constants/audio";
-import { getStaffUpgradeConfigs } from "@/requests/staff";
 import { getAllCatConfigs } from "@/requests/cat-config";
 import { CatConfig, CatLevelType } from "@/types/cat-config";
 
@@ -159,7 +158,7 @@ export class Preloader extends Scene {
   }
 
   loadAudios() {
-    this.load.audio("bgm", "/audios/sound-background.wav");
+    this.load.audio("bgm", "/audios/sound-background.mp3");
     this.load.audio("ambience", "/audios/sound-ambience.wav");
     for (let i = 1; i < CAT_AUDIO_COUNT + 1; i++) {
       this.load.audio(`cat-${i}`, `/audios/sound-cat-${i}.wav`);
@@ -180,7 +179,7 @@ export class Preloader extends Scene {
     this.createCatAnimationsFromConfig(CatLevelType.Apron);
     this.createCatAnimationsFromConfig(CatLevelType.Base);
     this.createCatAnimationsFromConfig(CatLevelType.Coat);
-    await waitForSeconds(1);
+    await waitForSeconds(0.5);
     this.scene.start("Game");
   }
 

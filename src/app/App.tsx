@@ -15,7 +15,7 @@ import {
 } from "@/lib/hooks/cat/useStaff";
 import Image from "next/image";
 import { Lightbulb } from "lucide-react";
-import { useInitData } from "@zakarliuka/react-telegram-web-tools";
+import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
 
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
@@ -27,6 +27,7 @@ function App() {
   const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
   // const [progress, setProgress] = useState(100);
   const telegramData = useInitData();
+  const expand = useExpand();
   const [login] = useUserStore((state) => [state.login]);
 
   // for (let i = 0; i < fakeProgress.length; i++) {
@@ -60,50 +61,46 @@ function App() {
       if (res) {
         setTimeout(() => setFinnishLoading(true), 2000);
       }
+      setFinnishLoading(true);
     } catch (error) {
       console.log("error", error);
     }
   };
   useEffect(() => {
-    fetchData();
-    const app = (window as any).Telegram?.WebApp;
-    if (app) {
-      app.ready();
+    if (telegramData.initData) {
+      expand[1]?.();
+      fetchData();
+      const app = (window as any).Telegram?.WebApp;
+      if (app) {
+        app.ready();
+      }
+      return () => {
+        clearClaimInterval();
+      };
     }
-    return () => {
-      clearClaimInterval();
-    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [telegramData.initData]);
+
   const loadingScreen = (
-    <>
-      <div className="relative w-full h-full flex flex-col justify-center items-center">
-        <div className="absolute !z-10">
-          <Image
-            src="/images/loading.png"
-            width={384}
-            height={500}
-            alt="icon"
-          />
-        </div>
-        <div className="!z-20 w-[60%] flex flex-col justify-center items-center">
-          <Image
-            src="/images/KatKafeLogo.png"
-            width={400}
-            height={400}
-            alt="icon"
-            className="mb-6"
-          />
-          {/* <ProgressBar progress={progress} /> */}
-        </div>
-        <div className="absolute bottom-4 !z-20">
-          <div className="flex gap-x-3 mt-10">
-            <Lightbulb />
-            <div>Tip: Tap to the screen to claim coin.</div>
-          </div>
+    <div className="relative w-full h-full flex flex-col justify-center items-center bg-[url('/images/loading.png')] bg-center bg-no-repeat bg-cover !z-20">
+      <div className="!z-20 w-[60%] flex flex-col justify-center items-center">
+        <Image
+          src="/images/KatKafeLogo.png"
+          width={400}
+          height={400}
+          alt="icon"
+          className="mb-6"
+        />
+        {/* <ProgressBar progress={progress} /> */}
+      </div>
+      <div className="absolute bottom-4 !z-20">
+        <div className="flex gap-x-3 mt-10">
+          <Lightbulb />
+          <div>Tip: Tap to the screen to claim coin.</div>
         </div>
       </div>
-    </>
+    </div>
   );
   return (
     <div id="app">

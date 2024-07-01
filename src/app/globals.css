@@ -17,9 +17,13 @@ body {
   align-items: center;
 }
 
+.app-bg {
+  background-image: url("/images/app-bg.jpg");
+}
+
 .game-ui {
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 
 .info-box {

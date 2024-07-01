@@ -31,13 +31,39 @@ export class Game extends Scene {
     this.gameManager.generateGuests(restaurant.order);
   }
 
-  onChooseNewRestaurant(restaurant?: Restaurant | null) {
+  async onChooseNewRestaurant(restaurant?: Restaurant | null) {
     if (restaurant) {
+      this.gameUI.enableLoadingLocation();
       this.currentLocation = restaurant.order;
-      this.generateCatsByRestaurant(restaurant!);
-      this.gameUI.removeLoadingLocation();
+      await this.generateCatsByRestaurant(restaurant!);
       this.gameUI.drawLocation(restaurant!.order);
+      this.gameUI.disableLoadingLocation();
     }
+  }
+
+  init() {
+    // Events
+    EventBus.on(
+      AUDIO_EVENTS.PLAY_SFX,
+      (key: string, config?: Phaser.Types.Sound.SoundConfig) => {
+        this.soundManager.playSFX(key, config);
+      },
+      this.scene
+    );
+    EventBus.on(
+      AUDIO_EVENTS.STOP_BGM,
+      () => {
+        this.soundManager.stopBGM();
+      },
+      this.scene
+    );
+    EventBus.on(
+      AUDIO_EVENTS.STOP_AMBIENCE,
+      () => {
+        this.soundManager.stopAmbience();
+      },
+      this.scene
+    );
   }
 
   create() {
@@ -81,37 +107,14 @@ export class Game extends Scene {
       useRestaurantStore.getState().currentRestaurant!
     );
 
-    EventBus.on("destroy", () => {
+    this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.restaurantSubscriber();
     });
-
-    // Events
-    EventBus.on(
-      AUDIO_EVENTS.PLAY_SFX,
-      (key: string, config?: Phaser.Types.Sound.SoundConfig) => {
-        this.soundManager.playSFX(key, config);
-      },
-      this
-    );
-    EventBus.on(
-      AUDIO_EVENTS.STOP_BGM,
-      () => {
-        this.soundManager.stopBGM();
-      },
-      this
-    );
-    EventBus.on(
-      AUDIO_EVENTS.STOP_AMBIENCE,
-      () => {
-        this.soundManager.stopAmbience();
-      },
-      this
-    );
 
     EventBus.emit(EVENT_BUS_TYPES.SCENE_READY, this);
 
     // Audios
-    this.soundManager.playBGM();
-    this.soundManager.playAmbience();
+    // this.soundManager.playBGM();
+    // this.soundManager.playAmbience();
   }
 }

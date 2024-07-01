@@ -42,8 +42,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
   const game = useRef<Phaser.Game | null>(null);
 
   const [isGameScene, setIsGameScene] = useState(false);
-  const { registerEventListeners, removeAllEventListeners, onGameSceneReady } =
-    useEventBus();
+  const { registerEventListeners, removeAllEventListeners } = useEventBus();
 
   const [
     showFriendPanel,
@@ -73,12 +72,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
     state.showRestaurantPanel,
   ]);
 
-  const [isShowingLoading] = useLoadingStore((state) => [
-    state.isShowing,
-  ]);
-  const [isShowingSnackbar] = useSnackBarStore((state) => [
-    state.isShowing
-  ]);
+  const [isShowingLoading] = useLoadingStore((state) => [state.isShowing]);
+  const [isShowingSnackbar] = useSnackBarStore((state) => [state.isShowing]);
 
   useLayoutEffect(() => {
     if (game.current === null) {
@@ -118,9 +113,13 @@ export const PhaserGame = forwardRef<IRefPhaserGame>(function PhaserGame(
       removeAllEventListeners();
     };
   }, [ref, registerEventListeners, removeAllEventListeners]);
+
   return (
-    <div className="mx-auto">
-      <div id="game-container" className="relative">
+    <div className="w-full h-full">
+      <div
+        id="game-container"
+        className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
+      >
         {isGameScene && <InGameUI />}
         {showFriendPanel && <Friend />}
         {showStaffPanel && <Staff />}

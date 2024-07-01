@@ -42,6 +42,7 @@ export class GameUI {
 
   scene: Phaser.Scene;
   uiGroup: Phaser.GameObjects.Group;
+  loadingGroup: Phaser.GameObjects.Group;
 
   constructor(scene: Phaser.Scene) {
     this.isLoadingUI = false;
@@ -50,29 +51,52 @@ export class GameUI {
   }
 
   drawLoadingLocation() {
+    this.loadingGroup = this.scene.add.group();
     this.loadingBg = drawBackground(this.scene, ASSETS.DEFAULT_BACKGROUND);
+    this.loadingBg.setSize(GAME_WIDTH, GAME_HEIGHT).setDepth(LAYERS.DEBUG);
 
     this.loadingLogo = drawSprite(
       this.scene,
       ASSETS.LOGO,
       GAME_WIDTH / 2,
       GAME_HEIGHT / 2,
-      ASSET_SCALE,
+      1 / 8,
       LAYERS.DEBUG
     );
 
-    this.loadingText = this.scene.add.text(512, 384, "Opening Restaurant...", {
-      fontSize: "24px",
-      color: "#000",
-    });
+    this.loadingText = this.scene.add.text(
+      GAME_WIDTH / 2,
+      GAME_HEIGHT / 2 + 64,
+      "Opening Restaurant...",
+      {
+        fontFamily: "Pixelify Sans",
+        fontSize: 22,
+        color: "#000000",
+        stroke: "#ffffff",
+        strokeThickness: 4,
+        align: "center",
+        shadow: {
+          offsetX: 0,
+          offsetY: 4,
+          color: "#00000033",
+          fill: true,
+        },
+      }
+    );
     this.loadingText.setOrigin(0.5);
     this.loadingText.setDepth(LAYERS.DEBUG);
+
+    this.loadingGroup.add(this.loadingBg);
+    this.loadingGroup.add(this.loadingLogo);
+    this.loadingGroup.add(this.loadingText);
   }
 
-  removeLoadingLocation() {
-    this.loadingBg.removeFromDisplayList();
-    this.loadingLogo.removeFromDisplayList();
-    this.loadingText.removeFromDisplayList();
+  disableLoadingLocation() {
+    this.loadingGroup.setVisible(false);
+  }
+
+  enableLoadingLocation() {
+    this.loadingGroup.setVisible(true);
   }
 
   drawLocation(currentLocation: number) {
