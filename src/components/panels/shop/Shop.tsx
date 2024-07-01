@@ -80,7 +80,7 @@ const Shop = () => {
     if (!user) return;
     if (Number(user.bean) < item.price) {
       setShowNotiBean(true);
-      showSnackbar("Not enough bean!");
+      showSnackbar("Not enough gold!");
       return;
     }
     try {
