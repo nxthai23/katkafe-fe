@@ -70,18 +70,15 @@ function App() {
     if (telegramData.initData) {
       expand[1]?.();
       fetchData();
-      const app = (window as any).Telegram?.WebApp;
-      if (app) {
-        app.ready();
-      }
-      return () => {
-        clearClaimInterval();
-      };
+    }
+
+    const app = (window as any).Telegram?.WebApp;
+    if (app) {
+      app.ready();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [telegramData.initData]);
-
   const loadingScreen = (
     <div className="relative w-full h-full flex flex-col justify-center items-center bg-[url('/images/loading.png')] bg-center bg-no-repeat bg-cover !z-20">
       <div className="!z-20 w-[60%] flex flex-col justify-center items-center">

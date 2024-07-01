@@ -1,2 +1,2 @@
 export const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://api-katkafe.capylabs.io";
+  process.env.NEXT_PUBLIC_KATCAFE_BASE_URL || "https://api-katkafe.capylabs.io";
