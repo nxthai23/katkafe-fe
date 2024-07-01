@@ -16,6 +16,8 @@ import { Lightbulb } from "lucide-react";
 import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { DeviceGuard } from "@/hoc/DeviceGuard";
 
+const needDeviceGuard = process.env.NEXT_PUBLIC_NEED_DEVICE_GUARD ?? 1;
+
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [finnishLoading, setFinnishLoading] = useState(false);
@@ -99,11 +101,19 @@ function App() {
       </div>
     </div>
   );
+
+  const gameContent = finnishLoading ? (
+    <PhaserGame ref={phaserRef} />
+  ) : (
+    loadingScreen
+  );
   return (
     <div id="app">
-      <DeviceGuard>
-        {finnishLoading ? <PhaserGame ref={phaserRef} /> : loadingScreen}
-      </DeviceGuard>
+      {needDeviceGuard == 1 ? (
+        <DeviceGuard>{gameContent}</DeviceGuard>
+      ) : (
+        gameContent
+      )}
     </div>
   );
 }
