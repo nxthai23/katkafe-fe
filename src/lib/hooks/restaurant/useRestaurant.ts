@@ -45,7 +45,7 @@ export const useFetchRestaurants = () => {
       const listRestaurantsConfigMapped = restaurantConfig.filter(
         (resConfig: any) =>
           restaurants.some((restaurant: any) => restaurant.order !== resConfig.order)
-      ).sort((restaurantA: any, restaurantB: any) => restaurantB.order - restaurantA.order);
+      ).sort((restaurantA: any, restaurantB: any) => restaurantA.order - restaurantB.order);
 
       const listRestaurantsMapped = [
         ...restaurants,

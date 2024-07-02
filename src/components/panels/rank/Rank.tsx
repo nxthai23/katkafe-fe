@@ -10,7 +10,7 @@ import CardBarista from "@/components/ui/CardBarista";
 
 type Props = {};
 
-function Rank({}: Props) {
+function Rank({ }: Props) {
   const [setShowRankPanel] = useLayoutStore((state) => [
     state.setShowRankPanel,
   ]);
@@ -64,24 +64,74 @@ function Rank({}: Props) {
               <div className="text-bodyMd text-orange-90 mb-3">
                 Total user: {totalUsers}
               </div>
-              {ranks.map((rank, index) => (
-                <div
-                  key={rank._id}
-                  className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-auto"
-                >
-                  <CardBarista
+              <div className="w-full overflow-auto !h-[calc(462px-30px-33px-172px-48px)]">
+                {ranks.map((rank, index) => (
+                  <div
                     key={rank._id}
-                    type={""}
-                    id={index}
-                    username={rank.username}
-                    avatarUrl={rank.avatarUrl}
-                    referralCounter={0}
-                    bean={rank.bean}
-                  />
-                </div>
-              ))}
+                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
+                  >
+                    <CardBarista
+                      key={rank._id}
+                      type={""}
+                      id={index}
+                      username={rank.username}
+                      avatarUrl={rank.avatarUrl}
+                      referralCounter={0}
+                      bean={rank.bean}
+                    />
+                  </div>
+                ))}
+                {ranks.map((rank, index) => (
+                  <div
+                    key={rank._id}
+                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
+                  >
+                    <CardBarista
+                      key={rank._id}
+                      type={""}
+                      id={index}
+                      username={rank.username}
+                      avatarUrl={rank.avatarUrl}
+                      referralCounter={0}
+                      bean={rank.bean}
+                    />
+                  </div>
+                ))}
+                {ranks.map((rank, index) => (
+                  <div
+                    key={rank._id}
+                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
+                  >
+                    <CardBarista
+                      key={rank._id}
+                      type={""}
+                      id={index}
+                      username={rank.username}
+                      avatarUrl={rank.avatarUrl}
+                      referralCounter={0}
+                      bean={rank.bean}
+                    />
+                  </div>
+                ))}
+                {ranks.map((rank, index) => (
+                  <div
+                    key={rank._id}
+                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
+                  >
+                    <CardBarista
+                      key={rank._id}
+                      type={""}
+                      id={index}
+                      username={rank.username}
+                      avatarUrl={rank.avatarUrl}
+                      referralCounter={0}
+                      bean={rank.bean}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="h-12 w-full">
+            <div className="h-12 w-full absolute bottom-0">
               <CardUser user={currentRank as LeaderBoard | null} />
             </div>
           </div>
