@@ -81,54 +81,6 @@ function Rank({ }: Props) {
                     />
                   </div>
                 ))}
-                {ranks.map((rank, index) => (
-                  <div
-                    key={rank._id}
-                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
-                  >
-                    <CardBarista
-                      key={rank._id}
-                      type={""}
-                      id={index}
-                      username={rank.username}
-                      avatarUrl={rank.avatarUrl}
-                      referralCounter={0}
-                      bean={rank.bean}
-                    />
-                  </div>
-                ))}
-                {ranks.map((rank, index) => (
-                  <div
-                    key={rank._id}
-                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
-                  >
-                    <CardBarista
-                      key={rank._id}
-                      type={""}
-                      id={index}
-                      username={rank.username}
-                      avatarUrl={rank.avatarUrl}
-                      referralCounter={0}
-                      bean={rank.bean}
-                    />
-                  </div>
-                ))}
-                {ranks.map((rank, index) => (
-                  <div
-                    key={rank._id}
-                    className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-hidden"
-                  >
-                    <CardBarista
-                      key={rank._id}
-                      type={""}
-                      id={index}
-                      username={rank.username}
-                      avatarUrl={rank.avatarUrl}
-                      referralCounter={0}
-                      bean={rank.bean}
-                    />
-                  </div>
-                ))}
               </div>
             </div>
             <div className="h-12 w-full absolute bottom-0">

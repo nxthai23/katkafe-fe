@@ -1,6 +1,4 @@
 "use client";
-import { EVENT_BUS_TYPES } from "@/constants/events";
-import { EventBus } from "@/game/EventBus";
 import {
   getNextRestaurantUnclockConfig,
   getPower,
@@ -51,11 +49,6 @@ export const useFetchRestaurants = () => {
         ...restaurants,
         ...listRestaurantsConfigMapped,
       ];
-      console.log('restaurants', restaurants);
-      console.log('restaurantConfig', restaurantConfig);
-      console.log('listRestaurantsConfigMapped', listRestaurantsConfigMapped);
-      console.log('listRestaurantsMapped', listRestaurantsMapped);
-
       if (listRestaurantsConfigMapped.length) {
         await fetchNextRestaurants(
           listRestaurantsMapped[restaurants.length - 1].order
