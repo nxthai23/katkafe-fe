@@ -15,6 +15,9 @@ import Image from "next/image";
 import { Lightbulb } from "lucide-react";
 import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { DeviceGuard } from "@/hoc/DeviceGuard";
+import { set } from "lodash";
+import { StartLoading } from "@/components/ui/StartLoading";
+import { AuthProvider } from "@/hoc/AuthProvider";
 
 const needDeviceGuard = process.env.NEXT_PUBLIC_NEED_DEVICE_GUARD ?? 1;
 
@@ -26,32 +29,16 @@ function App() {
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
   const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
   // const [progress, setProgress] = useState(100);
-  const telegramData = useInitData();
-  const expand = useExpand();
-  const [login] = useUserStore((state) => [state.login]);
 
   // for (let i = 0; i < fakeProgress.length; i++) {
   //   setTimeout(() => {
   //     setProgress(fakeProgress[i]);
   //   }, i * 500); // Simulating API progress
   // }
-  const Login = async () => {
-    try {
-      const loginBody = {
-        type: "local",
-        initData: telegramData.initData,
-        referralCode: telegramData.initDataUnsafe?.start_param,
-      };
-      await login(loginBody);
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
-  };
 
   const fetchData = async () => {
     try {
       setFinnishLoading(false);
-      await Login();
       const res = await Promise.all([
         fetchRestaurants(true),
         fetchStaffs(),
@@ -63,50 +50,28 @@ function App() {
       }
     } catch (error) {
       console.log("error", error);
+      //TODO: handle error
+    } finally {
+      setFinnishLoading(true);
     }
   };
-  useEffect(() => {
-    if (telegramData.initData) {
-      expand[1]?.();
-      fetchData();
-    }
 
-    const app = (window as any).Telegram?.WebApp;
-    if (app) {
-      app.ready();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [telegramData.initData]);
-  const loadingScreen = (
-    <div className="relative w-full h-screen flex flex-col justify-center items-center bg-[url('/images/loading.png')] bg-center bg-no-repeat bg-cover !z-20">
-      <div className="!z-20 w-[60%] flex flex-col justify-center items-center">
-        <Image
-          src="/images/KatKafeLogo.png"
-          width={400}
-          height={400}
-          alt="icon"
-          className="mb-6"
-        />
-        {/* <ProgressBar progress={progress} /> */}
-      </div>
-      <div className="absolute bottom-4 !z-20">
-        <div className="flex gap-x-3 mt-10">
-          <Lightbulb />
-          <div>Tip: Tap to the screen to claim coin.</div>
-        </div>
-      </div>
-    </div>
-  );
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const gameContent = finnishLoading ? (
     <PhaserGame ref={phaserRef} />
   ) : (
-    loadingScreen
+    <StartLoading />
   );
+
   return (
     <div id="app">
       {needDeviceGuard == 1 ? (
-        <DeviceGuard>{gameContent}</DeviceGuard>
+        <DeviceGuard>
+          <AuthProvider>{gameContent}</AuthProvider>
+        </DeviceGuard>
       ) : (
         gameContent
       )}
