@@ -4,6 +4,7 @@ import { get } from "lodash";
 import { LeaderBoard } from "@/types/leaderBoard";
 import { ordinalSuffix } from "@/utils/helpers";
 import FormatText from "./FormatText";
+import { DEFAULT_QUEST_ICON } from "@/constants/config";
 
 type Props = {
   user: LeaderBoard | null;
@@ -29,7 +30,7 @@ const CardFriend = ({ user }: Props) => {
             <div className="rounded-full w-6 h-6">
               <Image
                 className="rounded-[100px]"
-                src={imageUrl}
+                src={imageUrl === "" ? DEFAULT_QUEST_ICON : imageUrl}
                 alt="cat pic"
                 width={24}
                 height={24}
