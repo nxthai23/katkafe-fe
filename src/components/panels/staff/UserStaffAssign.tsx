@@ -6,6 +6,7 @@ import { assignCat } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
+import Restaurant from "../restaurant/Restaurant";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,19 +39,28 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
   const [confirmDialog, setConfirmDialog] = useState(false);
 
-  const [autoActives, setAutoActives, staffs, isOneAssign] = useStaffStore((state) => [state.autoActives, state.setAutoActives, state.staffs, state.isOneAssign]);
-  const [currentRestaurant, setCurrentRestaurant] = useRestaurantStore(
-    (state) => [state.currentRestaurant, state.setCurrentRestaurant]
+  const [autoActives, setAutoActives, staffs, isOneAssign] = useStaffStore(
+    (state) => [
+      state.autoActives,
+      state.setAutoActives,
+      state.staffs,
+      state.isOneAssign,
+    ]
   );
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
+  const [myRestaurants, currentRestaurant, setCurrentRestaurant] =
+    useRestaurantStore((state) => [
+      state.myRestaurants,
+      state.currentRestaurant,
+      state.setCurrentRestaurant,
+    ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+
+  const assignedCatIds = myRestaurants
+    .map((restaurant) => restaurant.cats)
+    .flat();
 
   const staffNotAssign = staffs
-    .filter((staff) => {
-      return !currentRestaurant?.cats.some((cat) => cat === staff._id);
-    })
+    .filter((staff) => !assignedCatIds.includes(staff._id))
     .sort((a, b) => b.level - a.level);
 
   const getFilteredStaffs = () => {
@@ -88,19 +98,19 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     try {
       if (!currentRestaurant) return;
       if (!isActive) return;
-      show()
+      show();
       const body = {
         locationId: currentRestaurant._id,
         catIds: [...isActive],
       };
       const response = await assignCat(body);
       setCurrentRestaurant(response);
-      setConfirmDialog(false)
+      setConfirmDialog(false);
       onAssignSuccess();
     } catch (error) {
       console.error("Error assign cat", error);
     } finally {
-      hide()
+      hide();
     }
     if (isActive !== null) {
       showStaffPanel(false);
@@ -172,32 +182,36 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
               <div className="flex items-center gap-1">
                 <span
                   onClick={() => handleStarFilterClick("All")}
-                  className={`${customClass} ${activeSelect === "All" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "All" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   All
                 </span>
                 <span
                   onClick={() => handleStarFilterClick("OneStar")}
-                  className={`${customClass} ${activeSelect === "OneStar" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "OneStar" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/OneStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleStarFilterClick("TwoStar")}
-                  className={`${customClass} ${activeSelect === "TwoStar" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "TwoStar" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/TwoStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleStarFilterClick("ThreeStar")}
-                  className={`${customClass} ${activeSelect === "ThreeStar" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "ThreeStar" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/ThreeStar.png" alt="" />
@@ -223,9 +237,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
             <hr className="w-[330px] border-[#e8ddbd] mb-2" />
             <div
               className="flex flex-wrap gap-2 justify-center"
-              onClick={() =>
-                setConfirmDialog(true)
-              }
+              onClick={() => setConfirmDialog(true)}
             >
               <div className="w-[172px] h-[39px] -mb-[3px]">
                 <Button>Assign</Button>
@@ -234,10 +246,14 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
           </div>
         </div>
       </div>
-      {
-        confirmDialog &&
-        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={() => handleAssign(Array.isArray(isActive) ? isActive : [])} title="Assign Confirmation" content="Do you want to assign this cat?" />
-      }
+      {confirmDialog && (
+        <ConfirmDialog
+          onCancel={() => setConfirmDialog(false)}
+          onAgree={() => handleAssign(Array.isArray(isActive) ? isActive : [])}
+          title="Assign Confirmation"
+          content="Do you want to assign this cat?"
+        />
+      )}
     </div>
   );
 };
