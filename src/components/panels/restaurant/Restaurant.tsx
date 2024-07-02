@@ -150,7 +150,7 @@ function Restaurant() {
             <p className="bg-red-10 h-[2px] w-[70%]"></p>
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
-          <div className="w-full flex flex-col gap-2 bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-hidden mt-8">
+          <div className="w-full flex flex-col gap-2 bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-auto mt-8">
             {currentRestaurants.map((restaurant) => (
               <>
                 <div
@@ -166,18 +166,9 @@ function Restaurant() {
                 </div>
               </>
             ))}
-            {/* {currentPage ===
-              Math.ceil((restaurants.length + 1) / itemsPerPage) && (
-              <div
-                className="border border-[#cccbbd] bg-[#F7F6E2] p-2 py-8 rounded-lg"
-                style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
-              >
-                <UnlockRestaurantCard onUnlock={handleClick} />
-              </div>
-            )} */}
             <Pagination
               onPageClick={handlePageClick}
-              customClassName="flex justify-center absolute bottom-2 w-full left-1/2 -translate-x-1/2 z-20"
+              customClassName="flex justify-center w-full z-20"
               currentPage={currentPage}
               totalPages={Math.ceil((restaurants.length + 1) / itemsPerPage)}
               onClickNextPage={handleNextPage}

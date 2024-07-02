@@ -43,13 +43,19 @@ export const useFetchRestaurants = () => {
         getRestaurantConfigs(),
       ]);
       const listRestaurantsConfigMapped = restaurantConfig.filter(
-        (resConfig: any, index: any) =>
-          resConfig[index]?.name === restaurants[index]?.name
-      );
+        (resConfig: any) =>
+          restaurants.some((restaurant: any) => restaurant.order !== resConfig.order)
+      ).sort((restaurantA: any, restaurantB: any) => restaurantB.order - restaurantA.order);
+
       const listRestaurantsMapped = [
         ...restaurants,
         ...listRestaurantsConfigMapped,
       ];
+      console.log('restaurants', restaurants);
+      console.log('restaurantConfig', restaurantConfig);
+      console.log('listRestaurantsConfigMapped', listRestaurantsConfigMapped);
+      console.log('listRestaurantsMapped', listRestaurantsMapped);
+
       if (listRestaurantsConfigMapped.length) {
         await fetchNextRestaurants(
           listRestaurantsMapped[restaurants.length - 1].order

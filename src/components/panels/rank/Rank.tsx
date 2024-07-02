@@ -67,7 +67,7 @@ function Rank({}: Props) {
               {ranks.map((rank, index) => (
                 <div
                   key={rank._id}
-                  className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12"
+                  className="w-full cursor-pointer bg-[#f7f6dc] border-[#e8ddbd] border-b first:rounded-t-lg last:rounded-b-lg h-12 overflow-auto"
                 >
                   <CardBarista
                     key={rank._id}
