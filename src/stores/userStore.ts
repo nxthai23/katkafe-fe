@@ -15,6 +15,7 @@ type Actions = {
   clear: () => void;
   setUser: (user: UserType | null) => void;
   fetchUser: () => Promise<void>;
+  isLoggedIn: () => boolean;
 };
 
 // Khởi tạo giá trị mặc định cho state
@@ -49,6 +50,7 @@ export const useUserStore = create<State & Actions>()(
           set({ user });
         }
       },
+      isLoggedIn: () => !!get().jwt && !!get().user,
     }),
     { name: "userStore" }
   )
