@@ -3,6 +3,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { useEffect, useState } from "react";
 import { get } from "lodash";
+import { ErrorStartApp } from "@/components/ui/ErrorStartApp";
 
 export const AuthProvider = ({
   children,
@@ -49,8 +50,8 @@ export const AuthProvider = ({
   const renderContent = () => {
     if (isLoading) return <StartLoading></StartLoading>;
     else if (!isLoading && error)
-      return <div className="text-red">{error}</div>;
-    else return children;
+      return <ErrorStartApp></ErrorStartApp>
+    else return children
   };
 
   return renderContent();

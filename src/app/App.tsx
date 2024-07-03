@@ -15,15 +15,17 @@ import Image from "next/image";
 import { Lightbulb } from "lucide-react";
 import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
 import { DeviceGuard } from "@/hoc/DeviceGuard";
-import { set } from "lodash";
+import { get, set } from "lodash";
 import { StartLoading } from "@/components/ui/StartLoading";
 import { AuthProvider } from "@/hoc/AuthProvider";
+import { ErrorStartApp } from "@/components/ui/ErrorStartApp";
 
 const needDeviceGuard = process.env.NEXT_PUBLIC_NEED_DEVICE_GUARD ?? 1;
 
 function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [finnishLoading, setFinnishLoading] = useState(false);
+  const [error, setError] = useState("");
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
@@ -50,6 +52,7 @@ function App() {
       }
     } catch (error) {
       console.log("error", error);
+      setError(get(error, "message", ""));
       //TODO: handle error
     } finally {
       setFinnishLoading(true);
@@ -60,20 +63,23 @@ function App() {
     fetchData();
   }, []);
 
-  const gameContent = finnishLoading ? (
-    <PhaserGame ref={phaserRef} />
-  ) : (
-    <StartLoading />
-  );
+  const gameContent = () => {
+    if (!finnishLoading) return <StartLoading></StartLoading>;
+    else if (finnishLoading && error)
+      return <ErrorStartApp></ErrorStartApp>
+    else return <PhaserGame ref={phaserRef} />
+  };
 
   return (
     <div id="app">
       {needDeviceGuard == 1 ? (
         <DeviceGuard>
-          <AuthProvider>{gameContent}</AuthProvider>
+          <AuthProvider>{gameContent()}</AuthProvider>
         </DeviceGuard>
       ) : (
-        gameContent
+        <AuthProvider>
+          {gameContent()}
+        </AuthProvider>
       )}
     </div>
   );
