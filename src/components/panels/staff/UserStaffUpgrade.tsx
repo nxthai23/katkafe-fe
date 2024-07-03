@@ -41,18 +41,16 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
     isChooseUpgrade,
     setIsChooseUpgrade,
     setNumberCatPick,
-    numberCatRequire
+    numberCatRequire,
   ] = useStaffStore((state) => [
     state.staffs,
     state.currentStaff,
     state.isChooseUpgrade,
     state.setIsChooseUpgrade,
     state.setNumberCatPick,
-    state.numberCatRequire
+    state.numberCatRequire,
   ]);
-  const [currentRestaurant] = useRestaurantStore((state) => [
-    state.currentRestaurant,
-  ]);
+  const [myRestaurants] = useRestaurantStore((state) => [state.myRestaurants]);
 
   const { fetchStaffs } = useFetchStaffs();
 
@@ -63,14 +61,22 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
     setActiveSelect(selectName);
     setActiveStarFilter(selectName);
   };
+
   //  @TODO:: staff in all restaurants
-  const staffNotAssign = staffs.filter((staff) => {
-    return (
-      currentStaff &&
-      staff._id !== currentStaff._id &&
-      !currentRestaurant?.cats.some((cat) => cat === staff._id)
-    );
-  });
+  // const staffNotAssign = staffs.filter((staff) => {
+  //   return (
+  //     currentStaff &&
+  //     staff._id !== currentStaff._id &&
+  //     !currentRestaurant?.cats.some((cat) => cat === staff._id)
+  //   );
+  // });
+  const assignedCatIds = myRestaurants
+    .map((restaurant) => restaurant.cats)
+    .flat();
+
+  const staffNotAssign = staffs
+    .filter((staff) => !assignedCatIds.includes(staff._id))
+    .sort((a, b) => b.level - a.level);
 
   const getFilteredStaffs = () => {
     let filtered = staffNotAssign;
@@ -163,32 +169,36 @@ const StaffUpgrade: React.FC<Props> = ({ showStaffUpgradePanel }) => {
               <div className="flex items-center gap-1">
                 <span
                   onClick={() => handleSelectClick("All")}
-                  className={`${customClass} ${activeSelect === "All" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "All" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   All
                 </span>
                 <span
                   onClick={() => handleSelectClick("OneStar")}
-                  className={`${customClass} ${activeSelect === "OneStar" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "OneStar" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/OneStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleSelectClick("TwoStar")}
-                  className={`${customClass} ${activeSelect === "TwoStar" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "TwoStar" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/TwoStar.png" alt="" />
                 </span>
                 <span
                   onClick={() => handleSelectClick("ThreeStar")}
-                  className={`${customClass} ${activeSelect === "ThreeStar" ? "!opacity-100" : ""
-                    }`}
+                  className={`${customClass} ${
+                    activeSelect === "ThreeStar" ? "!opacity-100" : ""
+                  }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/ThreeStar.png" alt="" />

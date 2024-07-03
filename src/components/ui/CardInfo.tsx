@@ -41,10 +41,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
   ]);
   const { fetchStaffs } = useFetchStaffs();
   const [user] = useUserStore((state) => [state.user]);
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
 
   const fetchDataUpgrade = async () => {
     show();
@@ -190,7 +187,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                 {staff && staff.level < 100 && (
                   <>
                     {numberCatRequire === 0 ||
-                      numberCatPick > numberCatRequire ? (
+                    numberCatPick > numberCatRequire ? (
                       <div
                         className="w-[172px] h-[39px] hidden"
                         onClick={handleShowStaffUpgrade}
@@ -209,13 +206,16 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                 )}
 
                 {staff && staff.level < 100 ? (
-                  <div className={classNames("w-[172px] h-[39px]", !handleUpgrade && 'hidden')} >
+                  <div
+                    className={classNames(
+                      "w-[172px] h-[39px]",
+                      !handleUpgrade && "hidden"
+                    )}
+                  >
                     {numberCatPick >= numberCatRequire ? (
                       <Button onClick={handleUpgrade}>Upgrade</Button>
                     ) : (
-                      <Button disabled onClick={handleUpgrade}>
-                        Upgrade
-                      </Button>
+                      <Button disabled>Upgrade</Button>
                     )}
                   </div>
                 ) : (
