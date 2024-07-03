@@ -1,5 +1,6 @@
 export type UpgradeBody = {
   catId: string;
+  catRequireIds?: string[];
 };
 
 export type RemoveBody = {

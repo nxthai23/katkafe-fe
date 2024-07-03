@@ -26,10 +26,10 @@ export const upgradeRequireStaff = async (body: RequireUpgradeBody) => {
   return response.data;
 };
 
-export const removeStaff = async (body: RemoveBody) => {
-  const response = await katAxios.post(`${BASE_URL}/cats/remove`, body);
-  return response.data;
-};
+// export const removeStaff = async (body: RemoveBody) => {
+//   const response = await katAxios.post(`${BASE_URL}/cats/remove`, body);
+//   return response.data;
+// };
 
 export const getStaffUpgradeConfigs = async () => {
   const response = await katAxios.get(`${BASE_URL}/cat-upgrade`);

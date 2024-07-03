@@ -5,16 +5,13 @@ import CardInfo from "@/components/ui/CardInfo";
 import { useStaffStore } from "@/stores/staffStore";
 import { Staff } from "@/types/common-types";
 import { useLayoutStore } from "@/stores/layoutStore";
-import {
-  removeStaff,
-  upgradeRequireStaff,
-  upgradeStaff,
-} from "@/requests/staff";
+import { upgradeRequireStaff, upgradeStaff } from "@/requests/staff";
 import { useUserStore } from "@/stores/userStore";
 import { Dot } from "lucide-react";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
 import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
+import { assign } from "lodash";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -155,29 +152,37 @@ const StaffList: React.FC = () => {
       if (!user) return;
       if (Number(user.bean) < fee) {
         showSnackbar("Not enough gold!");
+        setConfirmDialog(false);
         return;
       }
       if (Number(user.cats.length) < numberCatsRequire) {
         showSnackbar("Not enough cat!");
+        setConfirmDialog(false);
         return;
       }
-      setConfirmDialog(false);
       show();
-      const data = await upgradeStaff({ catId: staff._id });
+      const body = { catId: staff._id };
+      if (isChooseUpgrade.length > 0) {
+        assign(body, { catRequireIds: isChooseUpgrade });
+      }
+      const data = await upgradeStaff(body);
       setCurrentStaff(data.upgradedCat);
       setNumberCatPick(0);
-      showSnackbar("Upgrade successfully!");
-      if (isChooseUpgrade.length > 0) {
-        const body = { catIds: isChooseUpgrade };
-        await removeStaff(body);
-      }
+      // if (isChooseUpgrade.length > 0) {
+      //   const body = { catIds: isChooseUpgrade };
+      //   await removeStaff(body);
+      // }
       await fetchUser();
       await fetchStaffs();
       setIsChooseUpgrade([]);
       await fetchDataUpgrade();
-      hide();
+      showSnackbar("Upgrade successfully!");
     } catch (error) {
       console.log("error", error);
+      showSnackbar("Upgrade failed");
+    } finally {
+      hide();
+      setConfirmDialog(false);
     }
   };
 
