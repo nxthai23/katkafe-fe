@@ -19,6 +19,7 @@ import { get, set } from "lodash";
 import { StartLoading } from "@/components/ui/StartLoading";
 import { AuthProvider } from "@/hoc/AuthProvider";
 import { ErrorStartApp } from "@/components/ui/ErrorStartApp";
+import { useFetchUserBoosts } from "@/lib/hooks/boost/useFetchUserBoosts";
 
 const needDeviceGuard = process.env.NEXT_PUBLIC_NEED_DEVICE_GUARD ?? 1;
 
@@ -30,6 +31,7 @@ function App() {
   const { fetchStaffs } = useFetchStaffs();
   const { fetchStaffUpgradeConfigs } = useFetchStaffUpgradeConfigs();
   const { fetchRestaurantUpgradeConfigs } = useFetchRestaurantUpgradeConfigs();
+  const { fetchUserBoosts } = useFetchUserBoosts();
   // const [progress, setProgress] = useState(100);
 
   // for (let i = 0; i < fakeProgress.length; i++) {
@@ -46,6 +48,7 @@ function App() {
         fetchStaffs(),
         fetchStaffUpgradeConfigs(),
         fetchRestaurantUpgradeConfigs(),
+        fetchUserBoosts(),
       ]);
       if (res) {
         setTimeout(() => setFinnishLoading(true), 2000);
@@ -65,9 +68,8 @@ function App() {
 
   const gameContent = () => {
     if (!finnishLoading) return <StartLoading></StartLoading>;
-    else if (finnishLoading && error)
-      return <ErrorStartApp></ErrorStartApp>
-    else return <PhaserGame ref={phaserRef} />
+    else if (finnishLoading && error) return <ErrorStartApp></ErrorStartApp>;
+    else return <PhaserGame ref={phaserRef} />;
   };
 
   return (
@@ -77,9 +79,7 @@ function App() {
           <AuthProvider>{gameContent()}</AuthProvider>
         </DeviceGuard>
       ) : (
-        <AuthProvider>
-          {gameContent()}
-        </AuthProvider>
+        <AuthProvider>{gameContent()}</AuthProvider>
       )}
     </div>
   );

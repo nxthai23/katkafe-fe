@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants/api-url";
-import { InviteUrlResponse, UserType } from "@/types/user";
+import { BoostBody, InviteUrlResponse, UserType } from "@/types/user";
 import katAxios from "./axios.config";
+import { UserBoost } from "@/types/boost";
 
 export const getUser = async () => {
   const response = await katAxios.get(`${BASE_URL}/users/me`);
@@ -20,6 +21,14 @@ export const getClaimable = async () => {
 export const getInviteUrl = async () => {
   const response = await katAxios.get<InviteUrlResponse>(
     `${BASE_URL}/users/invite-url`
+  );
+  return response.data;
+};
+
+export const postBoost = async (body: BoostBody) => {
+  const response = await katAxios.post<UserBoost>(
+    `${BASE_URL}/users/boost`,
+    body
   );
   return response.data;
 };

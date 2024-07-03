@@ -1,4 +1,4 @@
-export type   UserType = {
+export type UserType = {
   _id: string;
   name: string;
   imageUrl: string;
@@ -16,6 +16,8 @@ export type   UserType = {
   level: number;
   shopCounter: number;
   referralCounter: number;
+  nextIdleBoostAt: string;
+  nextTapBoostAt: string;
 };
 
 export type LoginBody = {
@@ -30,4 +32,8 @@ export type LoginRepsonse = {
 
 export type InviteUrlResponse = {
   inviteUrl: string;
+};
+
+export type BoostBody = {
+  boostConfigId: string;
 };
