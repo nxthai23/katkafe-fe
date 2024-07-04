@@ -4,14 +4,23 @@ import { useEffect, useState, useRef } from "react";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { postTap } from "@/requests/taptap/taptap";
 import { getClaim } from "@/requests/user";
+import { useUserBoostsStore } from "@/stores/boost/userBoostsStore";
+import moment from "moment";
+import { set } from "lodash";
+import { UserBoost } from "@/types/boost";
 
 export const useGamePlay = () => {
   const [startIntervalRecoverPower, setStartIntervalRecoverPower] =
     useState(false);
   const [startIntervalPostTapping, setStartIntervalPostTapping] =
     useState(false);
+  const [startIntervalCheckBoost, setstartIntervalCheckBoost] = useState(false);
   const intervalRef = useRef<number | null>(null);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [userBoosts, setUserBoosts] = useUserBoostsStore((state) => [
+    state.userBoosts,
+    state.setUserBoosts,
+  ]);
   const [increasePower, tapping, resetTapping] = useGamePlayStore((state) => [
     state.increasePower,
     state.tapping,
@@ -79,10 +88,28 @@ export const useGamePlay = () => {
       return () => clearInterval(interval);
     }
   }, [startIntervalPostTapping, tapping]);
+
+  useEffect(() => {
+    if (userBoosts.length && startIntervalCheckBoost) {
+      const interval = setInterval(() => {
+        const newUserBoosts: UserBoost[] = [];
+        userBoosts.map((boost) => {
+          if (moment().utc().isBefore(boost.endAt)) {
+            return newUserBoosts.push(boost);
+          }
+        });
+        setUserBoosts(newUserBoosts);
+      }, 5000); // Update every second
+      // Cleanup the interval on component unmount
+      return () => clearInterval(interval);
+    }
+  }, [startIntervalCheckBoost, userBoosts.length]);
+
   return {
     setStartIntervalRecoverPower,
     setStartIntervalPostTapping,
+    setstartIntervalCheckBoost,
     clearClaimInterval,
-    handleClaim
-  }
-}
+    handleClaim,
+  };
+};

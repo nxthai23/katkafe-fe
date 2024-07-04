@@ -4,7 +4,7 @@ interface NumberFormatterProps {
   value?: number;
 }
 
-const formatNumber = (value: number): string => {
+export const formatNumber = (value: number): string => {
   if (value >= 1e6) {
     return (value / 1e6).toFixed(1) + "M";
   } else if (value >= 1e3) {

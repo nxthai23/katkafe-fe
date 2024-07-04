@@ -8,7 +8,7 @@ import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import LoginAward from "./LoginAward";
 import { getClaimable } from "@/requests/user";
 import OfflineEarning from "./OfflineEarning";
-import NumberFormatter from "./NumberFormat";
+import NumberFormatter, { formatNumber } from "./NumberFormat";
 import { useDialogStore } from "@/stores/DialogStore";
 import { useGamePlayStore } from "@/stores/GamePlayStore";
 import { useGamePlay } from "@/lib/hooks/gameplay/useGamePlay";
@@ -24,6 +24,10 @@ import { get } from "lodash";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import Dialog from "./common/Dialog";
+import { useUserBoostsStore } from "@/stores/boost/userBoostsStore";
+import { BoostType } from "@/types/boost";
+import moment from "moment";
+import { format } from "path";
 
 type Click = {
   id: number;
@@ -88,6 +92,13 @@ export const InGameUI = () => {
     state.increaseTapping,
     state.setCoinTapping,
   ]);
+  const [userBoosts] = useUserBoostsStore((state) => [state.userBoosts]);
+  let tapTapBoost = userBoosts.find(
+    (boost) => boost.boostConfig.type === BoostType.TAP
+  );
+  let idleBoost = userBoosts.find(
+    (boost) => boost.boostConfig.type === BoostType.IDLE
+  );
 
   const [hideDialog, showDialog, setDialogType, DialogType] = useDialogStore(
     (state) => [state.hide, state.show, state.setDialogType, state.type]
@@ -112,6 +123,7 @@ export const InGameUI = () => {
   const {
     setStartIntervalRecoverPower,
     setStartIntervalPostTapping,
+    setstartIntervalCheckBoost,
     handleClaim,
   } = useGamePlay();
 
@@ -148,6 +160,7 @@ export const InGameUI = () => {
     setShowOfflineEarning(false);
     setStartIntervalRecoverPower(true);
     setStartIntervalPostTapping(true);
+    setstartIntervalCheckBoost(true);
   };
 
   const handleClick = async () => {
@@ -298,19 +311,50 @@ export const InGameUI = () => {
         <InfoBox
           key="branch"
           icon={{ url: "/images/coin.png" }}
-          content={user ? <NumberFormatter value={coinTaping!} /> : "0"}
+          content={
+            user ? (
+              <NumberFormatter
+                value={
+                  !tapTapBoost
+                    ? coinTaping!
+                    : coinTaping! * tapTapBoost.boostConfig.boostMultiply
+                }
+              />
+            ) : (
+              "0"
+            )
+          }
         />
         {/* <NumberFormatter value={coinTaping!} />  */}
         <InfoBox
           key="branchSPD"
-          content={currentPower ? currentPower : "0"}
+          content={
+            currentPower ? (
+              <NumberFormatter
+                value={
+                  !idleBoost
+                    ? currentPower
+                    : currentPower * idleBoost.boostConfig.boostMultiply
+                }
+              />
+            ) : (
+              "0"
+            )
+          }
           icon={{
             url: "/images/kbuck.png",
           }}
         />
         <InfoBox
           key="totalSPD"
-          content={power ? power + "/s" : "0/s"}
+          content={
+            power
+              ? !idleBoost
+                ? formatNumber(power) + "/s"
+                : formatNumber(power * idleBoost.boostConfig.boostMultiply) +
+                  "/s"
+              : "0/s"
+          }
           icon={{
             url: "/images/speed.png",
           }}
@@ -328,7 +372,12 @@ export const InGameUI = () => {
               className="clickNumber text-white z-10 flex justify-center gap-x-1 items-center text-3xl"
               style={{ left: click?.x, top: click?.y }}
             >
-              <div className="">+5</div>
+              <div className="">
+                +
+                {!tapTapBoost
+                  ? user!.beansPerTab
+                  : user!.beansPerTab * tapTapBoost.boostConfig.boostMultiply}
+              </div>
               <Image src="/images/coin.png" width={24} height={24} alt="icon" />
             </div>
             {/* <Coin postionX={click?.x} postionY={click?.y} ref={coinRef} /> */}
