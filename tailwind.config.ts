@@ -74,6 +74,12 @@ const config: Config = {
         bodyLg: "24px",
         bodyXl: "28px",
       },
+      boxShadow: {
+        "bottom-2xl": "0px -4px 0px 0px #cccbbd inset",
+        "bottom-xl": "0px -2px 0px 0px #cccbbd inset",
+        "bottom-2xl-orange-20": "0px -4px 0px 0px #eeedd8 inset",
+        "bottom-xl-orange-20": "0px -2px 0px 0px #eeedd8 inset",
+      },
     },
   },
   plugins: [require("@designbycode/tailwindcss-text-stroke")],
