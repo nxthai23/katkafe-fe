@@ -73,6 +73,7 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
     fetchStaffs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff, fee]);
+  console.log("staff", staff);
 
   return (
     <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-20 p-4 top-0 left-0">
