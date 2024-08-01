@@ -85,10 +85,10 @@ export class GameManager {
 
   generateGuests(currentLocation: number, showPath = false) {
     const paths = this.locationsData[`location-${currentLocation}`].paths;
-    if (this.guestGroup.getLength() > 0) this.guestGenerator.removeAllGuests();
-    if (showPath) this.createEmptyPointsForPaths(paths);
-    this.guestGenerator = new GuestGenerator(this, this.scene, paths);
-    this.guestGenerator.play();
+    // if (this.guestGroup.getLength() > 0) this.guestGenerator.removeAllGuests();
+    // if (showPath) this.createEmptyPointsForPaths(paths);
+    // this.guestGenerator = new GuestGenerator(this, this.scene, paths);
+    // this.guestGenerator.play();
   }
 
   private createEmptyPointsForPaths(paths: PathData[]) {

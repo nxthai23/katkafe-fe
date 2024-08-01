@@ -13,3 +13,12 @@ export enum CatLevelType {
   Coat = "coat",
   Base = "base",
 }
+
+export enum CatAssetType {
+  Base = "Cat",
+  Aura = "Aura",
+  Body = "Body",
+  Face = "Face",
+  Cape = "Cape",
+  Hat = "Hat",
+}

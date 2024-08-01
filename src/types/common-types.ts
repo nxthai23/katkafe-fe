@@ -20,4 +20,13 @@ export type Staff = {
   backgroundUrl: string;
   power: string;
   assetName: string;
+
+  //New Cat Config
+  catAsset: number;
+  itemAssets: {
+    head: number;
+    body: number;
+    face: number;
+    cape: number;
+  };
 };

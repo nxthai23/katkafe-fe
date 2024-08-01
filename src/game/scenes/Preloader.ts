@@ -2,7 +2,22 @@ import {
   ASSETS,
   CATS_COUNT,
   CATS_FRAME_RATE,
+  CAT_ASSET_FOLDER,
+  CAT_AURA_ASSET_FOLDER,
+  CAT_AURA_COUNT,
+  CAT_BASE_ASSET_FOLDER,
+  CAT_BASE_COUNT,
+  CAT_BODY_ASSET_FOLDER,
+  CAT_BODY_COUNT,
+  CAT_CAPE_ASSET_FOLDER,
+  CAT_CAPE_COUNT,
   CAT_CONFIGS,
+  CAT_FACE_ASSET_FOLDER,
+  CAT_FACE_COUNT,
+  CAT_FRAME_HEIGHT,
+  CAT_FRAME_WIDTH,
+  CAT_HAT_ASSET_FOLDER,
+  CAT_HAT_COUNT,
   LOCATIONS_COUNT,
   LOCATION_ASSETS,
 } from "@/constants/config";
@@ -13,7 +28,7 @@ import { CAT_ANIMATIONS } from "@/constants/anims";
 import { DIALOG_TYPES } from "@/constants/dialog";
 import { CAT_AUDIO_COUNT, GUEST_AUDIO_COUNT } from "@/constants/audio";
 import { getAllCatConfigs } from "@/requests/cat-config";
-import { CatConfig, CatLevelType } from "@/types/cat-config";
+import { CatAssetType, CatConfig, CatLevelType } from "@/types/cat-config";
 
 export class Preloader extends Scene {
   background: GameObjects.Image;
@@ -83,7 +98,8 @@ export class Preloader extends Scene {
     this.loadLocationAssets();
     this.loadDialogs();
     this.loadAudios();
-    this.loadCatConfigs();
+    // this.loadCatConfigs();
+    this.loadAllCatAssets();
   }
 
   create() {
@@ -168,6 +184,49 @@ export class Preloader extends Scene {
     }
   }
 
+  //Load assets
+  loadAllCatAssets() {
+    this.loadCatAssets(
+      CatAssetType.Base,
+      CAT_BASE_COUNT,
+      CAT_BASE_ASSET_FOLDER
+    );
+    this.loadCatAssets(
+      CatAssetType.Aura,
+      CAT_AURA_COUNT,
+      CAT_AURA_ASSET_FOLDER
+    );
+    this.loadCatAssets(
+      CatAssetType.Body,
+      CAT_BODY_COUNT,
+      CAT_BODY_ASSET_FOLDER
+    );
+    this.loadCatAssets(
+      CatAssetType.Cape,
+      CAT_CAPE_COUNT,
+      CAT_CAPE_ASSET_FOLDER
+    );
+    this.loadCatAssets(
+      CatAssetType.Face,
+      CAT_FACE_COUNT,
+      CAT_FACE_ASSET_FOLDER
+    );
+    this.loadCatAssets(CatAssetType.Hat, CAT_HAT_COUNT, CAT_HAT_ASSET_FOLDER);
+  }
+
+  loadCatAssets(assetType: string, count: number, path: string) {
+    for (let i = 0; i < count; i++) {
+      this.load.spritesheet(
+        `Cat-${assetType}-${i + 1}`,
+        `/${CAT_ASSET_FOLDER}/${path}/${assetType}-${i + 1}.png`,
+        {
+          frameWidth: CAT_FRAME_WIDTH,
+          frameHeight: CAT_FRAME_HEIGHT,
+        }
+      );
+    }
+  }
+
   async loadCatConfigs() {
     const catConfigs = await getAllCatConfigs();
     this.catConfigs = catConfigs;
@@ -176,22 +235,27 @@ export class Preloader extends Scene {
   }
 
   async waitBeforeGoToGame() {
-    this.createCatAnimationsFromConfig(CatLevelType.Apron);
-    this.createCatAnimationsFromConfig(CatLevelType.Base);
-    this.createCatAnimationsFromConfig(CatLevelType.Coat);
-    await waitForSeconds(0.5);
+    // this.createCatAnimationsFromConfig(CatLevelType.Apron);
+    // this.createCatAnimationsFromConfig(CatLevelType.Base);
+    // this.createCatAnimationsFromConfig(CatLevelType.Coat);
+
+    this.createCatAnimationsFromConfig(CatAssetType.Base, CAT_BASE_COUNT);
+    this.createCatAnimationsFromConfig(CatAssetType.Aura, CAT_AURA_COUNT);
+    this.createCatAnimationsFromConfig(CatAssetType.Body, CAT_BODY_COUNT);
+    this.createCatAnimationsFromConfig(CatAssetType.Cape, CAT_CAPE_COUNT);
+    this.createCatAnimationsFromConfig(CatAssetType.Face, CAT_FACE_COUNT);
+    this.createCatAnimationsFromConfig(CatAssetType.Hat, CAT_HAT_COUNT);
+    await waitForSeconds(1);
     this.scene.start("Game");
   }
 
-  createCatAnimationsFromConfig(level: CatLevelType) {
-    for (let i = 0; i < this.catConfigs.length; i++) {
-      const catConfig = this.catConfigs[i];
-      const catName = catConfig.assetName;
-      const suffix = `-${level.toString()}`;
+  createCatAnimationsFromConfig(assetType: string, count: number) {
+    for (let i = 0; i < count; i++) {
+      const assetName = `Cat-${assetType}-${i + 1}`;
 
       this.anims.create({
-        key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.IDLE}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+        key: `Cat-${assetType}-${i + 1}-${CAT_ANIMATIONS.IDLE}`,
+        frames: this.anims.generateFrameNumbers(assetName, {
           start: 0,
           end: 3,
         }),
@@ -199,8 +263,8 @@ export class Preloader extends Scene {
         repeat: -1,
       });
       this.anims.create({
-        key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.SLEEP}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+        key: `Cat-${assetType}-${i + 1}-${CAT_ANIMATIONS.SLEEP}`,
+        frames: this.anims.generateFrameNumbers(assetName, {
           start: 4,
           end: 7,
         }),
@@ -208,8 +272,8 @@ export class Preloader extends Scene {
         repeat: -1,
       });
       this.anims.create({
-        key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_DOWN}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+        key: `Cat-${assetType}-${i + 1}-${CAT_ANIMATIONS.WALKING_DOWN}`,
+        frames: this.anims.generateFrameNumbers(assetName, {
           start: 8,
           end: 11,
         }),
@@ -217,8 +281,8 @@ export class Preloader extends Scene {
         repeat: -1,
       });
       this.anims.create({
-        key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_UP}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+        key: `Cat-${assetType}-${i + 1}-${CAT_ANIMATIONS.WALKING_UP}`,
+        frames: this.anims.generateFrameNumbers(assetName, {
           start: 12,
           end: 15,
         }),
@@ -226,8 +290,8 @@ export class Preloader extends Scene {
         repeat: -1,
       });
       this.anims.create({
-        key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+        key: `Cat-${assetType}-${i + 1}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
+        frames: this.anims.generateFrameNumbers(assetName, {
           start: 16,
           end: 19,
         }),
@@ -235,8 +299,8 @@ export class Preloader extends Scene {
         repeat: -1,
       });
       this.anims.create({
-        key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_LEFT}`,
-        frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+        key: `Cat-${assetType}-${i + 1}-${CAT_ANIMATIONS.WALKING_LEFT}`,
+        frames: this.anims.generateFrameNumbers(assetName, {
           start: 20,
           end: 23,
         }),
@@ -245,4 +309,67 @@ export class Preloader extends Scene {
       });
     }
   }
+
+  // createCatAnimationsFromConfig(level: CatLevelType) {
+  //   for (let i = 0; i < this.catConfigs.length; i++) {
+  //     const catConfig = this.catConfigs[i];
+  //     const catName = catConfig.assetName;
+  //     const suffix = `-${level.toString()}`;
+
+  //     this.anims.create({
+  //       key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.IDLE}`,
+  //       frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+  //         start: 0,
+  //         end: 3,
+  //       }),
+  //       frameRate: CATS_FRAME_RATE,
+  //       repeat: -1,
+  //     });
+  //     this.anims.create({
+  //       key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.SLEEP}`,
+  //       frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+  //         start: 4,
+  //         end: 7,
+  //       }),
+  //       frameRate: CATS_FRAME_RATE,
+  //       repeat: -1,
+  //     });
+  //     this.anims.create({
+  //       key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_DOWN}`,
+  //       frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+  //         start: 8,
+  //         end: 11,
+  //       }),
+  //       frameRate: CATS_FRAME_RATE,
+  //       repeat: -1,
+  //     });
+  //     this.anims.create({
+  //       key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_UP}`,
+  //       frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+  //         start: 12,
+  //         end: 15,
+  //       }),
+  //       frameRate: CATS_FRAME_RATE,
+  //       repeat: -1,
+  //     });
+  //     this.anims.create({
+  //       key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_RIGHT}`,
+  //       frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+  //         start: 16,
+  //         end: 19,
+  //       }),
+  //       frameRate: CATS_FRAME_RATE,
+  //       repeat: -1,
+  //     });
+  //     this.anims.create({
+  //       key: `Cat-${catName}${suffix}-${CAT_ANIMATIONS.WALKING_LEFT}`,
+  //       frames: this.anims.generateFrameNumbers(`Cat-${catName}${suffix}`, {
+  //         start: 20,
+  //         end: 23,
+  //       }),
+  //       frameRate: CATS_FRAME_RATE,
+  //       repeat: -1,
+  //     });
+  //   }
+  // }
 }
