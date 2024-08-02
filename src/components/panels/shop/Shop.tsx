@@ -165,27 +165,27 @@ const Shop = () => {
             <div className="flex">
               <div
                 onClick={() => handleTabClick(TABS.ROLL)}
-                className={`absolute cursor-pointer left-1/2 -translate-x-[100px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                className={`absolute cursor-pointer left-1/2 -translate-x-[50px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
                   activeTab === TABS.ROLL ? isActive : ""
                 }`}
               >
                 Roll
               </div>
-              <div
+              {/* <div
                 onClick={() => handleTabClick(TABS.CAT)}
                 className={`absolute cursor-pointer left-1/2 translate-x-[10px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
                   activeTab === TABS.CAT ? isActive : ""
                 }`}
               >
                 Cat
-              </div>
+              </div> */}
             </div>
             <span className="flex justify-between gap-2 absolute top-[14px] w-[90%] left-1/2 -translate-x-1/2">
               <p className="bg-red-10 h-[2px] w-[13%]"></p>
               <p className="bg-red-10 h-[2px] w-[70%]"></p>
               <p className="bg-red-10 h-[2px] w-[13%]"></p>
             </span>
-            {activeTab === TABS.CAT && (
+            {/* {activeTab === TABS.CAT && (
               <div className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
                 <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
                   <div className="text-center uppercase">deal of the day</div>
@@ -218,7 +218,7 @@ const Shop = () => {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
             {activeTab === TABS.ROLL && (
               <div className="bg-orange-10 rounded-b-[20px] flex flex-wrap justify-center rounded-t border border-gray-20 w-full overflow-y-auto h-[calc(100%-32px)] p-4 mt-8">
                 <div className="bg-[url('/images/bg-name.png')] w-[170px] h-[35px] bg-contain bg-center bg-no-repeat text-center mb-6">
@@ -228,7 +228,7 @@ const Shop = () => {
                   {items.map((item) => (
                     <div
                       key={item._id}
-                      className="flex flex-col items-center gap-4"
+                      className="flex flex-col items-center gap-y-2"
                     >
                       <div className="w-[114px] h-[186px]">
                         <Image
@@ -238,6 +238,7 @@ const Shop = () => {
                           height={186}
                         />
                       </div>
+                      <div className="text-orange-90">{item.itemName}</div>
                       <div
                         className="w-[88px] h-[30px]"
                         onClick={(event: React.MouseEvent<HTMLDivElement>) =>
