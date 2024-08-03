@@ -2,6 +2,7 @@ import React from "react";
 import Button from "./Button";
 import Image from "next/image";
 import Star from "./Star";
+import CatCard from "./CatCard";
 
 type Props = {
   handleClaim: () => void;
@@ -9,9 +10,11 @@ type Props = {
 };
 
 const LoginAward = ({ handleClaim, response }: Props) => {
+  const cat = response;
+
   return (
     <div className="relative z-50 top-1/2 -translate-y-1/2">
-      <div className="w-full flex flex-col items-center mb-14">
+      {/* <div className="w-full flex flex-col items-center mb-14">
         <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
           <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
             <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
@@ -52,6 +55,9 @@ const LoginAward = ({ handleClaim, response }: Props) => {
             </div>
           </div>
         </div>
+      </div> */}
+      <div className="mb-6 w-[140px] h-[182px] mx-auto">
+        <CatCard cat={cat} size="large" width={112} height={112} />
       </div>
       <div className="w-full text-center">
         <div className="flex gap-2 justify-center">
