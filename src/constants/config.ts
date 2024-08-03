@@ -74,20 +74,24 @@ export const DIALOG_MAX_DURATION = 8000;
 export const DEFAULT_QUEST_ICON = "/images/user-task.png";
 
 //TODO: Change this after
-export const CAT_ASSET_FOLDER = "demo-cats";
-export const CAT_BASE_ASSET_FOLDER = "Base";
+// export const CAT_ASSET_FOLDER = "demo-cats";
+export const CAT_ASSET_FOLDER = "cats/spritesheets";
+export const CAT_BASE_ASSET_FOLDER = "Cat";
 export const CAT_AURA_ASSET_FOLDER = "Aura";
 export const CAT_BODY_ASSET_FOLDER = "Body";
 export const CAT_FACE_ASSET_FOLDER = "Face";
 export const CAT_CAPE_ASSET_FOLDER = "Cape";
 export const CAT_HAT_ASSET_FOLDER = "Hat";
 
+export const CAT_BASE_COUNT = 15;
 export const CAT_AURA_COUNT = 1;
-export const CAT_BASE_COUNT = 1;
-export const CAT_BODY_COUNT = 1;
-export const CAT_FACE_COUNT = 1;
-export const CAT_CAPE_COUNT = 1;
-export const CAT_HAT_COUNT = 1;
+export const CAT_BODY_COUNT = 5;
+export const CAT_FACE_COUNT = 10;
+export const CAT_CAPE_COUNT = 9;
+export const CAT_HAT_COUNT = 10;
 
 export const CAT_FRAME_WIDTH = 160;
 export const CAT_FRAME_HEIGHT = 160;
+
+export const SPECIAL_CHARACTER_COUNT = 1;
+export const SPECIAL_CHARACTER_FOLDER = "cats/specials";

@@ -2,6 +2,10 @@ import { CAT_ANIMATIONS, CAT_DIRECTIONS, CAT_STATES } from "@/constants/anims";
 import {
   CATS_SCALE,
   CAT_BASE_COUNT,
+  CAT_BODY_COUNT,
+  CAT_CAPE_COUNT,
+  CAT_FACE_COUNT,
+  CAT_HAT_COUNT,
   CAT_MAX_SPEED,
   CAT_MIN_SPEED,
   COLLISION_CATEGORIES,
@@ -17,17 +21,13 @@ import {
   getRandomCatAnimationByPercentage,
   getRandomMaxAnimationDuration,
 } from "../utils/random";
-import {
-  getCatTextureName,
-  getCatItemLayer,
-  getCatSpriteByLevel,
-} from "../utils/anim";
+import { getCatTextureName } from "../utils/anim";
 import { EventBus } from "../EventBus";
 import { AUDIO_EVENTS } from "@/constants/events";
 import { CAT_AUDIO_COUNT } from "@/constants/audio";
 import { Staff } from "@/types/common-types";
 import { get } from "lodash";
-import { CatAssetType } from "@/types/cat-config";
+import { CatAssetType, CatRarity } from "@/types/cat-config";
 import { CatItemObject } from "./CatItem";
 
 export class CatObject extends Phaser.Physics.Arcade.Sprite {
@@ -45,6 +45,9 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
   catCape: number;
   catLevel: number;
 
+  isSpecial: boolean;
+  rarity: string;
+
   //Cat Items
   private catHatItem: CatItemObject;
   private catBodyItem: CatItemObject;
@@ -58,19 +61,35 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
   private dialogInterval: Phaser.Time.TimerEvent;
 
   constructor(scene: Phaser.Scene, x: number, y: number, data: Staff) {
-    super(scene, x, y, getCatTextureName(CatAssetType.Base, 1));
+    const catBase = get(
+      data,
+      "catAsset",
+      Phaser.Math.Between(1, CAT_BASE_COUNT)
+    );
+    super(
+      scene,
+      x,
+      y,
+      getCatTextureName(
+        CatAssetType.Base,
+        catBase,
+        get(data, "isSpecial", false)
+      )
+    );
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
     this.id = data._id;
     this.catData = data;
-    this.catBase = get(data, "catAsset", 1);
-    this.catHat = get(data, "itemAssets.head", 1);
-    this.catBody = get(data, "itemAssets.body", 1);
-    this.catFace = get(data, "itemAssets.face", 1);
-    this.catCape = get(data, "itemAssets.cape", 1);
+    this.catBase = get(data, "catAsset", catBase);
+    this.catHat = get(data, "itemAssets.head", 0);
+    this.catBody = get(data, "itemAssets.body", 0);
+    this.catFace = get(data, "itemAssets.face", 0);
+    this.catCape = get(data, "itemAssets.cape", 0);
     this.catLevel = get(data, "numberStar", 1);
+    this.isSpecial = get(data, "isSpecial", false);
+    this.rarity = get(data, "rarity", CatRarity.Common);
 
     this.setDepth(LAYERS.CAT_BASE);
     this.setScale(CATS_SCALE);
@@ -89,7 +108,7 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
     this.direction = CAT_DIRECTIONS.DOWN;
     this.speed = Phaser.Math.Between(CAT_MIN_SPEED, CAT_MAX_SPEED);
     //Cat Items
-    this.generateCatItems();
+    if (!this.isSpecial) this.generateCatItems();
 
     this.playAnimation();
     this.resetDialogInterval();
@@ -110,8 +129,11 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
       this.catFaceItem = this.generateCatItem(CatAssetType.Face, this.catFace);
     if (this.catCape !== 0)
       this.catCapeItem = this.generateCatItem(CatAssetType.Cape, this.catCape);
-    if (this.catLevel !== 0)
-      this.catAuraItem = this.generateCatItem(CatAssetType.Aura, this.catLevel);
+    if (this.catLevel - 1 !== 0)
+      this.catAuraItem = this.generateCatItem(
+        CatAssetType.Aura,
+        this.catLevel - 1
+      );
   }
 
   private generateCatItem(assetType: string, index: number) {
@@ -124,6 +146,16 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
     if (this.dialog) this.dialog.destroy();
     if (this.animInterval) this.animInterval.remove();
     if (this.dialogInterval) this.dialogInterval.remove();
+
+    if (!this.isSpecial) this.destroyCatItems();
+  }
+
+  private destroyCatItems() {
+    if (this.catAuraItem) this.catAuraItem.destroy();
+    if (this.catBodyItem) this.catBodyItem.destroy();
+    if (this.catFaceItem) this.catFaceItem.destroy();
+    if (this.catCapeItem) this.catCapeItem.destroy();
+    if (this.catHatItem) this.catHatItem.destroy();
   }
 
   private playItemsAnimation(animName: string) {
@@ -139,18 +171,22 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
       default:
       case CAT_STATES.IDLE:
         this.play(
-          `${getCatTextureName(CatAssetType.Base, this.catBase)}-${
-            CAT_ANIMATIONS.IDLE
-          }`
+          `${getCatTextureName(
+            CatAssetType.Base,
+            this.catBase,
+            this.isSpecial
+          )}-${CAT_ANIMATIONS.IDLE}`
         );
         this.playItemsAnimation(CAT_ANIMATIONS.IDLE);
         this.setVelocity(0);
         break;
       case CAT_STATES.SLEEP:
         this.play(
-          `${getCatTextureName(CatAssetType.Base, this.catBase)}-${
-            CAT_ANIMATIONS.SLEEP
-          }`
+          `${getCatTextureName(
+            CatAssetType.Base,
+            this.catBase,
+            this.isSpecial
+          )}-${CAT_ANIMATIONS.SLEEP}`
         );
         this.playItemsAnimation(CAT_ANIMATIONS.SLEEP);
         this.setVelocity(0);
@@ -162,9 +198,11 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
         switch (this.direction) {
           case CAT_DIRECTIONS.UP:
             this.play(
-              `${getCatTextureName(CatAssetType.Base, this.catBase)}-${
-                CAT_ANIMATIONS.WALKING_UP
-              }`
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.catBase,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_UP}`
             );
             this.playItemsAnimation(CAT_ANIMATIONS.WALKING_UP);
             this.setVelocityY(-this.speed);
@@ -172,9 +210,11 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
             break;
           case CAT_DIRECTIONS.DOWN:
             this.play(
-              `${getCatTextureName(CatAssetType.Base, this.catBase)}-${
-                CAT_ANIMATIONS.WALKING_DOWN
-              }`
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.catBase,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_DOWN}`
             );
             this.playItemsAnimation(CAT_ANIMATIONS.WALKING_DOWN);
             this.setVelocityY(this.speed);
@@ -182,9 +222,11 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
             break;
           case CAT_DIRECTIONS.LEFT:
             this.play(
-              `${getCatTextureName(CatAssetType.Base, this.catBase)}-${
-                CAT_ANIMATIONS.WALKING_LEFT
-              }`
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.catBase,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_LEFT}`
             );
             this.playItemsAnimation(CAT_ANIMATIONS.WALKING_LEFT);
             this.setVelocityX(-this.speed);
@@ -192,9 +234,11 @@ export class CatObject extends Phaser.Physics.Arcade.Sprite {
             break;
           case CAT_DIRECTIONS.RIGHT:
             this.play(
-              `${getCatTextureName(CatAssetType.Base, this.catBase)}-${
-                CAT_ANIMATIONS.WALKING_RIGHT
-              }`
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.catBase,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_RIGHT}`
             );
             this.playItemsAnimation(CAT_ANIMATIONS.WALKING_RIGHT);
             this.setVelocityX(this.speed);

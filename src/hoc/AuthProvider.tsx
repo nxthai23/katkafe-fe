@@ -1,3 +1,4 @@
+"use client";
 import { StartLoading } from "@/components/ui/StartLoading";
 import { useUserStore } from "@/stores/userStore";
 import { useExpand, useInitData } from "@zakarliuka/react-telegram-web-tools";
@@ -11,11 +12,14 @@ export const AuthProvider = ({
   children: React.ReactElement;
 }) => {
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const expand = useExpand();
   const telegramData = useInitData();
-  const [login] = useUserStore((state) => [state.login]);
+  const [login, isLoggedIn] = useUserStore((state) => [
+    state.login,
+    state.isLoggedIn,
+  ]);
 
   const loginUser = async () => {
     setIsLoading(true);
@@ -37,7 +41,8 @@ export const AuthProvider = ({
   useEffect(() => {
     if (telegramData.initData) {
       expand[1]?.();
-      loginUser();
+      if (!isLoggedIn()) loginUser();
+      else setIsLoading(false);
     }
 
     const app = (window as any).Telegram?.WebApp;
@@ -49,9 +54,8 @@ export const AuthProvider = ({
 
   const renderContent = () => {
     if (isLoading) return <StartLoading></StartLoading>;
-    else if (!isLoading && error)
-      return <ErrorStartApp></ErrorStartApp>
-    else return children
+    else if (!isLoading && error) return <ErrorStartApp></ErrorStartApp>;
+    else return children;
   };
 
   return renderContent();

@@ -8,6 +8,13 @@ export type CatConfig = {
   imgUrl: string;
 };
 
+export enum CatRarity {
+  Common = "Common",
+  Rare = "Rare",
+  Epic = "Epic",
+  Legendary = "Legendary",
+}
+
 export enum CatLevelType {
   Apron = "apron",
   Coat = "coat",
