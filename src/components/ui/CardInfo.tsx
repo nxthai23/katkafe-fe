@@ -12,6 +12,12 @@ import { Loading } from "./Loading";
 import NumberFormatter from "./NumberFormat";
 import { MoveRight } from "lucide-react";
 import classNames from "classnames";
+import StaffCard from "./StaffCard";
+import StaffCardAssign from "./StaffCardAssign";
+import { CatImage } from "./CatImage";
+import { get } from "lodash";
+import { CatRarity } from "@/types/cat-config";
+import { rarityToConfig } from "@/types/common-types";
 
 type Props = {
   onBack?: () => void;
@@ -74,6 +80,16 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff, fee]);
 
+  //Card info
+  const name = get(staff, "name", "");
+  const numberStar = get(staff, "numberStar", 1);
+  const level = get(staff, "level", 1);
+  const catRarity = get(staff, "rarity", CatRarity.Common);
+  const isSpecial = get(staff, "isSpecial", false);
+  const rarity = rarityToConfig(catRarity, isSpecial);
+  const backgroundCard = get(rarity, "backgroundCard", "");
+  const textColorClasses = get(rarity, "textColorClasses", "");
+
   return (
     <div className="info-panel bg-[#2e2e2e] w-full h-full absolute z-20 p-4 top-0 left-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
@@ -96,40 +112,47 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
           </span>
           <div className="bg-orange-10 h-[calc(100%-32px)] mt-8 relative flex flex-col justify-between items-center p-2 rounded-b-[20px] rounded-t border border-gray-20">
             <div className="w-full flex flex-col items-center overflow-y-auto">
-              <div className="rounded-xl border-solid border-[#4e4837] border-[3px] h-[208px] w-[160px] mt-6">
-                <div className="rounded-xl border-solid border-orange-20 border-[3px] h-full w-full">
-                  <div className="rounded-lg border-solid border-[#b2b19a] border h-full w-full flex flex-col justify-between relative">
-                    <div className="bg-[url('/images/background-cat.png')] bg-center bg-no-repeat bg-cover h-full">
-                      <div className="flex justify-center mt-14 relative">
-                        <div className="absolute bg-[#898989] w-[40%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-3 z-20"></div>
-                        <Image
-                          src={staff?.imgUrl || "/images/Cat.png"}
-                          alt="cat pic"
-                          width={106}
-                          height={106}
-                          className="relative z-20"
-                        />
-                      </div>
-                    </div>
-                    <div className="absolute top-3 w-full h-4">
-                      {staff?.name && (
-                        <div className="text-[14px] mx-1 pt-1 rounded-t text-center bg-[url('/images/bg-name.png')] bg-center bg-no-repeat bg-contain h-[38px] relative -my-1">
-                          {staff?.name}
+              <div className="h-[208px] w-[160px] mt-4">
+                <div
+                  className="h-full w-full cursor-pointer bg-center bg-no-repeat bg-contain relative"
+                  style={{ backgroundImage: backgroundCard }}
+                >
+                  <div className="h-full w-full">
+                    <div className="h-full w-full flex flex-col justify-between relative">
+                      <div className="h-full flex items-center justify-center">
+                        <div className="flex justify-center relative">
+                          <div className="absolute bg-[#898989] w-[50%] h-2 rounded-[100%] left-1/2 -translate-x-1/2 bottom-2.5 z-30"></div>
+                          <CatImage cat={staff} width={128} height={128} />
                         </div>
-                      )}
-                    </div>
-                    <div className="flex justify-between items-center px-1 py-1">
-                      {staff?.level && (
-                        <div className="text-sm">Lv.{staff?.level}</div>
-                      )}
-                      <div className="flex items-center">
-                        {[...Array(staff?.numberStar)].map((_, index) => (
-                          <Star
-                            key={index}
-                            numberStar={index + 1}
-                            customClass={customClass}
-                          ></Star>
-                        ))}
+                      </div>
+                      <div className="absolute w-full top-1.5">
+                        {name && (
+                          <div
+                            className={classNames(
+                              "text-sm text-center",
+                              textColorClasses
+                            )}
+                          >
+                            {name}
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className={classNames(
+                          "flex justify-between items-center absolute w-full h-6 bottom-2 px-4",
+                          textColorClasses
+                        )}
+                      >
+                        {level && <div className="text-xs">Lv.{level}</div>}
+                        <div className="flex items-center">
+                          {[...Array(numberStar)].map((_, index) => (
+                            <Star
+                              key={index}
+                              numberStar={index + 1}
+                              customClass={customClass}
+                            ></Star>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>

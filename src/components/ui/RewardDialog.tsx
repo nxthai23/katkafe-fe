@@ -76,7 +76,7 @@ const RewardDialog: React.FC<Props> = ({
 
         {type === ShopType.Roll && item && (
           <div className="w-[140px] h-[182px] cursor-pointer">
-            <CatCard cat={item} />
+            <CatCard cat={item} width={112} height={112} size="large" />
           </div>
         )}
       </div>

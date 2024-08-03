@@ -43,7 +43,7 @@ export enum COLLISION_CATEGORIES {
 //@TODO: Load from server/config
 export const CATS_COUNT = 15;
 export const CATS_FRAME_RATE = 8;
-export const CATS_SCALE = (1 / 2) * 1.3;
+export const CATS_SCALE = (1 / 2) * 1.2;
 
 export const CAT_MAX_LEVEL = 44;
 export const CAT_MAX_SPEED = 50;
@@ -61,8 +61,9 @@ export const CAT_CHANGE_DISPLAY_LEVELS = [
 
 export const GUEST_SPEED = 50;
 export const MAX_GUESTS = 6;
-export const GUEST_MAX_GEN_DELAY = 10000;
-export const GUEST_MIN_GEN_DELAY = 3000;
+export const SPECIAL_GUEST_PERCENTAGE = 10;
+export const GUEST_MAX_GEN_DELAY = 8000;
+export const GUEST_MIN_GEN_DELAY = 2000;
 export const GUEST_MAX_ORDER_DELAY = 8000;
 export const GUEST_MIN_ORDER_DELAY = 3000;
 
@@ -72,3 +73,28 @@ export const DIALOG_MIN_DURATION = 3000;
 export const DIALOG_MAX_DURATION = 8000;
 
 export const DEFAULT_QUEST_ICON = "/images/user-task.png";
+
+//TODO: Change this after
+// export const CAT_ASSET_FOLDER = "demo-cats";
+export const CAT_ASSET_FOLDER = "cats/spritesheets";
+export const CAT_BASE_ASSET_FOLDER = "Cat";
+export const CAT_AURA_ASSET_FOLDER = "Aura";
+export const CAT_BODY_ASSET_FOLDER = "Body";
+export const CAT_FACE_ASSET_FOLDER = "Face";
+export const CAT_CAPE_ASSET_FOLDER = "Cape";
+export const CAT_HAT_ASSET_FOLDER = "Hat";
+
+export const CAT_BASE_COUNT = 15;
+export const CAT_AURA_COUNT = 2;
+export const CAT_BODY_COUNT = 5;
+export const CAT_FACE_COUNT = 10;
+export const CAT_CAPE_COUNT = 9;
+export const CAT_HAT_COUNT = 10;
+
+export const CAT_FRAME_WIDTH = 160;
+export const CAT_FRAME_HEIGHT = 160;
+
+export const SPECIAL_CHARACTER_COUNT = 1;
+export const SPECIAL_CHARACTER_FOLDER = "cats/specials";
+
+export const CAT_AVATAR_FOLDER = "cats/avatars";
