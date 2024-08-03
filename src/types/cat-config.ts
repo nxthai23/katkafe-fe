@@ -9,10 +9,10 @@ export type CatConfig = {
 };
 
 export enum CatRarity {
-  Common = "Common",
-  Rare = "Rare",
-  Epic = "Epic",
-  Legendary = "Legendary",
+  Common = "common",
+  Rare = "rare",
+  Epic = "epic",
+  Legendary = "legendary",
 }
 
 export enum CatLevelType {

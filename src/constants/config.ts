@@ -62,7 +62,7 @@ export const CAT_CHANGE_DISPLAY_LEVELS = [
 export const GUEST_SPEED = 50;
 export const MAX_GUESTS = 6;
 export const SPECIAL_GUEST_PERCENTAGE = 10;
-export const GUEST_MAX_GEN_DELAY = 5000;
+export const GUEST_MAX_GEN_DELAY = 8000;
 export const GUEST_MIN_GEN_DELAY = 2000;
 export const GUEST_MAX_ORDER_DELAY = 8000;
 export const GUEST_MIN_ORDER_DELAY = 3000;
@@ -85,7 +85,7 @@ export const CAT_CAPE_ASSET_FOLDER = "Cape";
 export const CAT_HAT_ASSET_FOLDER = "Hat";
 
 export const CAT_BASE_COUNT = 15;
-export const CAT_AURA_COUNT = 1;
+export const CAT_AURA_COUNT = 2;
 export const CAT_BODY_COUNT = 5;
 export const CAT_FACE_COUNT = 10;
 export const CAT_CAPE_COUNT = 9;
@@ -96,3 +96,5 @@ export const CAT_FRAME_HEIGHT = 160;
 
 export const SPECIAL_CHARACTER_COUNT = 1;
 export const SPECIAL_CHARACTER_FOLDER = "cats/specials";
+
+export const CAT_AVATAR_FOLDER = "cats/avatars";

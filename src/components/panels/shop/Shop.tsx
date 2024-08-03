@@ -96,7 +96,7 @@ const Shop = () => {
         setUser(response.user);
         fetchStaffs();
         setCurrentStaff(response.items.cats[0]);
-        showSnackbar("Purchase successfully!");
+        // showSnackbar("Purchase successfully!");
         setShowRewardDialog(true);
       }
     } catch (error) {

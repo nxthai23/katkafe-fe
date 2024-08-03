@@ -39,7 +39,7 @@ export class Boot extends Scene {
         start: 0,
         end: 3,
       }),
-      frameRate: 12,
+      frameRate: 24,
       repeat: -1,
     });
 
