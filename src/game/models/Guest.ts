@@ -23,13 +23,16 @@ import {
 import { EventBus } from "../EventBus";
 import { AUDIO_EVENTS } from "@/constants/events";
 import { GUEST_AUDIO_COUNT } from "@/constants/audio";
+import { CatAssetType } from "@/types/cat-config";
+import { getCatTextureName } from "../utils/anim";
 
 export class GuestObject extends Phaser.Physics.Arcade.Sprite {
-  name: string;
+  index: number;
   speed: number;
   state: string; //GUEST_STATES
   direction: CAT_DIRECTIONS;
   path: PathData;
+  isSpecial: boolean;
 
   currentPointIndex: number = 0;
 
@@ -39,7 +42,12 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
 
   private orderInterval: Phaser.Time.TimerEvent;
 
-  constructor(scene: Phaser.Scene, name: string, path: PathData) {
+  constructor(
+    scene: Phaser.Scene,
+    index: number,
+    path: PathData,
+    isSpecial = false
+  ) {
     super(scene, path[0].position.x, path[0].position.y, `Cat-${name}`);
 
     scene.add.existing(this);
@@ -60,7 +68,8 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
 
     this.isRemoved = false;
     this.path = path;
-    this.name = name;
+    this.index = index;
+    this.isSpecial = isSpecial;
 
     this.speed = GUEST_SPEED;
     this.state = GUEST_STATES.ARRIVING;
@@ -223,22 +232,52 @@ export class GuestObject extends Phaser.Physics.Arcade.Sprite {
       default:
       case GUEST_STATES.IDLE:
       case GUEST_STATES.ORDERING:
-        this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.IDLE}`);
+        this.play(
+          `${getCatTextureName(
+            CatAssetType.Base,
+            this.index,
+            this.isSpecial
+          )}-${CAT_ANIMATIONS.IDLE}`
+        );
         break;
       case GUEST_STATES.ARRIVING:
       case GUEST_STATES.LEAVING:
         switch (this.direction) {
           case CAT_DIRECTIONS.UP:
-            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_UP}`);
+            this.play(
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.index,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_UP}`
+            );
             break;
           case CAT_DIRECTIONS.DOWN:
-            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_DOWN}`);
+            this.play(
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.index,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_DOWN}`
+            );
             break;
           case CAT_DIRECTIONS.LEFT:
-            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_LEFT}`);
+            this.play(
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.index,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_LEFT}`
+            );
             break;
           case CAT_DIRECTIONS.RIGHT:
-            this.play(`Cat-${this.name}-base-${CAT_ANIMATIONS.WALKING_RIGHT}`);
+            this.play(
+              `${getCatTextureName(
+                CatAssetType.Base,
+                this.index,
+                this.isSpecial
+              )}-${CAT_ANIMATIONS.WALKING_RIGHT}`
+            );
             break;
         }
         break;

@@ -1,9 +1,12 @@
 import { GameManager } from "./../GameManager";
 import {
+  CAT_BASE_COUNT,
   CAT_CONFIGS,
   GUEST_MAX_GEN_DELAY,
   GUEST_MIN_GEN_DELAY,
   MAX_GUESTS,
+  SPECIAL_CHARACTER_COUNT,
+  SPECIAL_GUEST_PERCENTAGE,
 } from "@/constants/config";
 import { GuestObject } from "../models/Guest";
 import { PathData } from "@/types/location";
@@ -53,11 +56,13 @@ export class GuestGenerator {
   generateGuest() {
     if (this.gameManager.guestGroup.getLength() < MAX_GUESTS) {
       const rndPathIndex = Phaser.Math.Between(0, this.paths.length - 1);
+      const rndGuestAsset = this.randomGuestCatAsset();
       this.gameManager.guestGroup.add(
         new GuestObject(
           this.scene,
-          this.randomGuestCatAsset(),
-          this.paths[rndPathIndex]
+          rndGuestAsset.index,
+          this.paths[rndPathIndex],
+          rndGuestAsset.isSpecial
         )
       );
     }
@@ -65,8 +70,16 @@ export class GuestGenerator {
   }
 
   private randomGuestCatAsset() {
-    const catConfigs = this.scene.registry.get(CAT_CONFIGS);
-    const rndIndex = Phaser.Math.Between(0, catConfigs.length - 1);
-    return catConfigs[rndIndex].assetName;
+    const rnd = Phaser.Math.Between(1, 100);
+    if (rnd <= SPECIAL_GUEST_PERCENTAGE)
+      return {
+        isSpecial: true,
+        index: Phaser.Math.Between(1, SPECIAL_CHARACTER_COUNT),
+      };
+    else
+      return {
+        isSpecial: false,
+        index: Phaser.Math.Between(1, CAT_BASE_COUNT),
+      };
   }
 }
