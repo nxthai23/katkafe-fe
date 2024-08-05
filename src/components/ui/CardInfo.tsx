@@ -53,7 +53,10 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
     show();
     if (!user || !staff) return;
     try {
-      const response = await upgradeRequireStaff({ level: staff.level });
+      const response = await upgradeRequireStaff({
+        level: staff.level,
+        catId: staff._id,
+      });
       if (response && response.nextFee) {
         setFee(response.nextFee);
         setNumberCatRequire(response.numberCats);
