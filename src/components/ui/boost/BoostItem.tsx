@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "../Button";
 import { BoostConfig, BoostType } from "@/types/boost";
@@ -24,6 +24,10 @@ export const BoostItem = ({
   onClick,
 }: Props) => {
   const [user] = useUserStore((state) => [state.user]);
+  const [durationHours, setDurationHours] = useState<string>();
+  const [durationMinutes, setDurationMinutes] = useState<string>();
+  const [durationSeconds, setDurationSeconds] = useState<string>();
+  const [startIntervalBoostTimer, setStartIntervalBoostTimer] = useState(true);
   const isCooldown =
     boostConfig.type === BoostType.IDLE
       ? moment()
@@ -38,6 +42,33 @@ export const BoostItem = ({
   const handleOnClick = () => {
     onClick && onClick(boostConfig._id);
   };
+
+  const boostTimer = () => {
+    const now = moment().utc().startOf("seconds");
+    const nextBoostAt =
+      boostConfig.type === BoostType.IDLE
+        ? get(user, "nextIdleBoostAt", "")
+        : get(user, "nextTapBoostAt", "");
+    const diffInMiliseconds = moment(nextBoostAt).startOf("seconds").diff(now);
+    const duration = moment.duration(diffInMiliseconds);
+    const hours = Math.floor(duration.asHours());
+    const minutes = Math.floor(duration.asMinutes());
+    const seconds = Math.floor(duration.asSeconds()) - minutes * 60;
+    setDurationHours(hours.toString().padStart(2, "0"));
+    setDurationMinutes(minutes.toString().padStart(2, "0"));
+    setDurationSeconds(seconds.toString().padStart(2, "0"));
+  };
+
+  useEffect(() => {
+    // boostTimer();
+    if (startIntervalBoostTimer) {
+      const interval = setInterval(() => {
+        boostTimer();
+      }, 1000); // Update every second
+      // Cleanup the interval on component unmount
+      return () => clearInterval(interval);
+    }
+  }, [startIntervalBoostTimer, user]);
 
   return (
     <div className="w-full flex justify-between items-center border border-orange-20 rounded-xl px-2 py-3 shadow-bottom-xl-orange-20 relative">
@@ -99,8 +130,8 @@ export const BoostItem = ({
         <div className="flex flex-col justify-center items-center inset-x-0 absolute w-full h-full z-10 rounded-xl bg-black opacity-70">
           <div className="text-white z-9">Cooldown</div>
           <div className="text-white z-9">
-            Available:{" "}
-            {isoStringToDateTimeString(get(user, "nextIdleBoostAt", ""))}
+            Available after:{" "}
+            {`${durationHours} : ${durationMinutes} : ${durationSeconds}`}
           </div>
         </div>
       )}
