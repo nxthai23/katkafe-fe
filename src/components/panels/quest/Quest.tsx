@@ -1,15 +1,27 @@
 import CardTask from "@/components/ui/CardTask";
 import { useFetchQuests } from "@/lib/hooks/quest/useFetchQuests";
-import { checkIn, visitWebsite, youtube } from "@/requests/quest/quests";
+import {
+  checkIn,
+  followTwitter,
+  joinTelegramChat,
+  joinTelegramOfficialAnnouncement,
+  shareLinktree,
+  visitWebsite,
+  youtube,
+} from "@/requests/quest/quests";
 import { useLayoutStore } from "@/stores/layoutStore";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { QuestCodes } from "@/constants/quest";
 import { useLoadingStore } from "@/stores/LoadingStore";
-import { Loading } from "@/components/ui/Loading";
 import RewardQuest from "@/components/ui/RewardQuest";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
-import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 import { Quest } from "@/types/quest";
+import {
+  useRequestContact,
+  useSendData,
+  useShowPopup,
+  useWebApp,
+} from "@zakarliuka/react-telegram-web-tools";
 
 type Props = {};
 const TAB = {
@@ -17,7 +29,7 @@ const TAB = {
   SOCIAL: "Social",
 };
 
-function Task({ }: Props) {
+function Task({}: Props) {
   const isActive = "!py-2 !-translate-y-[28px] !border-orange-90 !bg-orange-10";
   const [activeTab, setActiveTab] = useState(TAB.DAILY);
   const [showReward, setShowReward] = useState(false);
@@ -25,15 +37,11 @@ function Task({ }: Props) {
   const [setShowQuestPanel] = useLayoutStore((state) => [
     state.setShowQuestPanel,
   ]);
-  const [show, hide] = useLoadingStore((state) => [
-    state.show,
-    state.hide,
-  ]);
-  const [showSnackbar] = useSnackBarStore((state) => [
-    state.show,
-  ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+  const [showSnackbar] = useSnackBarStore((state) => [state.show]);
 
   const { quests, refetchQuests } = useFetchQuests();
+  const webApp = useWebApp();
 
   const handleTaskTabClick = () => {
     setActiveTab(TAB.DAILY);
@@ -48,13 +56,12 @@ function Task({ }: Props) {
       show();
       await checkIn();
       refetchQuests();
-      showSnackbar('Check in successfully!')
+      showSnackbar("Check in successfully!");
+      setShowReward(true);
     } catch (error) {
-      console.error("Failed to check in", error);
-      showSnackbar('Check in fail!')
+      showSnackbar("Check in fail!");
     } finally {
       hide();
-      setShowReward(true);
     }
   };
 
@@ -63,13 +70,12 @@ function Task({ }: Props) {
       show();
       await visitWebsite();
       refetchQuests();
-      showSnackbar('Visit website successfully!')
+      showSnackbar("Visit website successfully!");
+      setShowReward(true);
     } catch (error) {
-      console.error("Failed to visit website", error);
-      showSnackbar('Visit website faild!')
+      showSnackbar("Visit website faild!");
     } finally {
       hide();
-      setShowReward(true);
     }
   };
 
@@ -78,13 +84,68 @@ function Task({ }: Props) {
       show();
       await youtube();
       refetchQuests();
-      showSnackbar('Quest youtube successfully!')
+      showSnackbar("Visit youtube successfully!");
+      setShowReward(true);
     } catch (error) {
-      console.error("Failed to youtube", error);
-      showSnackbar('Quest youtube faild!')
+      showSnackbar("Visit youtube faild!");
     } finally {
       hide();
+    }
+  };
+
+  const handleJoinTelegramChat = async () => {
+    try {
+      show();
+      await joinTelegramChat();
+      refetchQuests();
+      showSnackbar("Join telegram chat successfully!");
       setShowReward(true);
+    } catch (error) {
+      showSnackbar("User does not join group.");
+    } finally {
+      hide();
+    }
+  };
+
+  const handleJoinTelegramOfficialAnnouncement = async () => {
+    try {
+      show();
+      await joinTelegramOfficialAnnouncement();
+      refetchQuests();
+      showSnackbar("Join telegram announcement successfully!");
+      setShowReward(true);
+    } catch (error) {
+      showSnackbar("User does not join group.");
+    } finally {
+      hide();
+    }
+  };
+
+  const handleFollowTwitter = async () => {
+    try {
+      show();
+      await followTwitter();
+      refetchQuests();
+      showSnackbar("Follow Twitter successfully!");
+      setShowReward(true);
+    } catch (error) {
+      showSnackbar("Follow Twitter faild!");
+    } finally {
+      hide();
+    }
+  };
+
+  const handleShareLinktreeQuest = async () => {
+    try {
+      show();
+      await shareLinktree();
+      refetchQuests();
+      showSnackbar("Share Linktree successfully!");
+      setShowReward(true);
+    } catch (error) {
+      showSnackbar("Share Linktree faild!");
+    } finally {
+      hide();
     }
   };
   // const handleQuestButtonClick = (quest: Quest) => {
@@ -106,17 +167,33 @@ function Task({ }: Props) {
 
   //   setConfirmDialog(true)
   // }
-  const handleQuestSubmit = async (questCode: QuestCodes) => {
-    switch (questCode) {
+  const handleQuestSubmit = async (quest: Quest) => {
+    switch (quest.questCode) {
       case QuestCodes.CHECK_IN:
+        webApp.openLink(quest.visitUrl);
         await handleCheckInQuest();
         break;
       case QuestCodes.VISIT_WEBSITE:
+        webApp.openLink(quest.visitUrl);
         await handleVisitWebsiteQuest();
         break;
       case QuestCodes.YOUTUBE:
+        webApp.openLink(quest.visitUrl);
         await handleYoutubeQuest();
         break;
+      case QuestCodes.JOIN_TELEGRAM_CHAT:
+        await handleJoinTelegramChat();
+        break;
+      case QuestCodes.JOIN_TELEGRAM_OFFICIAL_ANNOUNCEMENT:
+        await handleJoinTelegramOfficialAnnouncement();
+        break;
+      case QuestCodes.FOLLOW_TWITTER:
+        webApp.openLink(quest.visitUrl);
+        await handleFollowTwitter();
+        break;
+      case QuestCodes.SHARE_LINKTREE:
+        webApp.openLink("https://t.me/share?url=" + encodeURI(quest.visitUrl));
+        await handleShareLinktreeQuest();
       default:
         break;
     }
@@ -146,15 +223,17 @@ function Task({ }: Props) {
           <div className="flex">
             <div
               onClick={handleTaskTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Daily" ? isActive : ""
-                }`}
+              className={`absolute cursor-pointer border-b-0 left-1/2 -translate-x-[135px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === "Daily" ? isActive : ""
+              }`}
             >
               Daily Task
             </div>
             <div
               onClick={handleAchievementTabClick}
-              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${activeTab === "Social" ? isActive : ""
-                }`}
+              className={`absolute cursor-pointer border-b-0 left-1/2 translate-x-[5px] border-2 px-6 py-1 bg-[#edc6a9] border-[#edc6a9] -translate-y-[20px] rounded-t-xl text-orange-90 ${
+                activeTab === "Social" ? isActive : ""
+              }`}
             >
               Social Task
             </div>
@@ -188,12 +267,11 @@ function Task({ }: Props) {
                           quantity: quest.reward.value,
                         }}
                         button={{
-                          text: "Go",
-                          onClick: () =>
-                            handleQuestSubmit(quest.questCode),
+                          text: "Check",
+                          onClick: () => handleQuestSubmit(quest),
                         }}
                         isDone={quest.progress}
-                        visitUrl={quest.visitUrl}
+                        visitUrl={quest.needCheck ? quest.visitUrl : undefined}
                       />
                     </div>
                   ))}
@@ -224,11 +302,10 @@ function Task({ }: Props) {
                         }}
                         button={{
                           text: "Go",
-                          onClick: () =>
-                            handleQuestSubmit(quest.questCode),
+                          onClick: () => handleQuestSubmit(quest),
                         }}
                         isDone={quest.progress}
-                        visitUrl={quest.visitUrl}
+                        visitUrl={quest.needCheck ? quest.visitUrl : undefined}
                       />
                     </div>
                   ))}

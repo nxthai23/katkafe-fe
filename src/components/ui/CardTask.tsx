@@ -82,15 +82,19 @@ const CardTask = ({
         />
       )}
       <div className="w-full flex justify-center mt-2">
-        <div className="w-[76px] h-[28px] flex justify-center">
+        <div className="w-[150px] h-[28px] flex justify-center gap-x-4">
+          {visitUrl && (
+            <Button onClick={() => window.open(visitUrl, "_blank")}>
+              Visit
+            </Button>
+          )}
           {!isDone == true ? (
-            <Button onClick={button?.onClick} disabled={button?.disabled}>
-              {visitUrl && (
-                <Link href={visitUrl || "#"} target="_blank">
-                  {button?.text}
-                </Link>
-              )}
-              {!visitUrl && button?.text}
+            <Button
+              onClick={button?.onClick}
+              disabled={button?.disabled}
+              customClassNames="max-w-[74px]"
+            >
+              {button?.text}
             </Button>
           ) : (
             <div className="text-orange-50 flex gap-x-1">

@@ -19,6 +19,7 @@ export type Quest = {
   progress: boolean;
   visitUrl?: string;
   imgUrl: string;
+  needCheck: boolean;
 };
 
 export type Achievement = {
