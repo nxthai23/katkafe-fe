@@ -20,14 +20,11 @@ import usePower, {
   useFetchRestaurants,
 } from "@/lib/hooks/restaurant/useRestaurant";
 import { Staff } from "@/types/common-types";
-import { get } from "lodash";
 import { useFetchStaffs } from "@/lib/hooks/cat/useStaff";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import Dialog from "./common/Dialog";
 import { useUserBoostsStore } from "@/stores/boost/userBoostsStore";
 import { BoostType } from "@/types/boost";
-import moment from "moment";
-import { format } from "path";
 
 type Click = {
   id: number;
@@ -55,14 +52,12 @@ export const InGameUI = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [
-    setShowFriendPanel,
     setShowManagePanel,
     setShowStaffPanel,
     setShowShopPanel,
     setShowRestaurantPanel,
     setShowBoostPanel,
   ] = useLayoutStore((state) => [
-    state.setShowFriendPanel,
     state.setShowManagePanel,
     state.setShowStaffPanel,
     state.setShowShopPanel,
@@ -76,7 +71,6 @@ export const InGameUI = () => {
     setCurrentPower,
     setMaxPower,
     decreasePower,
-    coinTaping,
     resetTapping,
     increaseCoinTaping,
     increaseTaping,
@@ -86,7 +80,6 @@ export const InGameUI = () => {
     state.setCurrentPower,
     state.setMaxPower,
     state.decreasePower,
-    state.coinTaping,
     state.resetTapping,
     state.increaseCoinTapping,
     state.increaseTapping,
@@ -311,19 +304,7 @@ export const InGameUI = () => {
         <InfoBox
           key="branch"
           icon={{ url: "/images/coin.png" }}
-          content={
-            user ? (
-              <NumberFormatter
-                value={
-                  !tapTapBoost
-                    ? coinTaping!
-                    : coinTaping! * tapTapBoost.boostConfig.boostMultiply
-                }
-              />
-            ) : (
-              "0"
-            )
-          }
+          content={user ? <NumberFormatter value={Number(user.bean)} /> : "0"}
         />
         {/* <NumberFormatter value={coinTaping!} />  */}
         <InfoBox
