@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { get } from "lodash";
 import { LeaderBoard } from "@/types/leaderBoard";
-import { ordinalSuffix } from "@/utils/helpers";
+import { formatStringNumber, ordinalSuffix } from "@/utils/helpers";
 import FormatText from "./FormatText";
 import { DEFAULT_QUEST_ICON } from "@/constants/config";
 
@@ -14,7 +14,7 @@ const CardFriend = ({ user }: Props) => {
   const imageUrl = get(user, "avatarUrl", "");
   const name = get(user, "username", "");
   const rank = get(user, "rank", 0);
-  const balance = get(user, "bean", 0);
+  const balance = get(user, "bean", "0");
 
   return (
     <div className="bg-orange-10 border-[#e8ddbd] border-t rounded-b-[21px] w-full h-full p-2 flex gap-8 items-center justify-between">
@@ -41,7 +41,9 @@ const CardFriend = ({ user }: Props) => {
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <div className="text-bodyMd text-gray-60">{balance}</div>
+            <div className="text-bodyMd text-gray-60">
+              {formatStringNumber(balance)}
+            </div>
             <div>
               <Image
                 src="/images/coin.png"
