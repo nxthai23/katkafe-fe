@@ -7,11 +7,12 @@ import { Staff } from "@/types/common-types";
 import { useLayoutStore } from "@/stores/layoutStore";
 import { upgradeRequireStaff, upgradeStaff } from "@/requests/staff";
 import { useUserStore } from "@/stores/userStore";
-import { Dot } from "lucide-react";
+import { Dot, MoveRight } from "lucide-react";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
 import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 import { assign } from "lodash";
+import NumberFormatter from "@/components/ui/NumberFormat";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -35,6 +36,9 @@ const StaffList: React.FC = () => {
     isChooseUpgrade,
     setIsChooseUpgrade,
     setNumberCatPick,
+    speed,
+    numberCatRequire,
+    numberCatPick,
   ] = useStaffStore((state) => [
     state.fee,
     state.setFee,
@@ -45,6 +49,9 @@ const StaffList: React.FC = () => {
     state.isChooseUpgrade,
     state.setIsChooseUpgrade,
     state.setNumberCatPick,
+    state.speed,
+    state.numberCatRequire,
+    state.numberCatPick,
   ]);
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
@@ -197,6 +204,51 @@ const StaffList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staff?.level]);
 
+  const confirmUpgradeCatDialogContent = (
+    <div className="w-full font-normal mt-4">
+      <div>Do you want to upgrade this cat?</div>
+      <hr className="border-[#B5B5B5] mt-3 mb-2" />
+      <div className="text-bodyMd text-left text-black">Earning Speed</div>
+      <div className="flex gap-3 items-center">
+        <div className="flex gap-1 items-center">
+          <span>
+            <img className="w-4 h-4" src="/images/speed.png" alt="" />
+          </span>
+          <span>{staff?.power} / s</span>
+        </div>
+        <div>
+          <MoveRight size={16} />
+        </div>
+        <div className="flex gap-1 items-center">
+          <span>
+            <img className="w-4 h-4" src="/images/speed.png" alt="" />
+          </span>
+          <span>{speed} / s</span>
+        </div>
+      </div>
+
+      <div className="text-bodyMd text-left text-black">Upgrade Fee</div>
+      <div className="flex items-center gap-1">
+        <span>
+          <img className="h-4 w-4" src="/images/coin.png" alt="" />
+        </span>
+        <div> {user && <NumberFormatter value={parseInt(user.bean)} />} /</div>
+        <span>
+          <img className="h-4 w-4" src="/images/coin.png" alt="" />
+        </span>
+        <div>{<NumberFormatter value={fee} />} </div>
+      </div>
+      {numberCatRequire > 0 && (
+        <>
+          <div className="text-bodyMd text-left text-black">Cat Require</div>
+          <div className="flex items-center gap-1">
+            {numberCatPick} / {numberCatRequire}
+          </div>
+        </>
+      )}
+    </div>
+  );
+
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
       <div className="rounded-3xl border-solid border-orange-90 border-4 h-[calc(100%-16px)] mt-4">
@@ -300,7 +352,8 @@ const StaffList: React.FC = () => {
           onCancel={() => setConfirmDialog(false)}
           onAgree={handleUpgrade}
           title="Upgrade Confirmation"
-          content="Do you want to upgrade this cat?"
+          // content="Do you want to upgrade this cat?"
+          content={confirmUpgradeCatDialogContent}
         />
       )}
     </div>
