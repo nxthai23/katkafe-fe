@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { DEFAULT_QUEST_ICON } from "@/constants/config";
 import { TABS } from "../panels/friend/Friend";
-import { ordinalSuffix } from "@/utils/helpers";
+import { formatStringNumber, ordinalSuffix } from "@/utils/helpers";
 import FormatText from "./FormatText";
 
 type Props = {
@@ -47,7 +47,7 @@ const CardBarista = ({
         <div className="flex items-center gap-1 text-bodyMd">
           <div>
             {type === TABS.INVITE && <span>+</span>}
-            {referralCounter || bean}
+            {referralCounter || formatStringNumber(bean)}
           </div>
           <div className="w-4 h-4">
             {type === TABS.FRIENDLIST ? (

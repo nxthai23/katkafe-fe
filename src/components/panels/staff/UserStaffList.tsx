@@ -67,7 +67,10 @@ const StaffList: React.FC = () => {
   const staffNotAssign = async (staffs: Staff[]) => {
     return Promise.all(
       staffs.map(async (staff) => {
-        const response = await upgradeRequireStaff({ level: staff.level });
+        const response = await upgradeRequireStaff({
+          level: staff.level,
+          catId: staff._id,
+        });
         const fee = response.nextFee;
         if (!user) return { ...staff, isCanUpgrade: false, fee };
         const isCanUpgrade = staff.level < 100 && fee <= user.bean;
@@ -141,7 +144,10 @@ const StaffList: React.FC = () => {
 
   const fetchDataUpgrade = async () => {
     if (!staff) return;
-    const response = await upgradeRequireStaff({ level: staff.level });
+    const response = await upgradeRequireStaff({
+      level: staff.level,
+      catId: staff._id,
+    });
     setFee(response.fee);
     setNumberCatsRequire(response.numberCatRequire);
   };

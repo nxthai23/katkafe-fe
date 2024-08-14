@@ -10,6 +10,7 @@ type Props = {
 };
 
 export const BoostCard = ({ type, userBoost }: Props) => {
+  const [durationHours, setDurationHours] = useState<string>();
   const [durationMinutes, setDurationMinutes] = useState<string>();
   const [durationSeconds, setDurationSeconds] = useState<string>();
   const [startIntervalBoostTimer, setStartIntervalBoostTimer] = useState(true);
@@ -20,8 +21,10 @@ export const BoostCard = ({ type, userBoost }: Props) => {
       .startOf("seconds")
       .diff(now);
     const duration = moment.duration(diffInMiliseconds);
+    const hours = Math.floor(duration.asHours());
     const minutes = Math.floor(duration.asMinutes());
     const seconds = Math.floor(duration.asSeconds()) - minutes * 60;
+    setDurationHours(hours.toString().padStart(2, "0"));
     setDurationMinutes(minutes.toString().padStart(2, "0"));
     setDurationSeconds(seconds.toString().padStart(2, "0"));
   };
@@ -68,10 +71,14 @@ export const BoostCard = ({ type, userBoost }: Props) => {
           <div className="text-sm text-orange-90">--</div>
           <div className="text-sm text-orange-90">:</div>
           <div className="text-sm text-orange-90">--</div>
+          <div className="text-sm text-orange-90">:</div>
+          <div className="text-sm text-orange-90">--</div>
         </div>
       )}
       {userBoost && (
         <div className="flex justify-center items-center gap-x-1 mt-2">
+          <div className="text-sm text-orange-90">{durationHours}</div>
+          <div className="text-sm text-orange-90">:</div>
           <div className="text-sm text-orange-90">{durationMinutes}</div>
           <div className="text-sm text-orange-90">:</div>
           <div className="text-sm text-orange-90">{durationSeconds}</div>

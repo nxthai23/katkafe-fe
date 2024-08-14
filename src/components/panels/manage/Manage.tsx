@@ -20,9 +20,11 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import RemoveConfirmDialog from "@/components/ui/RemoveConfirmDialog";
 import { useLoadingStore } from "@/stores/LoadingStore";
-import NumberFormatter from "@/components/ui/NumberFormat";
+import NumberFormatter, { formatNumber } from "@/components/ui/NumberFormat";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
 import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
+import { useUserBoostsStore } from "@/stores/boost/userBoostsStore";
+import { BoostType } from "@/types/boost";
 
 const TABS = {
   CAFE: "Cafe",
@@ -68,6 +70,10 @@ const Manage: React.FC = () => {
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
   const power = usePower(currentRestaurant!._id, currentRestaurant!);
+  const [userBoosts] = useUserBoostsStore((state) => [state.userBoosts]);
+  let idleBoost = userBoosts.find(
+    (boost) => boost.boostConfig.type === BoostType.IDLE
+  );
 
   const handleClose = () => {
     setShowManagePanel(false);
@@ -395,7 +401,13 @@ const Manage: React.FC = () => {
                           src="/images/speed.png"
                           alt=""
                         />
-                        {power} / s
+                        {!idleBoost && `${formatNumber(Number(power))} /s`}
+                        {idleBoost &&
+                          `${formatNumber(Number(power))} + ${formatNumber(
+                            Number(power) *
+                              idleBoost.boostConfig.boostMultiply -
+                              Number(power)
+                          )} /s`}
                       </span>
                     </div>
                     <div className="flex flex-col gap-1 items-end">

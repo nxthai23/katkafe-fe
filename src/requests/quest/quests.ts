@@ -20,3 +20,22 @@ export const youtube = async () => {
   const response = await katAxios.post(`${BASE_URL}/quests/youtube`);
   return response.data;
 };
+export const joinTelegramChat = async () => {
+  const response = await katAxios.post(`${BASE_URL}/quests/join-telegram-chat`);
+  return response.data;
+};
+export const joinTelegramOfficialAnnouncement = async () => {
+  const response = await katAxios.post(
+    `${BASE_URL}/quests/join-telegram-official-announcement`
+  );
+  return response.data;
+};
+export const followTwitter = async () => {
+  const response = await katAxios.post(`${BASE_URL}/quests/follow-twitter`);
+  return response.data;
+};
+
+export const shareLinktree = async () => {
+  const response = await katAxios.post(`${BASE_URL}/quests/share-linktree`);
+  return response.data;
+};
