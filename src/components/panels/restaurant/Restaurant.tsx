@@ -26,13 +26,11 @@ function Restaurant() {
     state.setShowRestaurantPanel,
   ]);
   const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
-  const [show, hide] = useLoadingStore((state) => [
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+  const [showSuccessDialog, setDialogType] = useDialogStore((state) => [
     state.show,
-    state.hide,
+    state.setDialogType,
   ]);
-  const [showSuccessDialog, setDialogType] = useDialogStore(
-    (state) => [state.show, state.setDialogType]
-  );
   const [
     restaurants,
     nextRestaurantUnclock,
@@ -44,9 +42,7 @@ function Restaurant() {
     state.currentRestaurant,
     state.setCurrentRestaurant,
   ]);
-  const [showSnackbar] = useSnackBarStore((state) => [
-    state.show,
-  ]);
+  const [showSnackbar] = useSnackBarStore((state) => [state.show]);
 
   const { fetchRestaurants } = useFetchRestaurants();
 
@@ -92,7 +88,7 @@ function Restaurant() {
       Number(user?.bean) >= Number(nextRestaurantUnclock?.fee)
     ) {
       try {
-        setConfirmDialog(false)
+        setConfirmDialog(false);
         show();
         const res = await unclockRestaurant();
         if (res) {
@@ -111,14 +107,14 @@ function Restaurant() {
         }
       } catch (error) {
         console.error("Error fetching", error);
-        showSnackbar('Unlock Fail')
+        showSnackbar("Unlock Fail");
       } finally {
         setTimeout(() => {
           hide();
         }, 1000);
       }
     } else {
-      showSnackbar('Insufficient resource')
+      showSnackbar("Insufficient resource");
     }
   };
   const handleOnCardClick = (order: number) => {
@@ -126,7 +122,7 @@ function Restaurant() {
       (restaurant) => restaurant.order === order
     );
     setCurrentRestaurant(restaurantSelected as RestaurantType | null);
-    setShowRestaurantPanel(false)
+    setShowRestaurantPanel(false);
   };
   return (
     <div className="list-panel bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -151,11 +147,24 @@ function Restaurant() {
             <p className="bg-red-10 h-[2px] w-[13%]"></p>
           </span>
           <div className="w-full flex flex-col gap-2 bg-orange-10 rounded-b-[20px] rounded-t border border-gray-20 absolute z-10 h-[calc(100%-32px)] p-4 overflow-auto mt-8">
+            <Pagination
+              onPageClick={handlePageClick}
+              customClassName="flex justify-center w-full z-20"
+              currentPage={currentPage}
+              totalPages={Math.ceil((restaurants.length + 1) / itemsPerPage)}
+              onClickNextPage={handleNextPage}
+              onClickPrevPage={handlePrevPage}
+            />
             {currentRestaurants.map((restaurant) => (
               <>
                 <div
                   key={`${restaurant._id}+ ${restaurant.name}`}
-                  className={classNames("bg-orange-10 p-2 rounded-lg", currentRestaurant?.order === restaurant.order ? 'border-2 border-primary !shadow-none' : 'border border-[#cccbbd]')}
+                  className={classNames(
+                    "bg-orange-10 p-2 rounded-lg",
+                    currentRestaurant?.order === restaurant.order
+                      ? "border-2 border-primary !shadow-none"
+                      : "border border-[#cccbbd]"
+                  )}
                   style={{ boxShadow: "0px -4px 0px 0px #cccbbd inset" }}
                 >
                   <RestaurantCard
@@ -166,14 +175,6 @@ function Restaurant() {
                 </div>
               </>
             ))}
-            <Pagination
-              onPageClick={handlePageClick}
-              customClassName="flex justify-center w-full z-20"
-              currentPage={currentPage}
-              totalPages={Math.ceil((restaurants.length + 1) / itemsPerPage)}
-              onClickNextPage={handleNextPage}
-              onClickPrevPage={handlePrevPage}
-            />
           </div>
         </div>
       </div>
@@ -186,17 +187,20 @@ function Restaurant() {
           <UnlockDialog
             data={dataUnlock}
             onUnclock={() => {
-              setConfirmDialog(true),
-                setShowDialog(false)
+              setConfirmDialog(true), setShowDialog(false);
             }}
             onClose={() => setShowDialog(false)}
           />
         </>
       )}
-      {
-        confirmDialog &&
-        <ConfirmDialog onCancel={() => setConfirmDialog(false)} onAgree={handleClickUnlockDialog} title="Unlock Confirmation" content="Do you want to unlock this restaurant?" />
-      }
+      {confirmDialog && (
+        <ConfirmDialog
+          onCancel={() => setConfirmDialog(false)}
+          onAgree={handleClickUnlockDialog}
+          title="Unlock Confirmation"
+          content="Do you want to unlock this restaurant?"
+        />
+      )}
     </div>
   );
 }
