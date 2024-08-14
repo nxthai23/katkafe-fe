@@ -82,6 +82,21 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("@designbycode/tailwindcss-text-stroke")],
+  plugins: [
+    require("@designbycode/tailwindcss-text-stroke"),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".text-shadow-black-border": {
+          textShadow: `
+            -1px -1px 0 #000,
+             1px -1px 0 #000,
+            -1px  1px 0 #000,
+             1px  1px 0 #000
+          `,
+        },
+      };
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+  ],
 };
 export default config;

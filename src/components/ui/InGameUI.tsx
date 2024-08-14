@@ -353,7 +353,7 @@ export const InGameUI = () => {
               className="clickNumber text-white z-10 flex justify-center gap-x-1 items-center text-3xl"
               style={{ left: click?.x, top: click?.y }}
             >
-              <div className="">
+              <div className="relative text-shadow-black-border">
                 +
                 {!tapTapBoost
                   ? user!.beansPerTab
