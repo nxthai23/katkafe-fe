@@ -32,6 +32,7 @@
     "dependencies": {
         "@designbycode/tailwindcss-text-stroke": "^1.2.1",
         "@radix-ui/react-dialog": "^1.0.5",
+        "@radix-ui/react-popover": "^1.1.1",
         "@types/moment": "^2.13.0",
         "@zakarliuka/react-telegram-web-tools": "^1.0.1",
         "axios": "^1.6.8",

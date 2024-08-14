@@ -15,6 +15,13 @@ import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 import Image from "next/image";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import { useSnackBarStore } from "@/stores/SnackBarStore";
+import { InfoIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/Popover";
+import { get } from "lodash";
 
 const TABS = {
   CAT: "Cat",
@@ -238,7 +245,35 @@ const Shop = () => {
                           height={186}
                         />
                       </div>
-                      <div className="text-orange-90">{item.itemName}</div>
+                      <Popover>
+                        <PopoverTrigger>
+                          <div className="text-orange-90 flex items-center hover:cursor-pointer">
+                            <div>{item.itemName}</div>
+                            <InfoIcon
+                              size={16}
+                              className="ml-2 cursor-pointer"
+                            />
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[150px] bg-[#fffde9] text-orange-90">
+                          <div>
+                            <div>Rarity Info</div>
+                            <div className="flex flex-row gap-x-1.5">
+                              <div>Common:</div>
+                              <div>{get(item, "data.rarity.common", 0)}%</div>
+                            </div>
+                            <div className="flex flex-row gap-x-1.5">
+                              <div>Rare:</div>
+                              <div>{get(item, "data.rarity.rare", 0)}%</div>
+                            </div>
+                            <div className="flex flex-row gap-x-1.5">
+                              <div>Epic:</div>
+                              <div>{get(item, "data.rarity.epic", 0)}%</div>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+
                       <div
                         className="w-[88px] h-[30px]"
                         onClick={(event: React.MouseEvent<HTMLDivElement>) =>
