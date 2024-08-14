@@ -6,7 +6,7 @@ import { assignCat } from "@/requests/restaurant";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { useLoadingStore } from "@/stores/LoadingStore";
 import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
-import Restaurant from "../restaurant/Restaurant";
+import { CAT_SELECT_FILTERS, CAT_STAR_FILTERS } from "@/constants/filter";
 
 type Props = {
   showStaffPanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,18 +15,8 @@ type Props = {
 
 const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   const options = [
-    {
-      value: 1,
-      label: "All",
-    },
-    {
-      value: 2,
-      label: "Level",
-    },
-    // {
-    //   value: 3,
-    //   label: "Star",
-    // },
+    { value: CAT_SELECT_FILTERS.ALL, label: CAT_SELECT_FILTERS.ALL },
+    { value: CAT_SELECT_FILTERS.LEVEL, label: CAT_SELECT_FILTERS.LEVEL },
   ];
   const customClass =
     "border border-[#5d5d5d] w-6 h-6 opacity-50 rounded-md text-[#fc9b53] text-xs flex items-center justify-center";
@@ -35,8 +25,12 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
   };
 
   const [isActive, setIsActive] = useState<string[]>([]);
-  const [activeSelect, setActiveSelect] = useState("All");
-  const [activeStarFilter, setActiveStarFilter] = useState<string>("All");
+  const [activeStarFilter, setActiveStarFilter] = useState<string>(
+    CAT_STAR_FILTERS.ALL
+  );
+  const [activeSelect, setActiveSelect] = useState<string>(
+    CAT_SELECT_FILTERS.ALL
+  );
   const [confirmDialog, setConfirmDialog] = useState(false);
 
   const [autoActives, setAutoActives, staffs, isOneAssign] = useStaffStore(
@@ -64,19 +58,30 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     .sort((a, b) => b.level - a.level);
 
   const getFilteredStaffs = () => {
-    let filtered = staffNotAssign;
+    let filtered = staffs;
 
-    if (activeStarFilter !== "All") {
-      filtered = filtered.filter((staff) => {
-        if (activeStarFilter === "OneStar") return staff.numberStar === 1;
-        if (activeStarFilter === "TwoStar") return staff.numberStar === 2;
-        if (activeStarFilter === "ThreeStar") return staff.numberStar === 3;
-        return true;
-      });
+    // filter by star
+    switch (activeStarFilter) {
+      case CAT_STAR_FILTERS.ONE_STAR:
+        filtered = filtered.filter((staff) => staff.numberStar === 1);
+        break;
+      case CAT_STAR_FILTERS.TWO_STAR:
+        filtered = filtered.filter((staff) => staff.numberStar === 2);
+        break;
+      case CAT_STAR_FILTERS.THREE_STAR:
+        filtered = filtered.filter((staff) => staff.numberStar === 3);
+        break;
+      default:
+        break;
     }
 
-    if (activeSelect === "2") {
-      filtered = filtered.slice().sort((a, b) => b.level - a.level);
+    // filter sort by level
+    switch (activeSelect) {
+      case CAT_SELECT_FILTERS.LEVEL:
+        filtered = filtered.slice().sort((a, b) => b.level - a.level);
+        break;
+      default:
+        break;
     }
 
     return filtered;
@@ -181,36 +186,50 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
               </select>
               <div className="flex items-center gap-1">
                 <span
-                  onClick={() => handleStarFilterClick("All")}
+                  onClick={() => handleStarFilterClick(CAT_STAR_FILTERS.ALL)}
                   className={`${customClass} ${
-                    activeSelect === "All" ? "!opacity-100" : ""
+                    activeStarFilter === CAT_STAR_FILTERS.ALL
+                      ? "!opacity-100"
+                      : ""
                   }`}
                   style={boxShadowStyle}
                 >
-                  All
+                  {CAT_STAR_FILTERS.ALL}
                 </span>
                 <span
-                  onClick={() => handleStarFilterClick("OneStar")}
+                  onClick={() =>
+                    handleStarFilterClick(CAT_STAR_FILTERS.ONE_STAR)
+                  }
                   className={`${customClass} ${
-                    activeSelect === "OneStar" ? "!opacity-100" : ""
+                    activeStarFilter === CAT_STAR_FILTERS.ONE_STAR
+                      ? "!opacity-100"
+                      : ""
                   }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/OneStar.png" alt="" />
                 </span>
                 <span
-                  onClick={() => handleStarFilterClick("TwoStar")}
+                  onClick={() =>
+                    handleStarFilterClick(CAT_STAR_FILTERS.TWO_STAR)
+                  }
                   className={`${customClass} ${
-                    activeSelect === "TwoStar" ? "!opacity-100" : ""
+                    activeStarFilter === CAT_STAR_FILTERS.TWO_STAR
+                      ? "!opacity-100"
+                      : ""
                   }`}
                   style={boxShadowStyle}
                 >
                   <img src="/images/TwoStar.png" alt="" />
                 </span>
                 <span
-                  onClick={() => handleStarFilterClick("ThreeStar")}
+                  onClick={() =>
+                    handleStarFilterClick(CAT_STAR_FILTERS.THREE_STAR)
+                  }
                   className={`${customClass} ${
-                    activeSelect === "ThreeStar" ? "!opacity-100" : ""
+                    activeStarFilter === CAT_STAR_FILTERS.THREE_STAR
+                      ? "!opacity-100"
+                      : ""
                   }`}
                   style={boxShadowStyle}
                 >
