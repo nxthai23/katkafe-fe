@@ -18,6 +18,7 @@ import { CatImage } from "./CatImage";
 import { get } from "lodash";
 import { CatRarity } from "@/types/cat-config";
 import { rarityToConfig } from "@/types/common-types";
+import { RarityTag } from "./cat/RarityTag";
 
 type Props = {
   onBack?: () => void;
@@ -161,7 +162,11 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                   </div>
                 </div>
               </div>
-              <div className="w-full font-normal mt-4">
+              <div className="flex gap-3 items-center justify-center mx-auto mt-2 px-2 py-1">
+                <RarityTag rarity={catRarity} isSpecial={isSpecial} />
+              </div>
+              <div className="w-full font-normal mt-2 mb-2">
+                {/* <hr className="border-[#B5B5B5] mt-3 mb-2" /> */}
                 <div className="text-bodyMd text-[#6F6F6F]">Earning Speed</div>
                 <div className="flex gap-3 items-center">
                   <div className="flex gap-1 items-center">
