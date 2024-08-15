@@ -286,14 +286,22 @@ const Manage: React.FC = () => {
         </div>
         <span className="text-bodyMd text-black text-left">Cat in Cafe</span>
         <div className="flex items-center gap-1">
-          <img
-            src="/images/slot_cat.png"
-            className="w-[18px] h-[18px]"
-            alt=""
-          />
           <span className="flex items-center gap-x-2">
+            <img
+              src="/images/slot_cat.png"
+              className="w-[18px] h-[18px]"
+              alt=""
+            />
             {currentRestaurant?.slot}
-            <MoveRight size={16} />
+          </span>
+
+          <MoveRight size={16} />
+          <span className="flex items-center gap-x-2">
+            <img
+              src="/images/slot_cat.png"
+              className="w-[18px] h-[18px]"
+              alt=""
+            />
             {currentRestaurant?.slot + 1}
           </span>
         </div>
