@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { CatRarity } from "@/types/cat-config";
 import { useStaffStore } from "@/stores/staffStore";
 import { CatImage } from "./CatImage";
+import { MAX_CAT_STAR } from "@/constants/cat";
 
 type Props = {
   catId: string;
@@ -99,7 +100,14 @@ const StaffCard = ({ catId, active, onViewClick, onRemoveClick }: Props) => {
               {[...Array(numberStar)].map((_, index) => (
                 <Star
                   key={index}
-                  numberStar={index + 1}
+                  isHollow={false}
+                  customClass={customClass}
+                ></Star>
+              ))}
+              {[...Array(MAX_CAT_STAR - numberStar)].map((_, index) => (
+                <Star
+                  key={index}
+                  isHollow={true}
                   customClass={customClass}
                 ></Star>
               ))}

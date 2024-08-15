@@ -7,6 +7,7 @@ import { RARITY_CONFIG, rarityToConfig, Staff } from "@/types/common-types";
 import classNames from "classnames";
 import { CatRarity } from "@/types/cat-config";
 import { CatImage } from "./CatImage";
+import { MAX_CAT_STAR } from "@/constants/cat";
 
 type Props = {
   cat: Staff;
@@ -72,7 +73,14 @@ const StaffCardAssign = ({ cat, active, handleClick }: Props) => {
               {[...Array(numberStar)].map((_, index) => (
                 <Star
                   key={index}
-                  numberStar={index + 1}
+                  isHollow={false}
+                  customClass={customClass}
+                ></Star>
+              ))}
+              {[...Array(MAX_CAT_STAR - numberStar)].map((_, index) => (
+                <Star
+                  key={index}
+                  isHollow={true}
                   customClass={customClass}
                 ></Star>
               ))}

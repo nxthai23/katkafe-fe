@@ -19,6 +19,7 @@ import { get } from "lodash";
 import { CatRarity } from "@/types/cat-config";
 import { rarityToConfig } from "@/types/common-types";
 import { RarityTag } from "./cat/RarityTag";
+import { MAX_CAT_STAR } from "@/constants/cat";
 
 type Props = {
   onBack?: () => void;
@@ -152,10 +153,19 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                           {[...Array(numberStar)].map((_, index) => (
                             <Star
                               key={index}
-                              numberStar={index + 1}
+                              isHollow={false}
                               customClass={customClass}
                             ></Star>
                           ))}
+                          {[...Array(MAX_CAT_STAR - numberStar)].map(
+                            (_, index) => (
+                              <Star
+                                key={index}
+                                isHollow={true}
+                                customClass={customClass}
+                              ></Star>
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
