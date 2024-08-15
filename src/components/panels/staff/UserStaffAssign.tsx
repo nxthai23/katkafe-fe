@@ -58,7 +58,7 @@ const StaffAssign: React.FC<Props> = ({ showStaffPanel, onAssignSuccess }) => {
     .sort((a, b) => b.level - a.level);
 
   const getFilteredStaffs = () => {
-    let filtered = staffs;
+    let filtered = staffNotAssign;
 
     // filter by star
     switch (activeStarFilter) {
