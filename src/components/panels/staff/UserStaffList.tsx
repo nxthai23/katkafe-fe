@@ -273,6 +273,10 @@ const StaffList: React.FC = () => {
           </div>
         </>
       )}
+      <div className="text-bodyMd text-left mt-2">
+        <span className="text-black text-bold">Hint: </span>Your Cat will evolve
+        at levels 40 and 70
+      </div>
     </div>
   );
 

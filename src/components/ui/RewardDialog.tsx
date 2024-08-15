@@ -4,6 +4,9 @@ import Image from "next/image";
 import { ShopType } from "@/types/bundle";
 import CatCard from "./CatCard";
 import { Item } from "@/types/item";
+import { RarityTag } from "./cat/RarityTag";
+import { CatRarity } from "@/types/cat-config";
+import { get } from "lodash";
 
 type Props = {
   type: ShopType;
@@ -79,6 +82,12 @@ const RewardDialog: React.FC<Props> = ({
             <CatCard cat={item} width={112} height={112} size="large" />
           </div>
         )}
+      </div>
+      <div className="flex gap-3 items-center justify-center mx-auto mt-2 px-2 py-1">
+        <RarityTag
+          rarity={get(item, "rarity", CatRarity.Common)}
+          isSpecial={get(item, "isSpecial", false)}
+        />
       </div>
 
       <div className="flex flex-wrap gap-2 justify-center border-[#E8DDBD] border-t py-3 mt-6">
