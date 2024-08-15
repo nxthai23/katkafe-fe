@@ -257,17 +257,19 @@ const Shop = () => {
                         </PopoverTrigger>
                         <PopoverContent className="w-[150px] bg-[#fffde9] text-orange-90">
                           <div>
-                            <div>Rarity Info</div>
+                            <div className="text-bold text-black">
+                              Rarity Info
+                            </div>
                             <div className="flex flex-row gap-x-1.5">
                               <div>Common:</div>
                               <div>{get(item, "data.rarity.common", 0)}%</div>
                             </div>
                             <div className="flex flex-row gap-x-1.5">
-                              <div>Rare:</div>
+                              <div className="text-[#5e80d8]">Rare:</div>
                               <div>{get(item, "data.rarity.rare", 0)}%</div>
                             </div>
                             <div className="flex flex-row gap-x-1.5">
-                              <div>Epic:</div>
+                              <div className="text-[#a8163d]">Epic:</div>
                               <div>{get(item, "data.rarity.epic", 0)}%</div>
                             </div>
                           </div>
