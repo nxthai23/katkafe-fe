@@ -40,10 +40,16 @@ export const useFetchRestaurants = () => {
         getRestaurants(),
         getRestaurantConfigs(),
       ]);
-      const listRestaurantsConfigMapped = restaurantConfig.filter(
-        (resConfig: any) =>
-          restaurants.some((restaurant: any) => restaurant.order !== resConfig.order)
-      ).sort((restaurantA: any, restaurantB: any) => restaurantA.order - restaurantB.order);
+      const listRestaurantsConfigMapped = restaurantConfig
+        .filter((resConfig: any) =>
+          restaurants.some(
+            (restaurant: any) => restaurant.order !== resConfig.order
+          )
+        )
+        .sort(
+          (restaurantA: any, restaurantB: any) =>
+            restaurantA.order - restaurantB.order
+        );
 
       const listRestaurantsMapped = [
         ...restaurants,
@@ -59,7 +65,8 @@ export const useFetchRestaurants = () => {
       setMyRestaurants(restaurants);
       if (isFetchingFirstTime) {
         setCurrentRestaurant(
-          restaurants && (restaurants[restaurants?.length - 1] as Restaurant | null)
+          restaurants &&
+            (restaurants[restaurants?.length - 1] as Restaurant | null)
         );
       }
     } catch (error) {
@@ -74,18 +81,17 @@ export const useFetchRestaurants = () => {
 
 const usePower = (locationId: string, restaurant?: Restaurant) => {
   const [power, setPower] = useState(null);
+  const fetchPower = async (id: string) => {
+    try {
+      const powerData = await getPower(id);
+      setPower(powerData);
+    } catch (error) {
+      console.error("Error fetching power:", error);
+      setPower(null);
+    }
+  };
 
   useEffect(() => {
-    const fetchPower = async (id: string) => {
-      try {
-        const powerData = await getPower(id);
-        setPower(powerData);
-      } catch (error) {
-        console.error("Error fetching power:", error);
-        setPower(null);
-      }
-    };
-
     if (locationId && restaurant?.cats) {
       fetchPower(locationId);
     } else {
@@ -93,7 +99,7 @@ const usePower = (locationId: string, restaurant?: Restaurant) => {
     }
   }, [locationId, restaurant?.cats]);
 
-  return power;
+  return { power, fetchPower };
 };
 
 export default usePower;

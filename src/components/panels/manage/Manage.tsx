@@ -70,7 +70,7 @@ const Manage: React.FC = () => {
 
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
-  const power = usePower(currentRestaurant!._id, currentRestaurant!);
+  const { power } = usePower(currentRestaurant!._id, currentRestaurant!);
   const [userBoosts] = useUserBoostsStore((state) => [state.userBoosts]);
   let idleBoost = userBoosts.find(
     (boost) => boost.boostConfig.type === BoostType.IDLE
@@ -145,8 +145,8 @@ const Manage: React.FC = () => {
       await fetchStaffs();
     } catch (error) {
       console.error("Error removing staff", error);
-      alert("Failed to delete staff. Please try again.");
-      showSnackbar("Failed to delete staff. Please try again.");
+      // alert("Failed to delete staff. Please try again.");
+      showSnackbar("Failed to remove staff. Please try again.");
     } finally {
       hide();
     }

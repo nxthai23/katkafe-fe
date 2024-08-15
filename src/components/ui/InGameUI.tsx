@@ -109,7 +109,7 @@ export const InGameUI = () => {
   const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
   // const telegramData = useInitData()
 
-  const power = usePower(currentRestaurant!._id, currentRestaurant!);
+  const { power } = usePower(currentRestaurant!._id, currentRestaurant!);
   const { fetchUser } = useFetchUser();
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();

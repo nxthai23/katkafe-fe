@@ -14,6 +14,10 @@ import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 import { assign } from "lodash";
 import NumberFormatter from "@/components/ui/NumberFormat";
 import { CAT_SELECT_FILTERS, CAT_STAR_FILTERS } from "@/constants/filter";
+import usePower, {
+  useFetchRestaurants,
+} from "@/lib/hooks/restaurant/useRestaurant";
+import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 
 const StaffList: React.FC = () => {
   const [showCardInfo, setShowCardInfo] = useState(false);
@@ -58,6 +62,9 @@ const StaffList: React.FC = () => {
     state.numberCatRequire,
     state.numberCatPick,
   ]);
+  const [currentRestaurant] = useRestaurantStore((state) => [
+    state.currentRestaurant,
+  ]);
   const [setShowStaffPanel] = useLayoutStore((state) => [
     state.setShowStaffPanel,
   ]);
@@ -65,6 +72,8 @@ const StaffList: React.FC = () => {
   const [showSnackbar] = useSnackBarStore((state) => [state.show]);
 
   const { fetchStaffs } = useFetchStaffs();
+  const { fetchRestaurants } = useFetchRestaurants();
+  const { fetchPower } = usePower(currentRestaurant!._id, currentRestaurant!);
 
   const options = [
     { value: CAT_SELECT_FILTERS.ALL, label: CAT_SELECT_FILTERS.ALL },
@@ -202,7 +211,9 @@ const StaffList: React.FC = () => {
       //   await removeStaff(body);
       // }
       await fetchUser();
+      await fetchRestaurants();
       await fetchStaffs();
+      fetchPower(currentRestaurant!._id);
       setIsChooseUpgrade([]);
       await fetchDataUpgrade();
       showSnackbar("Upgrade successfully!");
