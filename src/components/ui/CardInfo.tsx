@@ -220,6 +220,10 @@ const CardInfo: React.FC<Props> = ({ onBack, handleUpgrade }: Props) => {
                     </span>
                   </div>
                 )}
+                <div className="text-bodyMd text-left mt-2 text-[#6F6F6F]">
+                  <span className="text-black text-bold">Hint: </span>Your Cat
+                  will evolve at levels 40 and 70
+                </div>
               </div>
             </div>
             <div className="w-full text-center">
