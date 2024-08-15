@@ -124,10 +124,11 @@ const Friend: React.FC = () => {
                 <div>
                   <div className="w-[320px] relative">
                     <div className="flex justify-between mt-2">
-                      <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded pr-4">
-                        <img
-                          className="w-6 h-6"
-                          src="/images/kbuck.png"
+                      <div className="flex items-center gap-2 bg-[#EEEDD8] border-[#DDDCC9] border w-fit rounded px-2">
+                        <Image
+                          width={16}
+                          height={16}
+                          src="/images/friend.png"
                           alt=""
                         />
                         <div>{user?.referralCounter}</div>
@@ -183,7 +184,7 @@ const Friend: React.FC = () => {
                               id={index}
                               avatarUrl={friend.avatarUrl}
                               username={friend.username}
-                              referralCounter={friend.referralCounter}
+                              referralReward={friend.referralReward}
                               bean={"0"}
                             />
                           </div>

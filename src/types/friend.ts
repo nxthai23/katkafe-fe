@@ -3,6 +3,7 @@ export type Friend = {
   username: string;
   avatarUrl: string;
   referralCounter: number;
+  referralReward: string;
 };
 
 export type Rank = {

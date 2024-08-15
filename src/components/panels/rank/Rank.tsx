@@ -10,7 +10,7 @@ import CardBarista from "@/components/ui/CardBarista";
 
 type Props = {};
 
-function Rank({ }: Props) {
+function Rank({}: Props) {
   const [setShowRankPanel] = useLayoutStore((state) => [
     state.setShowRankPanel,
   ]);
@@ -76,7 +76,7 @@ function Rank({ }: Props) {
                       id={index}
                       username={rank.username}
                       avatarUrl={rank.avatarUrl}
-                      referralCounter={0}
+                      referralReward="0"
                       bean={rank.bean}
                     />
                   </div>
