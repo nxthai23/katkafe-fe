@@ -26,32 +26,32 @@ const defaultStates: State = {
 
 // Tạo store sử dụng Zustand
 export const useUserStore = create<State & Actions>()(
-  persist(
-    (set, get) => ({
-      ...defaultStates,
-      login: async (body) => {
-        const response = await postLogin(body);
-        if (!response) {
-          return;
-        }
-        set({
-          jwt: response.accessToken,
-          user: response.user,
-        });
-        return response.user;
-      },
-      clear: () => {
-        set(defaultStates);
-      },
-      setUser: (user) => set({ user }),
-      fetchUser: async () => {
-        const user = await getUser();
-        if (user) {
-          set({ user });
-        }
-      },
-      isLoggedIn: () => !!get().jwt && !!get().user,
-    }),
-    { name: "userStore" }
-  )
+  // persist(
+  (set, get) => ({
+    ...defaultStates,
+    login: async (body) => {
+      const response = await postLogin(body);
+      if (!response) {
+        return;
+      }
+      set({
+        jwt: response.accessToken,
+        user: response.user,
+      });
+      return response.user;
+    },
+    clear: () => {
+      set(defaultStates);
+    },
+    setUser: (user) => set({ user }),
+    fetchUser: async () => {
+      const user = await getUser();
+      if (user) {
+        set({ user });
+      }
+    },
+    isLoggedIn: () => !!get().jwt && !!get().user,
+  })
+  // ),
+  // { name: "userStore" }
 );

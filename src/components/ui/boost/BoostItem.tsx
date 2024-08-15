@@ -52,7 +52,7 @@ export const BoostItem = ({
     const diffInMiliseconds = moment(nextBoostAt).startOf("seconds").diff(now);
     const duration = moment.duration(diffInMiliseconds);
     const hours = Math.floor(duration.asHours());
-    const minutes = Math.floor(duration.asMinutes());
+    const minutes = Math.floor(duration.asMinutes()) - hours * 60;
     const seconds = Math.floor(duration.asSeconds()) - minutes * 60;
     setDurationHours(hours.toString().padStart(2, "0"));
     setDurationMinutes(minutes.toString().padStart(2, "0"));

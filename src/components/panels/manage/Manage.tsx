@@ -25,6 +25,7 @@ import { useSnackBarStore } from "@/stores/SnackBarStore";
 import ConfirmDialog from "@/components/ui/common/ConfirmDialog";
 import { useUserBoostsStore } from "@/stores/boost/userBoostsStore";
 import { BoostType } from "@/types/boost";
+import { MoveRight } from "lucide-react";
 
 const TABS = {
   CAFE: "Cafe",
@@ -69,7 +70,7 @@ const Manage: React.FC = () => {
 
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
-  const power = usePower(currentRestaurant!._id, currentRestaurant!);
+  const { power } = usePower(currentRestaurant!._id, currentRestaurant!);
   const [userBoosts] = useUserBoostsStore((state) => [state.userBoosts]);
   let idleBoost = userBoosts.find(
     (boost) => boost.boostConfig.type === BoostType.IDLE
@@ -144,8 +145,8 @@ const Manage: React.FC = () => {
       await fetchStaffs();
     } catch (error) {
       console.error("Error removing staff", error);
-      alert("Failed to delete staff. Please try again.");
-      showSnackbar("Failed to delete staff. Please try again.");
+      // alert("Failed to delete staff. Please try again.");
+      showSnackbar("Failed to remove staff. Please try again.");
     } finally {
       hide();
     }
@@ -266,6 +267,71 @@ const Manage: React.FC = () => {
     fetchDataUpgrade();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const upgradeLocationContent = (
+    <div className="flex justify-between items-center">
+      <div className="flex flex-col">
+        <div>Do you want to upgrade this restaurant</div>
+        <hr className="border-[#B5B5B5] mt-3 mb-2" />
+        <span className="text-bodyMd text-black text-left">Upgrade Fee</span>
+        <div className="flex items-center">
+          <span className="flex items-center gap-1">
+            <img className="w-4 h-4" src="/images/coin.png" alt="" />
+            {user && <NumberFormatter value={parseInt(user.bean)} />} /
+          </span>
+          <span className="flex items-center gap-1 ml-1">
+            <img className="w-4 h-4" src="/images/coin.png" alt="" />
+            <NumberFormatter value={fee} />
+          </span>
+        </div>
+        <span className="text-bodyMd text-black text-left">Cat in Cafe</span>
+        <div className="flex items-center gap-1">
+          <span className="flex items-center gap-x-2">
+            <img
+              src="/images/slot_cat.png"
+              className="w-[18px] h-[18px]"
+              alt=""
+            />
+            {currentRestaurant?.slot}
+          </span>
+
+          <MoveRight size={16} />
+          <span className="flex items-center gap-x-2">
+            <img
+              src="/images/slot_cat.png"
+              className="w-[18px] h-[18px]"
+              alt=""
+            />
+            {currentRestaurant?.slot + 1}
+          </span>
+        </div>
+      </div>
+      {numberCatsRequire > 0 &&
+        currentRestaurant &&
+        currentRestaurant.level < currentRestaurant.maxLevel && (
+          <div className="flex flex-col items-end">
+            <span className="text-bodyMd text-black text-left">
+              Number cat require
+            </span>
+            <div className="flex items-center gap-1">
+              <span>
+                <img
+                  className="w-[18px] h-[18px]"
+                  src="/images/slot_cat.png"
+                  alt=""
+                />
+              </span>
+              <span className="flex items-center gap-1">
+                {user && user.cats.length}/
+              </span>
+              <span className="flex items-center gap-1">
+                {numberCatsRequire}
+              </span>
+            </div>
+          </div>
+        )}
+    </div>
+  );
 
   return (
     <div className="bg-[#2e2e2e] w-full h-full absolute z-10 p-4 top-0">
@@ -540,7 +606,7 @@ const Manage: React.FC = () => {
           }
           content={
             confirmDialogType === CONFIRM_DIALOG_TYPE.UPGRADE
-              ? "Do you want to upgrade this restaurant?"
+              ? upgradeLocationContent
               : "Do you want to remove this cat?"
           }
         ></ConfirmDialog>

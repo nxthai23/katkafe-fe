@@ -109,7 +109,7 @@ export const InGameUI = () => {
   const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
   // const telegramData = useInitData()
 
-  const power = usePower(currentRestaurant!._id, currentRestaurant!);
+  const { power } = usePower(currentRestaurant!._id, currentRestaurant!);
   const { fetchUser } = useFetchUser();
   const { fetchRestaurants } = useFetchRestaurants();
   const { fetchStaffs } = useFetchStaffs();
@@ -353,7 +353,7 @@ export const InGameUI = () => {
               className="clickNumber text-white z-10 flex justify-center gap-x-1 items-center text-3xl"
               style={{ left: click?.x, top: click?.y }}
             >
-              <div className="">
+              <div className="relative text-shadow-black-border">
                 +
                 {!tapTapBoost
                   ? user!.beansPerTab

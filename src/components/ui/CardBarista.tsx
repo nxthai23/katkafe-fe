@@ -4,13 +4,14 @@ import { DEFAULT_QUEST_ICON } from "@/constants/config";
 import { TABS } from "../panels/friend/Friend";
 import { formatStringNumber, ordinalSuffix } from "@/utils/helpers";
 import FormatText from "./FormatText";
+import { get } from "lodash";
 
 type Props = {
   type: string;
   id: number;
   username: string;
   avatarUrl: string;
-  referralCounter: number;
+  referralReward: string;
   totalBonus?: number;
   totalFriend?: number;
   bean: string;
@@ -21,10 +22,8 @@ const CardBarista = ({
   type,
   username,
   avatarUrl,
-  referralCounter,
+  referralReward,
   bean,
-  totalBonus,
-  totalFriend,
 }: Props) => {
   return (
     <div className="w-full h-full p-2 pl-4 flex gap-8 items-center justify-between text-gray-60">
@@ -45,26 +44,16 @@ const CardBarista = ({
       </div>
       <div>
         <div className="flex items-center gap-1 text-bodyMd">
-          <div>
-            {type === TABS.INVITE && <span>+</span>}
-            {referralCounter || formatStringNumber(bean)}
-          </div>
-          <div className="w-4 h-4">
-            {type === TABS.FRIENDLIST ? (
-              <img src="/images/friend.png" alt="" />
-            ) : (
-              <img src="/images/coin.png" alt="" />
-            )}
-          </div>
-        </div>
-        {type === TABS.INVITE && (
           <div className="flex items-center justify-end gap-1">
-            <div>{!referralCounter ? 0 : referralCounter}</div>
+            {type === TABS.FRIENDLIST && (
+              <div>{formatStringNumber(referralReward)}</div>
+            )}
+            {type !== TABS.FRIENDLIST && <div>{formatStringNumber(bean)}</div>}
             <div className="w-4 h-4">
-              <img src="/images/friend.png" alt="" />
+              <img src="/images/coin.png" alt="" />
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
