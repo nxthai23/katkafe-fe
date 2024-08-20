@@ -115,7 +115,7 @@ export class GameUI {
 
     this.uiGroup.add(
       this.scene.add
-        .text(GAME_WIDTH / 2, 402, "Tap here", {
+        .text(GAME_WIDTH / 2, 402, "Collect", {
           fontFamily: "Pixelify Sans",
           fontSize: 36,
           color: "#ffffff",

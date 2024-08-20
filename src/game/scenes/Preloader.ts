@@ -73,11 +73,33 @@ export class Preloader extends Scene {
     this.txtLoading = this.add
       .text(
         this.cameras.main.width / 2,
-        this.cameras.main.height / 2 + this.sptLoadingCat.height / 2 + 16,
-        "Prepare to open...",
+        this.cameras.main.height / 2 + this.sptLoadingCat.height / 2 + 14,
+        "The Kafe is opening soon...",
         {
           fontFamily: "Pixelify Sans",
-          fontSize: 22,
+          fontSize: 20,
+          color: "#000000",
+          stroke: "#ffffff",
+          strokeThickness: 4,
+          align: "center",
+          shadow: {
+            offsetX: 0,
+            offsetY: 4,
+            color: "#00000033",
+            fill: true,
+          },
+        }
+      )
+      .setOrigin(0.5)
+      .setDepth(100);
+    this.txtLoading = this.add
+      .text(
+        this.cameras.main.width / 2,
+        this.cameras.main.height / 2 + this.sptLoadingCat.height / 2 + 160,
+        "Our kats are more chonky than usual \nso they might take sometimes to get ready",
+        {
+          fontFamily: "Pixelify Sans",
+          fontSize: 16,
           color: "#000000",
           stroke: "#ffffff",
           strokeThickness: 4,
