@@ -6,6 +6,7 @@ import {
   getRestaurantUpgradeConfigs,
   getRestaurants,
 } from "@/requests/restaurant";
+import { useLoadingStore } from "@/stores/LoadingStore";
 import { useRestaurantStore } from "@/stores/restaurant/restaurantStore";
 import { Restaurant } from "@/types/restaurant";
 import { useEffect, useState } from "react";
@@ -25,17 +26,23 @@ export const useFetchRestaurants = () => {
     state.setMyRestaurants,
   ]);
 
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
+
   const fetchNextRestaurants = async (index: number) => {
     try {
+      show();
       const nextRestaurant = await getNextRestaurantUnclockConfig(index);
       setNextRestaurantUnclock(nextRestaurant);
     } catch (error) {
       console.error("Error fetching", error);
+    } finally {
+      hide();
     }
   };
 
   const fetchRestaurants = async (isFetchingFirstTime?: boolean) => {
     try {
+      show();
       const [restaurants, restaurantConfig] = await Promise.all([
         getRestaurants(),
         getRestaurantConfigs(),
@@ -71,6 +78,8 @@ export const useFetchRestaurants = () => {
       }
     } catch (error) {
       console.error("Error fetching", error);
+    } finally {
+      hide();
     }
   };
 
@@ -81,13 +90,17 @@ export const useFetchRestaurants = () => {
 
 const usePower = (locationId: string, restaurant?: Restaurant) => {
   const [power, setPower] = useState(null);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
   const fetchPower = async (id: string) => {
     try {
+      show();
       const powerData = await getPower(id);
       setPower(powerData);
     } catch (error) {
       console.error("Error fetching power:", error);
       setPower(null);
+    } finally {
+      hide();
     }
   };
 
@@ -108,13 +121,17 @@ export const useFetchRestaurantUpgradeConfigs = () => {
   const [setRestaurantUpgradeConfigs] = useRestaurantStore((state) => [
     state.setRestaurantUpgradeConfigs,
   ]);
+  const [show, hide] = useLoadingStore((state) => [state.show, state.hide]);
 
   const fetchRestaurantUpgradeConfigs = async () => {
     try {
+      show();
       const response = await getRestaurantUpgradeConfigs();
       setRestaurantUpgradeConfigs(response);
     } catch (error) {
       console.error("Error fetching", error);
+    } finally {
+      hide();
     }
   };
 
